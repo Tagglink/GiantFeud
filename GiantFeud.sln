@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiantFeud.CSharp.Plugins", "GiantFeud.CSharp.Plugins.csproj", "{0FB186AC-82E1-2DF9-EBFF-DDC6419637C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiantFeud.CSharp", "GiantFeud.CSharp.csproj", "{C8375A14-B7C5-8DCD-4F7E-80618EFDC386}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiantFeud.CSharp.Editor", "GiantFeud.CSharp.Editor.csproj", "{A670DDF5-D902-A785-4AA4-05DA8F102F4D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FB186AC-82E1-2DF9-EBFF-DDC6419637C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB186AC-82E1-2DF9-EBFF-DDC6419637C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB186AC-82E1-2DF9-EBFF-DDC6419637C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB186AC-82E1-2DF9-EBFF-DDC6419637C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8375A14-B7C5-8DCD-4F7E-80618EFDC386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8375A14-B7C5-8DCD-4F7E-80618EFDC386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8375A14-B7C5-8DCD-4F7E-80618EFDC386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8375A14-B7C5-8DCD-4F7E-80618EFDC386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A670DDF5-D902-A785-4AA4-05DA8F102F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A670DDF5-D902-A785-4AA4-05DA8F102F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A670DDF5-D902-A785-4AA4-05DA8F102F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A670DDF5-D902-A785-4AA4-05DA8F102F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
