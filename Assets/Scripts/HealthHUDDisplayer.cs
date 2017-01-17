@@ -13,6 +13,7 @@ public class HealthHUDDisplayer : MonoBehaviour {
 	
 	void Update () {
         //currentHealth = int.Parse(sep(GetComponentInChildren<Text>().text));
+        GetComponentInChildren<Text>().text = giant.stats.hp + " / " + giant.stats.maxHP;
         float healthPercentage = (float)giant.stats.hp / giant.stats.maxHP;
         GetComponent<Image>().fillAmount = healthPercentage;
 	}
