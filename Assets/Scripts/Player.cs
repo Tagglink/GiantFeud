@@ -3,10 +3,14 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
+
 public class Player : MonoBehaviour {
 
     public GameObject map;
+
+    [HideInInspector]
     public Camp camp;
+
     private List<Transform> centerOfTiles;
 
     private Color highlight;
@@ -16,6 +20,8 @@ public class Player : MonoBehaviour {
 
     void Start ()
     {
+        camp = GetComponent<Camp>();
+
         offScale = new Vector3(0, 0.25f, 0);
         centerOfTiles = new List<Transform>();
         for (var i = 0; i < map.transform.childCount; i++)

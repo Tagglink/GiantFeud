@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum VillagerState { NONE, IDLE, WALKING, GATHERING }
+
 public class Villager : MonoBehaviour {
+
+    public VillagerState state;
 
 	// Use this for initialization
 	void Start () {
-	
+        state = VillagerState.IDLE;
 	}
 	
 	// Update is called once per frame
@@ -13,8 +17,8 @@ public class Villager : MonoBehaviour {
 	
 	}
 
-    public void WalkTo()
+    public void WalkTo(GameObject tile)
     {
-        Map.tiles[0][0]
+        
     }
 }
