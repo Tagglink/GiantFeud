@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Giant : MonoBehaviour {
 
@@ -7,6 +8,8 @@ public class Giant : MonoBehaviour {
     public Stats stats;
     public Stats[] buffs;
 
+    public GameObject healthDisplay;
+    
     private int timer;
     private int atkTime;
 
@@ -29,6 +32,13 @@ public class Giant : MonoBehaviour {
     {
         stats = new Stats();
         stats.atkspd = 0.5f;
+        stats.maxHP = 1000;
+        stats.hp = 1000;
+    }
+
+    void Update()
+    {
+        healthDisplay.GetComponent<Text>().text = stats.hp + " / " + stats.maxHP;
     }
 
     void FixedUpdate()
