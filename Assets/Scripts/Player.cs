@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
     public GameObject map;
+    public Camp camp;
     private List<Transform> centerOfTiles;
 
     private Color highlight;
@@ -28,8 +29,18 @@ public class Player : MonoBehaviour {
 	void Update ()
     {
         UpdateColorCycle();
-        FindNearestPoint();
-	}
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Transform mouseTile = FindNearestTile(mousePosition);
+
+        if (mouseTile != null)
+            mouseTile.GetComponent<SpriteRenderer>().color = highlight;
+
+        if (Input.GetMouseButtonDown(1)) // Right-click
+        {
+            if (mouseTile != null)
+                camp.SendVillagerTo(mouseTile.gameObject);
+        }
+    }
 
     void UpdateColorCycle()
     {
@@ -43,22 +54,22 @@ public class Player : MonoBehaviour {
         highlight.b -= 0.01f * changeValue;
     }
 
-    void FindNearestPoint()
+    Transform FindNearestTile(Vector3 position)
     {
         Transform closestTransform = null;
         Vector3 closestPoint = new Vector3(0.25f,0.25f,0);
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 relativePoint;
         foreach (Transform t in centerOfTiles)
         {
             t.GetComponent<SpriteRenderer>().color = Color.white;
-            relativePoint = t.position + offScale - mousePosition;
+            relativePoint = t.position + offScale - position;
             if (Mathf.Abs(relativePoint.x) + Mathf.Abs(relativePoint.y) < Mathf.Abs(closestPoint.x) + Mathf.Abs(closestPoint.y))
             {
                 closestPoint = relativePoint;
                 closestTransform = t;
             }
         }
-        closestTransform.GetComponent<SpriteRenderer>().color = highlight;
+
+        return closestTransform;
     }
 }
