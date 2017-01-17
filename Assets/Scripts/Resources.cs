@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum ResourceType { NONE, WOOD, WHEAT, MEAT, WATER, STONE };
+
 public struct Resources {
 
     public int wood;

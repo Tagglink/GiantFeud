@@ -1,0 +1,7 @@
+Library/
+Temp/
+Builds/
+.vs/
+*.bat
+*.csproj
+*.sln

@@ -61,4 +61,26 @@ public class Camp : MonoBehaviour {
 
         return ret;
     }
+
+    public void AddResource(ResourceType type, int amount)
+    {
+        switch (type)
+        {
+            case ResourceType.MEAT:
+                resources.meat += amount;
+                break;
+            case ResourceType.STONE:
+                resources.stone += amount;
+                break;
+            case ResourceType.WATER:
+                resources.water += amount;
+                break;
+            case ResourceType.WHEAT:
+                resources.wheat += amount;
+                break;
+            case ResourceType.WOOD:
+                resources.wood += amount;
+                break;
+        }
+    }
 }

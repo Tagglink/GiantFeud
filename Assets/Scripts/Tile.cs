@@ -2,10 +2,12 @@
 using UnityEditor;
 using System.Collections;
 
+public enum TileType { NONE, WOODS, STONE, WATER, CROPS, CATTLE, GIANTS, CAMP }
 public enum TileState { NONE, READY, HARVESTED }
 
 public class Tile : MonoBehaviour {
 
+    public TileType type; // set in inspector
     public TileState state;
     public bool occupied;
 
