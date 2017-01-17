@@ -9,18 +9,27 @@ public class Giant : MonoBehaviour {
     public Stats[] buffs;
 
     public GameObject healthDisplay;
-    
+    public GameObject enemyGiant;
+
     private int timer;
     private int atkTime;
 
     void Attack()
     {
-        Debug.Log("Giant attacked at: " + Time.time);
+        int buffDamage = 0;
+        if (buffs != null) {
+            foreach (Stats s in buffs)
+            {
+                buffDamage += s.atk;
+            }
+        }
+        int damageDealt = stats.atk + buffDamage;
+        enemyGiant.GetComponent<Giant>().TakeDamage(damageDealt);
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damageTaken)
     {
-
+        stats.hp -= damageTaken - stats.def;
     }
 
     public void UseItem(Item item)
@@ -31,14 +40,16 @@ public class Giant : MonoBehaviour {
     void Start()
     {
         stats = new Stats();
-        stats.atkspd = 0.5f;
+        stats.atk = 10;
+        stats.atkspd = 1f;
         stats.maxHP = 1000;
         stats.hp = 1000;
+        stats.def = 0;
     }
 
     void Update()
     {
-        healthDisplay.GetComponent<Text>().text = stats.hp + " / " + stats.maxHP;
+        
     }
 
     void FixedUpdate()
