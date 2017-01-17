@@ -23,7 +23,7 @@ public class Camp : MonoBehaviour {
         isCrafting = false;
         craftingProgress = 0.0f;
         
-        // Villagers should already be instantiated in the scene and out of camera view.
+        // Villagers should already be instantiated in the scene as children of the camp and out of camera view.
         for (int i = 0; i < MAX_VILLAGERS; i++) 
         {
             villagers.Add(transform.GetChild(i).gameObject);
@@ -45,7 +45,7 @@ public class Camp : MonoBehaviour {
         else
             return; // if no villagers are idle, return
 
-        villager.WalkTo(tile);
+        villager.Gather(tile);
     }
 
     List<GameObject> GetIdleVillagers()

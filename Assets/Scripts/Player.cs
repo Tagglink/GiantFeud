@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
     {
         UpdateColorCycle();
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Transform mouseTile = FindNearestTile(mousePosition);
+        Transform mouseTile = FindNearestTransform(centerOfTiles.ToArray(), mousePosition);
 
         if (mouseTile != null)
             mouseTile.GetComponent<SpriteRenderer>().color = highlight;
@@ -60,12 +60,13 @@ public class Player : MonoBehaviour {
         highlight.b -= 0.01f * changeValue;
     }
 
-    Transform FindNearestTile(Vector3 position)
+    Transform FindNearestTransform(Transform[] transforms, Vector3 position)
     {
         Transform closestTransform = null;
         Vector3 closestPoint = new Vector3(0.25f,0.25f,0);
         Vector3 relativePoint;
-        foreach (Transform t in centerOfTiles)
+
+        foreach (Transform t in transforms)
         {
             t.GetComponent<SpriteRenderer>().color = Color.white;
             relativePoint = t.position + offScale - position;
