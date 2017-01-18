@@ -48,7 +48,6 @@ public class Map : MonoBehaviour {
         {
             for (int j = 0; j < (i < 7 ? i + 1 : 15 - i); j++)
             {
-                Debug.Log(totalLoops);
                 ret[i][j] = tileTransforms[totalLoops].gameObject;
                 totalLoops++;
             }

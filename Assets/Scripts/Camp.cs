@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Camp : MonoBehaviour {
 
-    public static int MAX_VILLAGERS;
+    public static int maxVillagers;
 
     public List<Item> itemStash;
     public List<GameObject> villagers;
@@ -15,7 +15,7 @@ public class Camp : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        MAX_VILLAGERS = 6;
+        maxVillagers = 6;
         itemStash = new List<Item>();
         villagers = new List<GameObject>();
         resources = new Resources();
@@ -24,7 +24,7 @@ public class Camp : MonoBehaviour {
         craftingProgress = 0.0f;
         
         // Villagers should already be instantiated in the scene as children of the camp and out of camera view.
-        for (int i = 0; i < MAX_VILLAGERS; i++) 
+        for (int i = 0; i < maxVillagers; i++) 
         {
             villagers.Add(transform.GetChild(i).gameObject);
         }
@@ -53,7 +53,8 @@ public class Camp : MonoBehaviour {
         List<GameObject> ret = new List<GameObject>();
         for (int i = 0; i < villagerCount; i++)
         {
-            if (villagers[i].GetComponent<Villager>().state == VillagerState.IDLE)
+            Villager v = villagers[i].GetComponent<Villager>();
+            if (v.state == VillagerState.IDLE)
             {
                 ret.Add(villagers[i]);
             }

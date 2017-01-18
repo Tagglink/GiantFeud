@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public enum VillagerState { NONE, IDLE, WALKING, GATHERING }
 
 public class Villager : MonoBehaviour {
-    
-    public AnimationClip walkAnimation; // set in the inspector
 
     public VillagerState state;
     public ResourceType resource;
@@ -15,7 +13,8 @@ public class Villager : MonoBehaviour {
     float gatherTime;
     int currentTargetPositionIndex;
     Transform[] movePositions;
-    Vector3 tilePositionOffset;
+    Vector3 tileCenterPositionOffset;
+    Vector3 feetPositionOffset;
 
     Camp camp; // the camp the villager belongs to.
     Animator animator;
@@ -29,7 +28,8 @@ public class Villager : MonoBehaviour {
         state = VillagerState.IDLE;
         camp = GetComponentInParent<Camp>();
         animator = GetComponent<Animator>();
-        tilePositionOffset = new Vector3(0, 1, 0);
+        tileCenterPositionOffset = new Vector3(0, 0.25f, 0);
+        feetPositionOffset = new Vector3(0, 0.265f, 0);
 	}
 	
 	// Update is called once per frame
@@ -45,7 +45,8 @@ public class Villager : MonoBehaviour {
 
     void MoveIntoBounds()
     {
-        transform.position = Map.tiles[7][1].transform.position + tilePositionOffset;
+        GameObject tile = Map.tiles[7][1];
+        transform.position = tile.transform.position + feetPositionOffset + tileCenterPositionOffset;
     }
 
     void MoveOutOfBounds()
@@ -62,8 +63,31 @@ public class Villager : MonoBehaviour {
     Transform[] FindTilePathTo(GameObject tile)
     {
         List<Transform> ret = new List<Transform>();
+        
+        RaycastHit2D hit;
+        Ray2D dstRay = new Ray2D(transform.position, tile.transform.position + tileCenterPositionOffset + feetPositionOffset - transform.position);
 
+        var walkableTileLayerMask = 1 << 8;
 
+        int debug_max_loops = 40;
+        int loop_count = 0;
+
+        do
+        {
+            loop_count++;
+
+            if (loop_count > debug_max_loops)
+                break;
+
+            hit = Physics2D.Raycast(dstRay.origin, dstRay.direction, 0.26f, walkableTileLayerMask);
+
+            if (hit)
+            {
+                ret.Add(hit.transform);
+                dstRay.origin = hit.transform.position + tileCenterPositionOffset + feetPositionOffset;
+                dstRay.direction = tile.transform.position - hit.transform.position;
+            }
+        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
 
         return ret.ToArray();
     }
@@ -71,11 +95,14 @@ public class Villager : MonoBehaviour {
     void Move()
     {
         if (ValidateMovement())
+        {
             transform.position = Vector2.MoveTowards(transform.position, movePositions[currentTargetPositionIndex].position, speed * Time.deltaTime);
 
-        if ((Vector2)transform.position == (Vector2)movePositions[currentTargetPositionIndex].position)
-        {
-            currentTargetPositionIndex++;
+            // if position reached, go on to the next one
+            if ((Vector2)transform.position == (Vector2)movePositions[currentTargetPositionIndex].position)
+            {
+                currentTargetPositionIndex++;
+            }
         }
     }
 
@@ -92,9 +119,10 @@ public class Villager : MonoBehaviour {
     void Arrived()
     {
         Tile tile = movePositions[movePositions.Length - 1].GetComponent<Tile>();
-        if (resource == ResourceType.NONE)
+        if (resource == ResourceType.NONE) // is the villager carrying a resource?
         {
             state = VillagerState.GATHERING;
+            animator.SetTrigger("gathering");
             StartCoroutine(WaitForGather(tile));
         }
         else
@@ -102,6 +130,7 @@ public class Villager : MonoBehaviour {
             GiveCampResource();
             MoveOutOfBounds();
             state = VillagerState.IDLE;
+            animator.SetTrigger("idle");
         }
     }
 
@@ -121,8 +150,8 @@ public class Villager : MonoBehaviour {
     void MoveTo(GameObject tile)
     {
         movePositions = FindTilePathTo(tile);
-        // TODO: start walking animation
         state = VillagerState.WALKING;
+        animator.SetTrigger("walking");
     }
 
     void PickUpResource(Tile tile)

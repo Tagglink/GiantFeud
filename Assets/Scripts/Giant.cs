@@ -59,7 +59,7 @@ public class Giant : MonoBehaviour {
         stats.maxHP = 3000;
         stats.hp = 3000;
         stats.def = 0;
-        UseItem(Items.itemList[ItemID.SPEAR]);
+        //UseItem(Items.itemList[ItemID.SPEAR]);
     }
 
     void Update()
@@ -76,7 +76,7 @@ public class Giant : MonoBehaviour {
         atkTime = Mathf.RoundToInt(50 / stats.atkspd);
         if (timer % atkTime == 0)
         {
-            Attack();
+            //Attack();
         }
         if (timer % 50 == 0)
         {

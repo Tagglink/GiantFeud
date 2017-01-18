@@ -15,5 +15,4 @@ public class Item {
         resourceCost = _resourceCost;
         icon = _icon;
     }
-
 }
