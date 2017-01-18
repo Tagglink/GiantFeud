@@ -16,7 +16,11 @@ public class Giant : MonoBehaviour {
 
     void Attack()
     {
-        int damageDealt = stats.atk + currentWeapon.stats.atk;
+        int damageDealt;
+        if (currentWeapon != null)
+            damageDealt = stats.atk + currentWeapon.stats.atk;
+        else
+            damageDealt = stats.atk;
         enemyGiant.GetComponent<Giant>().TakeDamage(damageDealt);
     }
 
@@ -41,14 +45,16 @@ public class Giant : MonoBehaviour {
         {
             Consumable consumable = item as Consumable;
             stats += consumable.stats;
-            StartCoroutine(DelayTemporaryBuff(consumable.stats));
+            consumable.action(gameObject.GetComponent<Giant>());
+            StartCoroutine(DelayTemporaryBuff(consumable));
         }
     }
 
-    IEnumerator DelayTemporaryBuff(Stats _stats)
+    IEnumerator DelayTemporaryBuff(Consumable consumable)
     {
-        yield return new WaitForSeconds(_stats.duration);
-        stats -= _stats;
+        yield return new WaitForSeconds(consumable.stats.duration);
+        stats -= consumable.stats;
+        consumable.reverseAction(gameObject.GetComponent<Giant>());
     }
 
     void Start()
@@ -59,7 +65,6 @@ public class Giant : MonoBehaviour {
         stats.maxHP = 3000;
         stats.hp = 3000;
         stats.def = 0;
-        //UseItem(Items.itemList[ItemID.SPEAR]);
     }
 
     void Update()
