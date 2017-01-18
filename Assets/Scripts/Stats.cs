@@ -36,6 +36,19 @@ public struct Stats {
         return ret;
     }
 
+    public static Stats operator /(Stats stats1, int number)
+    {
+        Stats ret = new Stats();
+        ret.atk = stats1.atk / number;
+        ret.atkspd = stats1.atkspd / number;
+        ret.def = stats1.def / number;
+        ret.maxHP = stats1.maxHP / number;
+        ret.hp = stats1.hp / number;
+        ret.hpPerSec = stats1.hpPerSec / number;
+        ret.duration = stats1.duration / number;
+        return ret;
+    }
+
     public Stats(int _atk, float _atkspd, int _def, int _maxHP, int _hp, int _hpPerSec, int _duration)
     {
         atk = _atk;
