@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class Giant : MonoBehaviour {
 
     public Weapon currentWeapon;
+    public Armour currentArmour;
     public Stats stats;
-    public Stats[] buffs;
 
     public GameObject healthDisplay;
     public GameObject enemyGiant;
@@ -34,11 +34,21 @@ public class Giant : MonoBehaviour {
         if (item is Equipment)
         {
             Equipment equipment = item as Equipment;
-            stats += equipment.stats;
+            if (equipment is Armour)
+            {
+                Armour armour = equipment as Armour;
+                if (currentArmour != null)
+                    stats -= currentArmour.stats + currentArmour.reinforcementStats * currentArmour.reinforcementCount;
+                currentArmour = armour;
+                stats += currentArmour.stats;
+            }
             if (equipment is Weapon)
             {
                 Weapon weapon = equipment as Weapon;
+                if (currentWeapon != null)
+                    stats -= currentWeapon.stats + currentWeapon.reinforcementStats * currentWeapon.reinforcementCount;
                 currentWeapon = weapon;
+                stats += currentWeapon.stats;
             }
         }
         else if (item is Consumable)
@@ -46,7 +56,22 @@ public class Giant : MonoBehaviour {
             Consumable consumable = item as Consumable;
             stats += consumable.stats;
             consumable.action(gameObject.GetComponent<Giant>());
-            StartCoroutine(DelayTemporaryBuff(consumable));
+            if (consumable.stats.duration > -1)
+                StartCoroutine(DelayTemporaryBuff(consumable));
+        }
+    }
+
+    public void Reinforce(Item item)
+    {
+        if (item is Weapon)
+        {
+            currentWeapon.reinforcementCount += 1;
+            stats += currentWeapon.reinforcementStats;
+        }
+        else if (item is Armour)
+        {
+            currentArmour.reinforcementCount += 1;
+            stats += currentArmour.reinforcementStats;
         }
     }
 
@@ -63,7 +88,7 @@ public class Giant : MonoBehaviour {
         stats.atk = 5;
         stats.atkspd = 0.5f;
         stats.maxHP = 3000;
-        stats.hp = 3000;
+        stats.hp = 0;
         stats.def = 0;
     }
 
@@ -73,6 +98,10 @@ public class Giant : MonoBehaviour {
         {
             stats.hp = stats.maxHP;
         }
+        if (stats.hp < 0)
+        {
+            stats.hp = 0;
+        }
     }
 
     void FixedUpdate()
@@ -81,7 +110,7 @@ public class Giant : MonoBehaviour {
         atkTime = Mathf.RoundToInt(50 / stats.atkspd);
         if (timer % atkTime == 0)
         {
-            //Attack();
+            Attack();
         }
         if (timer % 50 == 0)
         {

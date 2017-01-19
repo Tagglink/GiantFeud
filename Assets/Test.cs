@@ -12,8 +12,8 @@ public class Test : MonoBehaviour {
     IEnumerator Wait()
     {
         yield return new WaitForEndOfFrame();
-        targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.MEATSTEW]);
-        targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.BREADLOAF]);
-        targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.ELIXIR]);
+        targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.ASGARDMEAL]);
+        //targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.AXE]);
+        //targetGiant.GetComponent<Giant>().UseItem(Items.itemList[ItemID.ELIXIR]);
     }
 }
