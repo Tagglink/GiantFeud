@@ -46,7 +46,8 @@ public class Villager : MonoBehaviour {
     void MoveIntoBounds()
     {
         GameObject tile = Map.tiles[7][1];
-        transform.position = tile.transform.position + feetPositionOffset + tileCenterPositionOffset;
+        Vector3 spawnPosition = tile.transform.position + feetPositionOffset + tileCenterPositionOffset;
+        transform.position = spawnPosition;
     }
 
     void MoveOutOfBounds()
@@ -65,29 +66,32 @@ public class Villager : MonoBehaviour {
         List<Transform> ret = new List<Transform>();
         
         RaycastHit2D hit;
-        Ray2D dstRay = new Ray2D(transform.position, tile.transform.position + tileCenterPositionOffset + feetPositionOffset - transform.position);
+        Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
+        Vector2 currentTileCenter = transform.position - feetPositionOffset;
+        Vector3 directionToTile = dstTileCenter - currentTileCenter;
+        Collider2D lastCollider = null;
 
         var walkableTileLayerMask = 1 << 8;
 
-        int debug_max_loops = 40;
-        int loop_count = 0;
-
         do
         {
-            loop_count++;
+            hit = Physics2D.Raycast(currentTileCenter, directionToTile, 0.5f, walkableTileLayerMask);
 
-            if (loop_count > debug_max_loops)
-                break;
-
-            hit = Physics2D.Raycast(dstRay.origin, dstRay.direction, 0.26f, walkableTileLayerMask);
+            if (lastCollider)
+                lastCollider.enabled = true; // re-enable the collider as we have passed it
 
             if (hit)
             {
                 ret.Add(hit.transform);
-                dstRay.origin = hit.transform.position + tileCenterPositionOffset + feetPositionOffset;
-                dstRay.direction = tile.transform.position - hit.transform.position;
+                hit.collider.enabled = false; // disable the collider as to not hit it again
+                lastCollider = hit.collider; // cache the collider to re-enable later
+
+                currentTileCenter = hit.transform.position + tileCenterPositionOffset;
+                directionToTile = dstTileCenter - currentTileCenter;
             }
         } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
+
+        lastCollider.enabled = true;
 
         return ret.ToArray();
     }
@@ -96,10 +100,11 @@ public class Villager : MonoBehaviour {
     {
         if (ValidateMovement())
         {
-            transform.position = Vector2.MoveTowards(transform.position, movePositions[currentTargetPositionIndex].position, speed * Time.deltaTime);
+            Vector3 destinationPos = movePositions[currentTargetPositionIndex].position + tileCenterPositionOffset + feetPositionOffset;
+            transform.position = Vector2.MoveTowards(transform.position, destinationPos, speed * Time.deltaTime);
 
-            // if position reached, go on to the next one
-            if ((Vector2)transform.position == (Vector2)movePositions[currentTargetPositionIndex].position)
+            // if position reached, iterate position list
+            if ((Vector2)transform.position == (Vector2)destinationPos)
             {
                 currentTargetPositionIndex++;
             }
@@ -118,6 +123,7 @@ public class Villager : MonoBehaviour {
 
     void Arrived()
     {
+        currentTargetPositionIndex = 0;
         Tile tile = movePositions[movePositions.Length - 1].GetComponent<Tile>();
         if (resource == ResourceType.NONE) // is the villager carrying a resource?
         {
@@ -144,7 +150,7 @@ public class Villager : MonoBehaviour {
     {
         yield return new WaitForSeconds(gatherTime);
         PickUpResource(tile);
-        MoveTo(camp.gameObject);
+        MoveTo(Map.tiles[7][1]);
     }
 
     void MoveTo(GameObject tile)
