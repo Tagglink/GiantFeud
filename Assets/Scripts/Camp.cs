@@ -67,6 +67,8 @@ public class Camp : MonoBehaviour {
     {
         switch (type)
         {
+            case ResourceType.NONE:
+                break;
             case ResourceType.MEAT:
                 resources.meat += amount;
                 break;

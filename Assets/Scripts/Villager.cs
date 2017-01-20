@@ -91,7 +91,8 @@ public class Villager : MonoBehaviour {
             }
         } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
 
-        lastCollider.enabled = true;
+        if (lastCollider)
+            lastCollider.enabled = true;
 
         return ret.ToArray();
     }

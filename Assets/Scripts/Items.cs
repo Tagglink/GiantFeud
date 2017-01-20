@@ -6,7 +6,7 @@ public enum ItemID { NULL, AXE, CLUB, SWORD, SPEAR, ELIXIR, HALBERD, MEATSTEW, B
 public static class Items {
 
     public static Dictionary <ItemID, Item> itemList = new Dictionary<ItemID, Item> {
-            { ItemID.AXE, new Weapon("Yxa", "Väger 5 ton.", new Resources(3,0,0,0,5), null, new Stats(30,0,0,0,0,0,-1), 0, new Stats(30,0,0,0,0,0,-1)) },
+            { ItemID.AXE, new Weapon("Yxa", "Väger 5 ton.", new Resources(3,0,0,0,5), null, new Stats(30, 0, 0, 0, 0, 0, -1), 0, new Stats(30, 0, 0, 0, 0, 0, -1)) },
             { ItemID.CLUB, new Weapon("Klubba", "Mer likt ett träd, faktiskt.", new Resources(6,0,0,0,0),null, new Stats(25,0,0,0,0,0,-1),0, new Stats(25,0,0,0,0,0,-1)) },
             { ItemID.SWORD, new Weapon("Svärd", "Ett stort, sten svärd. Snabb att svinga.", new Resources(5,0,0,0,10), null, new Stats(50,0.5f,0,0,0,0,-1), 0, new Stats(20,0.5f,0,0,0,0,-1)) },
             { ItemID.SPEAR, new Weapon("Spjut", "Stock o sten.", new Resources(2, 0, 0, 0, 1), null, new Stats(5, 0.5f, 0, 0, 0, 0, -1), 0, new Stats(2, 0.25f, 0, 0, 0, 0, -1)) },
