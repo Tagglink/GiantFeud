@@ -11,6 +11,8 @@ public class Giant : MonoBehaviour {
     public GameObject healthDisplay;
     public GameObject enemyGiant;
 
+    public GameObject camp;
+
     private int timer;
     private int atkTime;
 
@@ -88,7 +90,7 @@ public class Giant : MonoBehaviour {
         stats.atk = 5;
         stats.atkspd = 0.5f;
         stats.maxHP = 3000;
-        stats.hp = 0;
+        stats.hp = 3000;
         stats.def = 0;
     }
 
