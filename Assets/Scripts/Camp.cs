@@ -9,6 +9,8 @@ public class Camp : MonoBehaviour {
     public List<GameObject> villagers;
     public Resources resources;
 
+    public GameObject giant;
+
     public int villagerCount;
     public bool isCrafting;
     public float craftingProgress;
