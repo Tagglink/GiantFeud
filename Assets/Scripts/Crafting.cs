@@ -2,6 +2,14 @@
 using System.Collections;
 
 public class Crafting : MonoBehaviour {
+    
+    public void CraftFromPlayer(int id)
+    {
+        ItemID itemID = (ItemID)id;
+        Item item = Items.itemList[itemID];
+        GameObject camp = GameObject.Find("Base Player");
+        Craft(item, camp);
+    }
 
     public void Craft(Item item, GameObject camp)
     {

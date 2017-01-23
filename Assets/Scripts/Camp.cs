@@ -10,6 +10,7 @@ public class Camp : MonoBehaviour {
     public Resources resources;
 
     public GameObject giant;
+    public GameObject homeTile; // set by inspector
 
     public int villagerCount;
     public bool isCrafting;
@@ -37,7 +38,7 @@ public class Camp : MonoBehaviour {
 	
 	}
 
-    public void SendVillagerTo(GameObject tile)
+    public bool SendVillagerToGather(GameObject tile)
     {
         List<GameObject> idleVillagers = GetIdleVillagers();
         Villager villager;
@@ -45,9 +46,10 @@ public class Camp : MonoBehaviour {
         if (idleVillagers.Count > 0)
             villager = idleVillagers[0].GetComponent<Villager>();
         else
-            return; // if no villagers are idle, return
+            return false; // if no villagers are idle, return false
 
         villager.Gather(tile);
+        return true;
     }
 
     List<GameObject> GetIdleVillagers()
@@ -65,27 +67,38 @@ public class Camp : MonoBehaviour {
         return ret;
     }
 
-    public void AddResource(ResourceType type, int amount)
+    public Resources CalculateRequiredResources(ItemID item)
     {
-        switch (type)
+        Resources itemCost = Items.itemList[item].resourceCost;
+        Resources effectiveResources = resources;
+        Resources ret = new Resources();
+
+        foreach (GameObject vObj in villagers)
         {
-            case ResourceType.NONE:
-                break;
-            case ResourceType.MEAT:
-                resources.meat += amount;
-                break;
-            case ResourceType.STONE:
-                resources.stone += amount;
-                break;
-            case ResourceType.WATER:
-                resources.water += amount;
-                break;
-            case ResourceType.WHEAT:
-                resources.wheat += amount;
-                break;
-            case ResourceType.WOOD:
-                resources.wood += amount;
-                break;
+            Villager v = vObj.GetComponent<Villager>();
+            ResourceType vResource = v.resource;
+            switch (vResource)
+            {
+                case ResourceType.MEAT:
+                    effectiveResources.meat += v.resourcesCarried;
+                    break;
+                case ResourceType.STONE:
+                    effectiveResources.stone += v.resourcesCarried;
+                    break;
+                case ResourceType.WATER:
+                    effectiveResources.water += v.resourcesCarried;
+                    break;
+                case ResourceType.WHEAT:
+                    effectiveResources.wheat += v.resourcesCarried;
+                    break;
+                case ResourceType.WOOD:
+                    effectiveResources.wood += v.resourcesCarried;
+                    break;
+            }
         }
+
+        ret = itemCost - effectiveResources;
+
+        return ret;
     }
 }

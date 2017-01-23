@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum VillagerState { NONE, IDLE, WALKING, GATHERING }
+public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOURCE }
 
 public class Villager : MonoBehaviour {
 
     public VillagerState state;
     public ResourceType resource;
     public int speed;
+    public int resourcesCarried;
 
+    VillagerArriveAction arriveAction;
     float gatherTime;
     int currentTargetPositionIndex;
     Transform[] movePositions;
@@ -45,8 +48,7 @@ public class Villager : MonoBehaviour {
 
     void MoveIntoBounds()
     {
-        GameObject tile = Map.tiles[7][1];
-        Vector3 spawnPosition = tile.transform.position + feetPositionOffset + tileCenterPositionOffset;
+        Vector3 spawnPosition = camp.homeTile.transform.position + feetPositionOffset + tileCenterPositionOffset;
         transform.position = spawnPosition;
     }
 
@@ -58,7 +60,8 @@ public class Villager : MonoBehaviour {
     public void Gather(GameObject tile)
     {
         MoveIntoBounds();
-        MoveTo(tile);
+        resource = Resources.TileToResource(tile.GetComponent<Tile>().type);
+        MoveTo(tile, VillagerArriveAction.GATHER_RESOURCE);
     }
 
     Transform[] FindTilePathTo(GameObject tile)
@@ -125,61 +128,62 @@ public class Villager : MonoBehaviour {
     void Arrived()
     {
         currentTargetPositionIndex = 0;
-        Tile tile = movePositions[movePositions.Length - 1].GetComponent<Tile>();
-        if (resource == ResourceType.NONE) // is the villager carrying a resource?
+        
+        switch (arriveAction)
         {
-            state = VillagerState.GATHERING;
-            animator.SetTrigger("gathering");
-            StartCoroutine(WaitForGather(tile));
+            case VillagerArriveAction.NONE:
+                // idk
+                break;
+            case VillagerArriveAction.GATHER_RESOURCE:
+                StartGather();
+                break;
+            case VillagerArriveAction.LEAVE_RESOURCE:
+                LeaveResourceAtCamp();
+                break;
+            case VillagerArriveAction.USE_ITEM:
+                // TODO: Giant use item function
+                break;
         }
-        else
-        {
-            GiveCampResource();
-            MoveOutOfBounds();
-            state = VillagerState.IDLE;
-            animator.SetTrigger("idle");
-        }
+
+        arriveAction = VillagerArriveAction.NONE;
+    }
+
+    void StartGather()
+    {
+        if (resource == ResourceType.NONE)
+            return;
+
+        state = VillagerState.GATHERING;
+        animator.SetTrigger("gathering");
+        StartCoroutine(WaitForGather());
+    }
+
+    void LeaveResourceAtCamp()
+    {
+        GiveCampResource();
+        MoveOutOfBounds();
+        state = VillagerState.IDLE;
+        animator.SetTrigger("idle");
     }
 
     void GiveCampResource()
     {
-        camp.AddResource(resource, 1);
+        camp.resources.Add(resource, resourcesCarried);
         resource = ResourceType.NONE;
     }
 
-    IEnumerator WaitForGather(Tile tile)
+    IEnumerator WaitForGather()
     {
         yield return new WaitForSeconds(gatherTime);
-        PickUpResource(tile);
-        MoveTo(Map.tiles[7][1]);
+        resourcesCarried++;
+        MoveTo(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 
-    void MoveTo(GameObject tile)
+    void MoveTo(GameObject tile, VillagerArriveAction actionAtArrival)
     {
+        arriveAction = actionAtArrival;
         movePositions = FindTilePathTo(tile);
         state = VillagerState.WALKING;
         animator.SetTrigger("walking");
-    }
-
-    void PickUpResource(Tile tile)
-    {
-        switch (tile.type)
-        {
-            case TileType.CATTLE:
-                resource = ResourceType.MEAT;
-                break;
-            case TileType.CROPS:
-                resource = ResourceType.WHEAT;
-                break;
-            case TileType.STONE:
-                resource = ResourceType.STONE;
-                break;
-            case TileType.WATER:
-                resource = ResourceType.WATER;
-                break;
-            case TileType.WOODS:
-                resource = ResourceType.WOOD;
-                break;
-        }
     }
 }
