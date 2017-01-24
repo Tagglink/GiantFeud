@@ -11,6 +11,7 @@ public class Villager : MonoBehaviour {
     public ResourceType resource;
     public int speed;
     public int resourcesCarried;
+    public int efficiency; // the amount of resources to pick up per Gather
 
     VillagerArriveAction arriveAction;
     float gatherTime;
@@ -27,6 +28,8 @@ public class Villager : MonoBehaviour {
         currentTargetPositionIndex = 0;
         speed = 2;
         gatherTime = 5.0f;
+        resourcesCarried = 0;
+        efficiency = 1;
         resource = ResourceType.NONE;
         state = VillagerState.IDLE;
         camp = GetComponentInParent<Camp>();
@@ -127,6 +130,7 @@ public class Villager : MonoBehaviour {
 
     void Arrived()
     {
+        Tile at = movePositions[movePositions.Length - 1].GetComponent<Tile>();
         currentTargetPositionIndex = 0;
         
         switch (arriveAction)
@@ -135,7 +139,7 @@ public class Villager : MonoBehaviour {
                 // idk
                 break;
             case VillagerArriveAction.GATHER_RESOURCE:
-                StartGather();
+                StartGather(at);
                 break;
             case VillagerArriveAction.LEAVE_RESOURCE:
                 LeaveResourceAtCamp();
@@ -148,14 +152,15 @@ public class Villager : MonoBehaviour {
         arriveAction = VillagerArriveAction.NONE;
     }
 
-    void StartGather()
+    void StartGather(Tile at)
     {
         if (resource == ResourceType.NONE)
             return;
 
+        at.occupied = true;
         state = VillagerState.GATHERING;
         animator.SetTrigger("gathering");
-        StartCoroutine(WaitForGather());
+        StartCoroutine(WaitForGather(at));
     }
 
     void LeaveResourceAtCamp()
@@ -170,12 +175,14 @@ public class Villager : MonoBehaviour {
     {
         camp.resources.Add(resource, resourcesCarried);
         resource = ResourceType.NONE;
+        resourcesCarried = 0;
     }
 
-    IEnumerator WaitForGather()
+    IEnumerator WaitForGather(Tile at)
     {
         yield return new WaitForSeconds(gatherTime);
-        resourcesCarried++;
+        at.occupied = false;
+        resourcesCarried = efficiency;
         MoveTo(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 

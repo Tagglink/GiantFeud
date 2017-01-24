@@ -37,14 +37,16 @@ public class Player : MonoBehaviour {
         UpdateColorCycle();
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Transform mouseTile = FindNearestTransform(centerOfTiles.ToArray(), mousePosition);
-        Tile mouseTileScript = mouseTile.GetComponent<Tile>();
+        Tile mouseTileScript = null;
 
-        if (mouseTile != null)
+        if (mouseTile != null) {
             mouseTile.GetComponent<SpriteRenderer>().color = highlight;
+            mouseTileScript = mouseTile.GetComponent<Tile>();
+        }
 
         if (Input.GetMouseButtonDown(1)) // Right-click
         {
-            if (mouseTile != null && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP)
+            if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP)
                 camp.SendVillagerToGather(mouseTile.gameObject);
         }
     }

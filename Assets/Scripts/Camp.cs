@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Camp : MonoBehaviour {
@@ -12,7 +13,7 @@ public class Camp : MonoBehaviour {
     public GameObject giant;
     public GameObject homeTile; // set by inspector
 
-    public int villagerCount;
+    public int villagerCount; // number of unlocked villagers
     public bool isCrafting;
     public float craftingProgress;
 
@@ -52,7 +53,7 @@ public class Camp : MonoBehaviour {
         return true;
     }
 
-    List<GameObject> GetIdleVillagers()
+    public List<GameObject> GetIdleVillagers()
     {
         List<GameObject> ret = new List<GameObject>();
         for (int i = 0; i < villagerCount; i++)
@@ -80,19 +81,19 @@ public class Camp : MonoBehaviour {
             switch (vResource)
             {
                 case ResourceType.MEAT:
-                    effectiveResources.meat += v.resourcesCarried;
+                    effectiveResources.meat += v.efficiency;
                     break;
                 case ResourceType.STONE:
-                    effectiveResources.stone += v.resourcesCarried;
+                    effectiveResources.stone += v.efficiency;
                     break;
                 case ResourceType.WATER:
-                    effectiveResources.water += v.resourcesCarried;
+                    effectiveResources.water += v.efficiency;
                     break;
                 case ResourceType.WHEAT:
-                    effectiveResources.wheat += v.resourcesCarried;
+                    effectiveResources.wheat += v.efficiency;
                     break;
                 case ResourceType.WOOD:
-                    effectiveResources.wood += v.resourcesCarried;
+                    effectiveResources.wood += v.efficiency;
                     break;
             }
         }
@@ -100,5 +101,27 @@ public class Camp : MonoBehaviour {
         ret = itemCost - effectiveResources;
 
         return ret;
+    }
+
+    public bool Craft(ItemID item)
+    {
+        Item it = Items.itemList[item];
+
+        if (it.resourceCost <= resources)
+        {
+            StartCoroutine(WaitForCraft(it));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    IEnumerator WaitForCraft(Item item)
+    {
+        yield return new WaitForSeconds(item.craftingTime);
+        resources -= item.resourceCost;
+        itemStash.Add(item);
     }
 }

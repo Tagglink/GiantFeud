@@ -1,38 +1,49 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AI : MonoBehaviour {
 
     public Camp camp;
 
     private ItemID goalItem;
-
+    private bool craftFlag;
 
     void Start()
     {
-        
+        goalItem = ItemID.NULL;
+        craftFlag = false;
     }
 
 	void Update () {
         if (goalItem == ItemID.NULL)
         {
-            GatherRequiredResources();
+            DetermineGoalItem();
         }
         else
         {
-            DetermineGoalItem();
+            if (craftFlag)
+            {
+                // attempt to craft goalItem until success
+                craftFlag = !camp.Craft(goalItem);
+            }
+            else
+            {
+                // craftFlag is true once enough villagers have been sent for goalItem's cost
+                craftFlag = GatherRequiredResources();
+            }
         }
 	}
 
-    void GatherRequiredResources()
+    bool GatherRequiredResources()
     {
         Resources requiredResources = camp.CalculateRequiredResources(goalItem);
-        ResourceType resourceToGather = ResourceType.NONE;
+        int idleVillagerCount = camp.GetIdleVillagers().Count;
+        ResourceType resourceToGather;
         GameObject targetTile;
-        
-        while (requiredResources >= 1)
+
+        while (requiredResources >= 1 && idleVillagerCount > 0)
         {
-            // TODO: determine resourceToGather
+            resourceToGather = GetFirstResourceOverZero(requiredResources);
 
             switch (resourceToGather)
             {
@@ -65,8 +76,14 @@ public class AI : MonoBehaviour {
             }
 
             if (targetTile)
+            {
                 camp.SendVillagerToGather(targetTile);
+                idleVillagerCount--;
+            }
         }
+
+        // if enough villagers were sent to satisfy the required resources, return true
+        return requiredResources <= 0;
     }
 
     GameObject FindHarvestableTile(TileType type)
@@ -88,10 +105,24 @@ public class AI : MonoBehaviour {
         return null;
     }
 
+    ResourceType GetFirstResourceOverZero(Resources res)
+    {
+        if (res.meat > 0)
+            return ResourceType.MEAT;
+        else if (res.stone > 0)
+            return ResourceType.STONE;
+        else if (res.water > 0)
+            return ResourceType.WATER;
+        else if (res.wheat > 0)
+            return ResourceType.WHEAT;
+        else if (res.wood > 0)
+            return ResourceType.WOOD;
+
+        return ResourceType.NONE;
+    }
+
     void DetermineGoalItem()
     {
 
     }
-
-    
 }
