@@ -6,7 +6,7 @@ public class CraftingButton : MonoBehaviour {
     private List<GameObject> children;
     private List<Vector3> startPositions;
     public bool retracted;
-    private bool lerping;
+    public bool lerping;
     private float lerpTime;
 
 	void Start () {
