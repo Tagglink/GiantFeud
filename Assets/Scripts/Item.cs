@@ -7,9 +7,9 @@ public class Item {
     public string description;
     public Resources resourceCost;
     public Sprite icon;
-    public int craftingTime;
+    public float craftingTime;
 
-    public Item(string _name, string _description, Resources _resourceCost, Sprite _icon, int _craftingTime)
+    public Item(string _name, string _description, Resources _resourceCost, Sprite _icon, float _craftingTime)
     {
         name = _name;
         description = _description;

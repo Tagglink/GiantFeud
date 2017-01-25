@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class Giant : MonoBehaviour {
 
     public Weapon currentWeapon;
     public Armour currentArmour;
+    public Stats baseStats;
+    public List<Stats> buffs;
+    public List<Stats> multipliers;
     public Stats stats;
 
     public GameObject healthDisplay;
@@ -15,14 +19,17 @@ public class Giant : MonoBehaviour {
 
     private int timer;
     private int atkTime;
+    
 
     void Attack()
     {
         int damageDealt;
+
         if (currentWeapon != null)
             damageDealt = stats.atk + currentWeapon.stats.atk;
         else
             damageDealt = stats.atk;
+
         enemyGiant.GetComponent<Giant>().TakeDamage(damageDealt);
     }
 
@@ -36,62 +43,99 @@ public class Giant : MonoBehaviour {
         if (item is Equipment)
         {
             Equipment equipment = item as Equipment;
-            if (equipment is Armour)
-            {
-                Armour armour = equipment as Armour;
-                if (currentArmour != null)
-                    stats -= currentArmour.stats + currentArmour.reinforcementStats * currentArmour.reinforcementCount;
-                currentArmour = armour;
-                stats += currentArmour.stats;
-            }
-            if (equipment is Weapon)
-            {
-                Weapon weapon = equipment as Weapon;
-                if (currentWeapon != null)
-                    stats -= currentWeapon.stats + currentWeapon.reinforcementStats * currentWeapon.reinforcementCount;
-                currentWeapon = weapon;
-                stats += currentWeapon.stats;
-            }
+            Equip(equipment);
         }
         else if (item is Consumable)
         {
             Consumable consumable = item as Consumable;
-            stats += consumable.stats;
-            consumable.action(gameObject.GetComponent<Giant>());
-            if (consumable.stats.duration > -1)
-                StartCoroutine(DelayTemporaryBuff(consumable));
+            Eat(consumable);
         }
     }
 
-    public void Reinforce(Item item)
+    public void Reinforce(Equipment item)
     {
         if (item is Weapon)
         {
             currentWeapon.reinforcementCount += 1;
-            stats += currentWeapon.reinforcementStats;
+            AddBuff(currentWeapon.reinforcementStats);
         }
         else if (item is Armour)
         {
             currentArmour.reinforcementCount += 1;
-            stats += currentArmour.reinforcementStats;
+            AddBuff(currentArmour.reinforcementStats);
         }
+    }
+
+    void Eat(Consumable cons)
+    {
+        cons.action(GetComponent<Giant>());
+
+        if (cons.duration > 0)
+        {
+            StartCoroutine(DelayTemporaryBuff(cons));
+        }
+    }
+
+    void Equip(Equipment equipment)
+    {
+        if (equipment is Armour)
+        {
+            if (currentArmour != null)
+                UnEquip(currentArmour);
+
+            currentArmour = equipment as Armour;
+        }
+        else if (equipment is Weapon)
+        {
+            if (currentWeapon != null)
+                UnEquip(currentWeapon);
+
+            currentWeapon = equipment as Weapon;
+        }
+
+        AddBuff(equipment.stats);
+    }
+
+    void UnEquip(Equipment equipment)
+    {
+        RemoveBuff(equipment.stats + (equipment.reinforcementStats * equipment.reinforcementCount));
+
+        if (equipment is Armour)
+            currentArmour = null;
+        else if (equipment is Weapon)
+            currentWeapon = null;
+    }
+
+    public void AddBuff(Stats buff)
+    {
+        buffs.Add(buff);
+    }
+
+    public void RemoveBuff(Stats buff)
+    {
+        
+    }
+
+    public void AddMultiplier(Stats multiplier)
+    {
+        multipliers.Add(multiplier);
+    }
+
+    public void RemoveMultiplier(Stats multiplier)
+    {
+
     }
 
     IEnumerator DelayTemporaryBuff(Consumable consumable)
     {
-        yield return new WaitForSeconds(consumable.stats.duration);
-        stats -= consumable.stats;
-        consumable.reverseAction(gameObject.GetComponent<Giant>());
+        yield return new WaitForSeconds(consumable.duration);
+        consumable.reverseAction(GetComponent<Giant>());
     }
 
     void Start()
     {
-        stats = new Stats();
-        stats.atk = 5;
-        stats.atkspd = 0.5f;
-        stats.maxHP = 3000;
-        stats.hp = 3000;
-        stats.def = 0;
+        // default Giant stats
+        baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
     }
 
     void Update()
