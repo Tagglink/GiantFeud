@@ -7,48 +7,56 @@ public class HUDManager : MonoBehaviour {
     public GameObject armourButton;
     public GameObject consumableButton;
 
-    public void ShowChildren(GameObject parent)
+    public void ToggleState(GameObject parent)
     {
-        List<GameObject> children = GetChildren(parent);
+        //List<GameObject> children = GetChildren(parent);
 
-        foreach (GameObject c in children)
-        {
-            Animation cAnimation = c.GetComponent<Animation>();
-            if (cAnimation)
-            {
-                cAnimation.Play();
-            }
-        }
+        //foreach (GameObject c in children)
+        //{
+
+        //}
+
+        ToggleOtherParents(parent);
+        ToggleMovement(parent);
     }
 
-    List<GameObject> GetChildren(GameObject parent)
+    void ToggleMovement(GameObject parent)
     {
-        List<GameObject> children = new List<GameObject>();
-        for (int i = 0; i < children.Count; i++)
-        {
-            children.Add(parent.transform.GetChild(i).gameObject);
-        }
-        return children;
+        parent.GetComponent<CraftingButton>().ToggleMovement();
     }
 
-    void GetOtherParents(GameObject parent)
+    //List<GameObject> GetChildren(GameObject parent)
+    //{
+    //    List<GameObject> children = new List<GameObject>();
+    //    for (int i = 0; i < children.Count; i++)
+    //    {
+    //        children.Add(parent.transform.GetChild(i).gameObject);
+    //    }
+    //    return children;
+    //}
+
+    void ToggleOtherParents(GameObject parent)
     {
         if (parent == weaponButton)
         {
-            HideChildren(armourButton, consumableButton);
+            if (!consumableButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(consumableButton);
+            if (!armourButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(armourButton);
         }
         else if (parent == armourButton)
         {
-            HideChildren(weaponButton, consumableButton);
+            if (!weaponButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(weaponButton);
+            if (!consumableButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(consumableButton);
         }
         else if (parent == consumableButton)
         {
-            HideChildren(weaponButton, armourButton);
+            if (!weaponButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(weaponButton);
+            if (!armourButton.GetComponent<CraftingButton>().retracted)
+                ToggleMovement(armourButton);
         }
-    }
-
-    void HideChildren(GameObject parent1, GameObject parent2)
-    {
-        List<GameObject> children = new List<GameObject>();
     }
 }
