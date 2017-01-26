@@ -7,9 +7,9 @@ public class Giant : MonoBehaviour {
 
     public Weapon currentWeapon;
     public Armour currentArmour;
+    public Dictionary<ItemID, Stats> buffs;
+    public Dictionary<ItemID, Stats> multipliers;
     public Stats baseStats;
-    public List<Stats> buffs;
-    public List<Stats> multipliers;
     public Stats stats;
 
     public GameObject healthDisplay;
@@ -19,6 +19,7 @@ public class Giant : MonoBehaviour {
 
     private int timer;
     private int atkTime;
+    private bool statsChanged;
     
 
     void Attack()
@@ -57,13 +58,13 @@ public class Giant : MonoBehaviour {
         if (item is Weapon)
         {
             currentWeapon.reinforcementCount += 1;
-            AddBuff(currentWeapon.reinforcementStats);
         }
         else if (item is Armour)
         {
             currentArmour.reinforcementCount += 1;
-            AddBuff(currentArmour.reinforcementStats);
         }
+
+        statsChanged = true;
     }
 
     void Eat(Consumable cons)
@@ -71,59 +72,47 @@ public class Giant : MonoBehaviour {
         cons.action(GetComponent<Giant>());
 
         if (cons.duration > 0)
-        {
             StartCoroutine(DelayTemporaryBuff(cons));
-        }
+
+        statsChanged = true;
     }
 
     void Equip(Equipment equipment)
     {
         if (equipment is Armour)
         {
-            if (currentArmour != null)
-                UnEquip(currentArmour);
-
             currentArmour = equipment as Armour;
         }
         else if (equipment is Weapon)
         {
-            if (currentWeapon != null)
-                UnEquip(currentWeapon);
-
             currentWeapon = equipment as Weapon;
         }
 
-        AddBuff(equipment.stats);
+        statsChanged = true;
     }
 
-    void UnEquip(Equipment equipment)
+    public void AddBuff(ItemID item, Stats buff)
     {
-        RemoveBuff(equipment.stats + (equipment.reinforcementStats * equipment.reinforcementCount));
-
-        if (equipment is Armour)
-            currentArmour = null;
-        else if (equipment is Weapon)
-            currentWeapon = null;
+        buffs.Add(item, buff);
+        statsChanged = true;
     }
 
-    public void AddBuff(Stats buff)
+    public void RemoveBuff(ItemID item)
     {
-        buffs.Add(buff);
+        buffs.Remove(item);
+        statsChanged = true;
     }
 
-    public void RemoveBuff(Stats buff)
+    public void AddMultiplier(ItemID item, Stats multiplier)
     {
-        
+        multipliers.Add(item, multiplier);
+        statsChanged = true;
     }
 
-    public void AddMultiplier(Stats multiplier)
+    public void RemoveMultiplier(ItemID item)
     {
-        multipliers.Add(multiplier);
-    }
-
-    public void RemoveMultiplier(Stats multiplier)
-    {
-
+        multipliers.Remove(item);
+        statsChanged = true;
     }
 
     IEnumerator DelayTemporaryBuff(Consumable consumable)
@@ -136,14 +125,43 @@ public class Giant : MonoBehaviour {
     {
         // default Giant stats
         baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
+        statsChanged = false;
+    }
+
+    void UpdateStats()
+    {
+        Stats multiplier = new Stats(0, 0, 0, 0, 0, 0);
+
+        stats = baseStats;
+
+        stats += currentArmour.stats + (currentArmour.reinforcementStats * currentArmour.reinforcementCount);
+        stats += currentWeapon.stats + (currentWeapon.reinforcementStats * currentWeapon.reinforcementCount);
+
+        foreach (KeyValuePair<ItemID, Stats> buff in buffs)
+            stats += buff.Value;
+
+        if (multipliers.Count > 0)
+        {
+            foreach (KeyValuePair<ItemID, Stats> mult in multipliers)
+                multiplier += mult.Value;
+
+            stats *= multiplier;
+        }
     }
 
     void Update()
     {
+        if (statsChanged)
+        {
+            UpdateStats();
+            statsChanged = false;
+        }
+
         if (stats.hp > stats.maxHP)
         {
             stats.hp = stats.maxHP;
         }
+
         if (stats.hp < 0)
         {
             stats.hp = 0;
