@@ -8,9 +8,11 @@ public class CraftingButton : MonoBehaviour {
     public bool retracted;
     public bool lerping;
     private float lerpTime;
+    private float speed;
 
 	void Start () {
         lerpTime = 0;
+        speed = 2;
         retracted = true;
         lerping = false;
         children = GetChildren();
@@ -34,11 +36,11 @@ public class CraftingButton : MonoBehaviour {
 
     void Move()
     {
+        lerpTime += Time.deltaTime * speed;
         for (int i = 0; i < children.Count; i++)
         {
             GameObject child = children[i];
             RectTransform rectTransform = child.GetComponent<RectTransform>();
-            lerpTime += Time.deltaTime;
 
             if (retracted)
             {
@@ -56,6 +58,22 @@ public class CraftingButton : MonoBehaviour {
     public void ToggleMovement()
     {
         lerping = true;
+        if (!retracted)
+        {
+            RetractChildren();
+        }
+    }
+
+    public void RetractChildren()
+    {
+        foreach (GameObject c in children)
+        {
+            ItemButton itemButton = c.GetComponent<ItemButton>();
+            if (!itemButton.hidden)
+            {
+                itemButton.lerping = true;
+            }
+        }
     }
 
     List<GameObject> GetChildren()
