@@ -89,12 +89,10 @@ public class AI : MonoBehaviour {
         {
             return AIAction.HEAL;
         }
-        else if (goalItem == ItemID.NULL)
+        else
         {
             return AIAction.BUILD_PATH;
         }
-        
-        return AIAction.NONE;
     }
 
     bool GatherRequiredResources()

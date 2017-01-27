@@ -11,7 +11,7 @@ public class Camp : MonoBehaviour {
     public Resources resources;
 
     public GameObject giant; // inspector set
-    public GameObject homeTile; // set by inspector
+    public GameObject homeTile; // inspector set
     public Giant giantScript;
 
     public int villagerCount; // number of unlocked villagers
@@ -105,26 +105,27 @@ public class Camp : MonoBehaviour {
         return ret;
     }
 
-    public bool Craft(ItemID item)
+    public bool Craft(ItemID itemID)
     {
-        Item it = Items.itemList[item];
+        Item it = Items.itemList[itemID];
 
         if (it.resourceCost <= resources)
         {
-            StartCoroutine(WaitForCraft(item, it));
+            resources -= it.resourceCost;
+            StartCoroutine(WaitForCraft(itemID, it));
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     // returns false if item was not found in the item stash
     public bool UseItem(ItemID id)
     {
         for (int i = 0; i < itemStash.Count; i++) { 
+
             ItemID item = itemStash[i];
+
             if (item == id)
             {
                 giantScript.UseItem(Items.itemList[id]);
@@ -138,7 +139,6 @@ public class Camp : MonoBehaviour {
     IEnumerator WaitForCraft(ItemID id, Item item)
     {
         yield return new WaitForSeconds(item.craftingTime);
-        resources -= item.resourceCost;
         itemStash.Add(id);
     }
 }
