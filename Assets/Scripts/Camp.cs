@@ -6,12 +6,13 @@ public class Camp : MonoBehaviour {
 
     public static int maxVillagers;
 
-    public List<Item> itemStash;
+    public List<ItemID> itemStash;
     public List<GameObject> villagers;
     public Resources resources;
 
-    public GameObject giant;
+    public GameObject giant; // inspector set
     public GameObject homeTile; // set by inspector
+    public Giant giantScript;
 
     public int villagerCount; // number of unlocked villagers
     public bool isCrafting;
@@ -20,12 +21,13 @@ public class Camp : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         maxVillagers = 6;
-        itemStash = new List<Item>();
+        itemStash = new List<ItemID>();
         villagers = new List<GameObject>();
         resources = new Resources();
         villagerCount = 2;
         isCrafting = false;
         craftingProgress = 0.0f;
+        giantScript = giant.GetComponent<Giant>();
         
         // Villagers should already be instantiated in the scene as children of the camp and out of camera view.
         for (int i = 0; i < maxVillagers; i++) 
@@ -109,7 +111,7 @@ public class Camp : MonoBehaviour {
 
         if (it.resourceCost <= resources)
         {
-            StartCoroutine(WaitForCraft(it));
+            StartCoroutine(WaitForCraft(item, it));
             return true;
         }
         else
@@ -118,10 +120,25 @@ public class Camp : MonoBehaviour {
         }
     }
 
-    IEnumerator WaitForCraft(Item item)
+    // returns false if item was not found in the item stash
+    public bool UseItem(ItemID id)
+    {
+        for (int i = 0; i < itemStash.Count; i++) { 
+            ItemID item = itemStash[i];
+            if (item == id)
+            {
+                giantScript.UseItem(Items.itemList[id]);
+                itemStash.RemoveAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    IEnumerator WaitForCraft(ItemID id, Item item)
     {
         yield return new WaitForSeconds(item.craftingTime);
         resources -= item.resourceCost;
-        itemStash.Add(item);
+        itemStash.Add(id);
     }
 }

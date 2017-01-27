@@ -1,38 +1,101 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum AIAction { NONE, BUILD_PATH, HEAL }
+
 public class AI : MonoBehaviour {
 
-    public Camp camp;
+    public Giant giant; // inspector set
+    public Camp camp; // inspector set
 
     private ItemID goalItem;
+    private AIAction action;
     private bool craftFlag;
+
+    private ItemID[] buildPath;
+    private int buildPathIndex;
 
     void Start()
     {
         goalItem = ItemID.NULL;
+        action = AIAction.NONE;
         craftFlag = false;
+        buildPathIndex = 0;
+
+        buildPath = new ItemID[]
+        {
+            ItemID.SPEAR, ItemID.LEATHERARMOUR, ItemID.AXE, ItemID.SWORD, ItemID.STONEARMOUR, ItemID.HIDEARMOUR
+        };
     }
 
 	void Update () {
-        if (goalItem == ItemID.NULL)
+
+        action = DetermineAction();
+        DetermineGoalItem();
+
+        if (craftFlag)
         {
-            DetermineGoalItem();
+            // attempt to craft goalItem until success
+            craftFlag = !camp.Craft(goalItem);
+            if (!craftFlag)
+            {
+                goalItem = ItemID.NULL; // if success, set item back to null
+                if (action == AIAction.BUILD_PATH && buildPathIndex < buildPath.Length - 1)
+                    buildPathIndex++;
+            }
         }
         else
         {
-            if (craftFlag)
-            {
-                // attempt to craft goalItem until success
-                craftFlag = !camp.Craft(goalItem);
-            }
-            else
-            {
-                // craftFlag is true once enough villagers have been sent for goalItem's cost
-                craftFlag = GatherRequiredResources();
-            }
+            // craftFlag is true once enough villagers have been sent for goalItem's cost
+            craftFlag = GatherRequiredResources();
         }
-	}
+
+        // if there is an item in the stash, use it right away
+        if (camp.itemStash.Count > 0)
+            camp.UseItem(camp.itemStash[0]);
+    }
+
+    void DetermineGoalItem()
+    {
+        switch (action)
+        {
+            case AIAction.HEAL:
+                BuildHeal();
+                break;
+            case AIAction.BUILD_PATH:
+                BuildNextOnPath();
+                break;
+            case AIAction.NONE:
+                // do nothing!
+                break;
+            default:
+                break;
+        }
+    }
+
+    void BuildHeal()
+    {
+        goalItem = ItemID.MEATSTEW;
+    }
+
+    void BuildNextOnPath()
+    {
+        goalItem = buildPath[buildPathIndex];
+    }
+
+    AIAction DetermineAction()
+    {
+        if (giant.stats.hp < giant.stats.maxHP / 2)
+        {
+            return AIAction.HEAL;
+        }
+        else if (goalItem == ItemID.NULL)
+        {
+            return AIAction.BUILD_PATH;
+        }
+        
+        return AIAction.NONE;
+    }
 
     bool GatherRequiredResources()
     {
@@ -41,7 +104,7 @@ public class AI : MonoBehaviour {
         ResourceType resourceToGather;
         GameObject targetTile;
 
-        while (requiredResources >= 1 && idleVillagerCount > 0)
+        while (!(requiredResources <= 0) && idleVillagerCount > 0)
         {
             resourceToGather = GetFirstResourceOverZero(requiredResources);
 
@@ -119,10 +182,5 @@ public class AI : MonoBehaviour {
             return ResourceType.WOOD;
 
         return ResourceType.NONE;
-    }
-
-    void DetermineGoalItem()
-    {
-
     }
 }

@@ -11,16 +11,49 @@ public class Giant : MonoBehaviour {
     public Dictionary<ItemID, Stats> multipliers;
     public Stats baseStats;
     public Stats stats;
-
-    public GameObject healthDisplay;
-    public GameObject enemyGiant;
-
-    public GameObject camp;
+    
+    public GameObject enemyGiant; // inspector set
+    public GameObject camp; // inspector set
 
     private int timer;
     private int atkTime;
     private bool statsChanged;
-    
+
+    void Start()
+    {
+        buffs = new Dictionary<ItemID, Stats>();
+        multipliers = new Dictionary<ItemID, Stats>();
+        stats = new Stats();
+        statsChanged = true;
+        timer = 0;
+        atkTime = 0;
+
+        // default Giant stats
+        baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
+
+        currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
+        currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
+    }
+
+    void Update()
+    {
+        if (statsChanged)
+        {
+            UpdateStats();
+            statsChanged = false;
+        }
+
+        if (stats.hp > stats.maxHP)
+        {
+            stats.hp = stats.maxHP;
+        }
+
+        if (stats.hp < 0)
+        {
+            stats.hp = 0;
+        }
+    }
+
 
     void Attack()
     {
@@ -121,13 +154,6 @@ public class Giant : MonoBehaviour {
         consumable.reverseAction(GetComponent<Giant>());
     }
 
-    void Start()
-    {
-        // default Giant stats
-        baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
-        statsChanged = false;
-    }
-
     void UpdateStats()
     {
         Stats multiplier = new Stats(0, 0, 0, 0, 0, 0);
@@ -146,25 +172,6 @@ public class Giant : MonoBehaviour {
                 multiplier += mult.Value;
 
             stats *= multiplier;
-        }
-    }
-
-    void Update()
-    {
-        if (statsChanged)
-        {
-            UpdateStats();
-            statsChanged = false;
-        }
-
-        if (stats.hp > stats.maxHP)
-        {
-            stats.hp = stats.maxHP;
-        }
-
-        if (stats.hp < 0)
-        {
-            stats.hp = 0;
         }
     }
 
