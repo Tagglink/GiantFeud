@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum VillagerState { NONE, IDLE, WALKING, GATHERING }
-public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOURCE }
+public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOURCE, ESCAPE, WALK }
 
 public class Villager : MonoBehaviour {
 
     public VillagerState state;
     public ResourceType resource;
+    public ItemID item;
     public int speed;
     public int resourcesCarried;
     public int efficiency; // the amount of resources to pick up per Gather
@@ -23,8 +24,11 @@ public class Villager : MonoBehaviour {
     Camp camp; // the camp the villager belongs to.
     Animator animator;
 
-	// Use this for initialization
-	void Start () {
+    VillagerArriveAction arriveActionNext;
+    GameObject targetTileNext;
+
+    // Use this for initialization
+    void Start () {
         currentTargetPositionIndex = 0;
         speed = 2;
         gatherTime = 5.0f;
@@ -40,6 +44,8 @@ public class Villager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        SetDepth();
+
 	    if (state == VillagerState.WALKING)
         {
             Move();
@@ -48,6 +54,20 @@ public class Villager : MonoBehaviour {
                 Arrived();
         }
 	}
+
+    void SetDepth()
+    {
+        Vector3 targetPosition = transform.position;
+        targetPosition.z = transform.position.y;
+        transform.position = targetPosition;
+    }
+
+    void Escape()
+    {
+        state = VillagerState.IDLE;
+        MoveOutOfBounds();
+        animator.SetTrigger("idle");
+    }
 
     void MoveIntoBounds()
     {
@@ -65,6 +85,13 @@ public class Villager : MonoBehaviour {
         MoveIntoBounds();
         resource = Resources.TileToResource(tile.GetComponent<Tile>().type);
         MoveTo(tile, VillagerArriveAction.GATHER_RESOURCE);
+    }
+
+    public void UseItem(ItemID id)
+    {
+        MoveIntoBounds();
+        item = id;
+        MoveTo(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
     Transform[] FindTilePathTo(GameObject tile)
@@ -142,10 +169,20 @@ public class Villager : MonoBehaviour {
                 StartGather(at);
                 break;
             case VillagerArriveAction.LEAVE_RESOURCE:
-                LeaveResourceAtCamp();
+                GiveCampResource();
+                Escape();
                 break;
             case VillagerArriveAction.USE_ITEM:
-                // TODO: Giant use item function
+                ApplyItemToGiant();
+                MoveTo(camp.homeTile, VillagerArriveAction.ESCAPE);
+                break;
+            case VillagerArriveAction.ESCAPE:
+                Escape();
+                break;
+            case VillagerArriveAction.WALK:
+                MoveTo(targetTileNext, arriveActionNext);
+                targetTileNext = null;
+                arriveActionNext = VillagerArriveAction.NONE;
                 break;
         }
 
@@ -162,12 +199,13 @@ public class Villager : MonoBehaviour {
         StartCoroutine(WaitForGather(at));
     }
 
-    void LeaveResourceAtCamp()
+    void ApplyItemToGiant()
     {
-        GiveCampResource();
-        MoveOutOfBounds();
-        state = VillagerState.IDLE;
-        animator.SetTrigger("idle");
+        if (item == ItemID.NULL)
+            return;
+
+        Item itemObject = Items.itemList[item];
+        camp.giant.GetComponent<Giant>().UseItem(itemObject);
     }
 
     void GiveCampResource()
@@ -185,14 +223,59 @@ public class Villager : MonoBehaviour {
         MoveTo(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 
+    void Pathfind(GameObject tile, VillagerArriveAction actionAtArrival)
+    {
+        GameObject cornerTileUpper = Map.tiles[2][1];
+        GameObject cornerTileLower = Map.tiles[12][1];
+
+        Vector3 cornerUpperPos = cornerTileUpper.transform.position + tileCenterPositionOffset;
+        Vector3 cornerLowerPos = cornerTileLower.transform.position + tileCenterPositionOffset;
+
+        Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
+        Vector2 currentTileCenter = transform.position - feetPositionOffset;
+        Vector3 directionToTile = dstTileCenter - currentTileCenter;
+        Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
+
+        GameObject tileNext;
+
+        if (LineIntersect(rayToTile, cornerUpperPos, cornerLowerPos))
+        {
+            arriveActionNext = actionAtArrival;
+            targetTileNext = tile;
+
+            tileNext = FindClosestToRay(rayToTile, cornerTileUpper, cornerTileLower);
+            MoveTo(tileNext, VillagerArriveAction.WALK);
+        }
+        else
+        {
+            MoveTo(tile, actionAtArrival);
+        }
+    }
+
+    bool LineIntersect(Ray2D ray, Vector2 lineEnd1, Vector2 lineEnd2)
+    {
+        float k = ray.direction.y / ray.direction.x;
+        float x = lineEnd1.x - ray.origin.x;
+        float y = k * x + ray.origin.y;
+
+        return (y < lineEnd1.y && y > lineEnd2.y) || (y < lineEnd2.y && y > lineEnd1.y);
+    }
+
     void MoveTo(GameObject tile, VillagerArriveAction actionAtArrival)
     {
         Tile tileScript = tile.GetComponent<Tile>();
 
         arriveAction = actionAtArrival;
         tileScript.occupied = true;
+
         movePositions = FindTilePathTo(tile);
+
         state = VillagerState.WALKING;
         animator.SetTrigger("walking");
+    }
+
+    GameObject FindClosestToRay(Ray2D ray, GameObject obj1, GameObject obj2)
+    {
+        
     }
 }
