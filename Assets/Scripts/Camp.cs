@@ -12,6 +12,9 @@ public class Camp : MonoBehaviour {
 
     public GameObject giant; // inspector set
     public GameObject homeTile; // inspector set
+    public GameObject giantTile; // inspector set
+
+    [HideInInspector]
     public Giant giantScript;
 
     public int villagerCount; // number of unlocked villagers
@@ -49,9 +52,33 @@ public class Camp : MonoBehaviour {
         if (idleVillagers.Count > 0)
             villager = idleVillagers[0].GetComponent<Villager>();
         else
-            return false; // if no villagers are idle, return false
+        {
+            // TODO: Give the player some error message like "You don't have enough idle villagers for that!"
+            // (do not send if it's the opponent's camp)
+            return false;
+        }
 
         villager.Gather(tile);
+        return true;
+    }
+
+    public bool SendVillagerToUseItem(ItemID item)
+    {
+        List<GameObject> idleVillagers = GetIdleVillagers();
+        Villager villager;
+
+        if (idleVillagers.Count > 0)
+        {
+            villager = idleVillagers[0].GetComponent<Villager>();
+        }
+        else
+        {
+            // TODO: Give the player some error message like "You don't have enough idle villagers for that!"
+            // (do not send if it's the opponent's camp)
+            return false;
+        }
+
+        villager.UseItem(item);
         return true;
     }
 
@@ -116,7 +143,10 @@ public class Camp : MonoBehaviour {
             return true;
         }
         else
+        {
+            // TODO: show the player some error message like "You don't have enough resources to do that!"
             return false;
+        }
     }
 
     // returns false if item was not found in the item stash
@@ -128,7 +158,7 @@ public class Camp : MonoBehaviour {
 
             if (item == id)
             {
-                giantScript.UseItem(Items.itemList[id]);
+                SendVillagerToUseItem(id);
                 itemStash.RemoveAt(i);
                 return true;
             }

@@ -24,12 +24,18 @@ public class Player : MonoBehaviour {
 
         offScale = new Vector3(0, 0.25f, 0);
         centerOfTiles = new List<Transform>();
+
         for (var i = 0; i < map.transform.childCount; i++)
         {
             centerOfTiles.Add(map.transform.GetChild(i));
         }
+
         changeValue = 1;
         highlight = Color.white;
+
+        // testing
+
+        camp.resources = new Resources(99, 99, 99, 99, 99);
 	}
 
 	void Update ()

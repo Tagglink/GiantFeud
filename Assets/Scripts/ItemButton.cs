@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 using System;
@@ -6,6 +7,7 @@ using System;
 public class ItemButton : MonoBehaviour {
 
     public ItemID itemID;
+    public Camp playerCamp; // inspector set
     private GameObject infoBox;
 
     // Lerp variables
@@ -20,13 +22,29 @@ public class ItemButton : MonoBehaviour {
         lerping = false;
         hidden = true;
         speed = 2;
-        GameObject playerGiant = GameObject.Find("Giant Player");
         infoBox = transform.GetChild(0).gameObject;
         startPoint = infoBox.transform.localPosition;
         infoBox.transform.localScale = Vector3.zero;
         infoBox.transform.localPosition = Vector3.zero;
         infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
-        infoBox.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate () { playerGiant.GetComponent<Giant>().camp.GetComponent<Camp>().Craft(itemID); });
+        infoBox.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(Craft(itemID));
+        infoBox.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(Use(itemID));
+
+        // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
+    }
+
+    UnityAction Craft(ItemID id)
+    {
+        return new UnityAction(() => {
+            playerCamp.Craft(id);
+        });
+    }
+
+    UnityAction Use(ItemID id)
+    {
+        return new UnityAction(() => {
+            playerCamp.UseItem(id);
+        });
     }
 
 	public void Move()
