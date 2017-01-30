@@ -36,6 +36,9 @@ public class Villager : MonoBehaviour {
         efficiency = 1;
         resource = ResourceType.NONE;
         state = VillagerState.IDLE;
+        arriveAction = VillagerArriveAction.NONE;
+        arriveActionNext = VillagerArriveAction.NONE;
+        targetTileNext = null;
         camp = GetComponentInParent<Camp>();
         animator = GetComponent<Animator>();
         tileCenterPositionOffset = new Vector3(0, 0.25f, 0);
@@ -84,14 +87,14 @@ public class Villager : MonoBehaviour {
     {
         MoveIntoBounds();
         resource = Resources.TileToResource(tile.GetComponent<Tile>().type);
-        MoveTo(tile, VillagerArriveAction.GATHER_RESOURCE);
+        Pathfind(tile, VillagerArriveAction.GATHER_RESOURCE);
     }
 
     public void UseItem(ItemID id)
     {
         MoveIntoBounds();
         item = id;
-        MoveTo(camp.giantTile, VillagerArriveAction.USE_ITEM);
+        Pathfind(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
     Transform[] FindTilePathTo(GameObject tile)
@@ -220,11 +223,12 @@ public class Villager : MonoBehaviour {
         yield return new WaitForSeconds(gatherTime);
         at.occupied = false;
         resourcesCarried = efficiency;
-        MoveTo(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
+        Pathfind(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 
     void Pathfind(GameObject tile, VillagerArriveAction actionAtArrival)
     {
+        
         GameObject cornerTileUpper = Map.tiles[2][1];
         GameObject cornerTileLower = Map.tiles[12][1];
 
@@ -276,6 +280,20 @@ public class Villager : MonoBehaviour {
 
     GameObject FindClosestToRay(Ray2D ray, GameObject obj1, GameObject obj2)
     {
-        
+        Vector2 pos1 = obj1.transform.position;
+        Vector2 pos2 = obj2.transform.position;
+
+        if (ShortestDistanceFromRayToPoint(ray, pos1) > ShortestDistanceFromRayToPoint(ray, pos2))
+            return obj2;
+        else
+            return obj1;
+    }
+
+    float ShortestDistanceFromRayToPoint(Ray2D ray, Vector2 p)
+    {
+        float x1 = ray.origin.x, y1 = ray.origin.y;
+        float x2 = ray.direction.x, y2 = ray.direction.y;
+
+        return Mathf.Abs(((y2 - y1) * p.x) - ((x2 - x1) * p.y) + (x2 * y1) - (y2 * x1)) / Mathf.Sqrt(Mathf.Pow((y2 - y1), 2) + Mathf.Pow((x2 - x1), 2));
     }
 }
