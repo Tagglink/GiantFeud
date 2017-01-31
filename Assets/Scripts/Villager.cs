@@ -38,6 +38,7 @@ public class Villager : MonoBehaviour {
         state = VillagerState.IDLE;
         arriveAction = VillagerArriveAction.NONE;
         arriveActionNext = VillagerArriveAction.NONE;
+        item = ItemID.NULL;
         targetTileNext = null;
         camp = GetComponentInParent<Camp>();
         animator = GetComponent<Animator>();
@@ -104,14 +105,19 @@ public class Villager : MonoBehaviour {
         RaycastHit2D hit;
         Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
         Vector2 currentTileCenter = transform.position - feetPositionOffset;
-        Vector3 directionToTile = dstTileCenter - currentTileCenter;
+        Vector2 directionToTile = dstTileCenter - currentTileCenter;
+        Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
+        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, 45.0f, 4);
+
         Collider2D lastCollider = null;
 
         var walkableTileLayerMask = 1 << 8;
 
-        do
+        /*do
         {
-            hit = Physics2D.Raycast(currentTileCenter, directionToTile, 0.5f, walkableTileLayerMask);
+            hit = Physics2D.Raycast(moveOptions[0].origin, moveOptions[0].direction, 0.5f, walkableTileLayerMask);
+            if (!hit)
+                hit = Physics2D.Raycast(moveOptions[1].origin, moveOptions[1].direction, 0.5f, walkableTileLayerMask);
 
             if (lastCollider)
                 lastCollider.enabled = true; // re-enable the collider as we have passed it
@@ -125,12 +131,42 @@ public class Villager : MonoBehaviour {
                 currentTileCenter = hit.transform.position + tileCenterPositionOffset;
                 directionToTile = dstTileCenter - currentTileCenter;
             }
-        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
+        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.*/
 
         if (lastCollider)
             lastCollider.enabled = true;
 
         return ret.ToArray();
+    }
+
+    // takes a ray and returns two other rays fixed to a certain dividing of angles.
+    // the first ray in the list is the closest rounded
+    Ray2D[] RayAngleAdjust(Ray2D originRay, float offset, int divides)
+    {
+        if (divides == 0)
+            return new Ray2D[2]; // can't divide by zero!
+
+        Ray2D[] ret = new Ray2D[] { originRay, originRay };
+
+        Vector2 direction = originRay.direction - originRay.origin;
+        float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
+        int step = 360 / divides;
+
+        float steps = Mathf.Round(angle / step);
+        float floored = Mathf.Floor(angle / step);
+
+        float a1 = steps * step + offset;
+        float a2;
+
+        if (steps - floored == 1)
+            a2 = floored * step + offset;
+        else
+            a2 = (floored + 1) * step + offset;
+
+        ret[0].direction = new Vector2(Mathf.Cos(a1 * Mathf.Deg2Rad), Mathf.Sin(a1 * Mathf.Deg2Rad)) + originRay.origin;
+        ret[1].direction = new Vector2(Mathf.Cos(a2 * Mathf.Deg2Rad), Mathf.Sin(a2 * Mathf.Deg2Rad)) + originRay.origin;
+
+        return ret;
     }
 
     void Move()
@@ -188,8 +224,6 @@ public class Villager : MonoBehaviour {
                 arriveActionNext = VillagerArriveAction.NONE;
                 break;
         }
-
-        arriveAction = VillagerArriveAction.NONE;
     }
 
     void StartGather(Tile at)
@@ -228,7 +262,6 @@ public class Villager : MonoBehaviour {
 
     void Pathfind(GameObject tile, VillagerArriveAction actionAtArrival)
     {
-        
         GameObject cornerTileUpper = Map.tiles[2][1];
         GameObject cornerTileLower = Map.tiles[12][1];
 
