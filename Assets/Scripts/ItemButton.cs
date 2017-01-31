@@ -49,8 +49,18 @@ public class ItemButton : MonoBehaviour {
 
 	public void Move()
     {
-        lerping = true;
+        StartLerping();
         GetComponentInParent<CraftingButton>().RetractChildren();
+    }
+
+    public void StartLerping()
+    {
+        lerping = true;
+    }
+
+    public void SwitchDirection()
+    {
+        hidden = !hidden;
     }
 
     void Update()

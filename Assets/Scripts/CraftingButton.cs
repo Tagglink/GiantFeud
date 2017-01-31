@@ -71,14 +71,19 @@ public class CraftingButton : MonoBehaviour {
             ItemButton itemButton = c.GetComponent<ItemButton>();
             if (!itemButton.hidden)
             {
-                itemButton.lerping = true;
+                itemButton.StartLerping();
             }
         }
     }
 
+    bool LerpingAndHidden(ItemButton itemButton)
+    {
+        return itemButton.lerping && itemButton.hidden;
+    }
+
     List<GameObject> GetChildren()
     {
-        List<GameObject> ret = new List<GameObject>();
+        var ret = new List<GameObject>();
         for (int i = 0; i < transform.childCount; i++)
         {
             ret.Add(transform.GetChild(i).gameObject);
@@ -88,7 +93,7 @@ public class CraftingButton : MonoBehaviour {
 
     List<Vector3> GetPositions(List<GameObject> gameObjects)
     {
-        List<Vector3> ret = new List<Vector3>();
+        var ret = new List<Vector3>();
         foreach (GameObject a in gameObjects)
         {
             ret.Add(a.GetComponent<RectTransform>().localPosition);
