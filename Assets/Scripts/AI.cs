@@ -7,6 +7,7 @@ public class AI : MonoBehaviour {
 
     public Giant giant; // inspector set
     public Camp camp; // inspector set
+    public bool active;
 
     private ItemID goalItem;
     private AIAction action;
@@ -20,6 +21,7 @@ public class AI : MonoBehaviour {
         goalItem = ItemID.NULL;
         action = AIAction.NONE;
         craftFlag = false;
+        active = false;
         buildPathIndex = 0;
 
         buildPath = new ItemID[]
@@ -29,30 +31,32 @@ public class AI : MonoBehaviour {
     }
 
 	void Update () {
-
-        action = DetermineAction();
-        DetermineGoalItem();
-
-        if (craftFlag)
+        if (active)
         {
-            // attempt to craft goalItem until success
-            craftFlag = !camp.Craft(goalItem);
-            if (!craftFlag)
+            action = DetermineAction();
+            DetermineGoalItem();
+
+            if (craftFlag)
             {
-                goalItem = ItemID.NULL; // if success, set item back to null
-                if (action == AIAction.BUILD_PATH && buildPathIndex < buildPath.Length - 1)
-                    buildPathIndex++;
+                // attempt to craft goalItem until success
+                craftFlag = !camp.Craft(goalItem);
+                if (!craftFlag)
+                {
+                    goalItem = ItemID.NULL; // if success, set item back to null
+                    if (action == AIAction.BUILD_PATH && buildPathIndex < buildPath.Length - 1)
+                        buildPathIndex++;
+                }
             }
-        }
-        else
-        {
-            // craftFlag is true once enough villagers have been sent for goalItem's cost
-            craftFlag = GatherRequiredResources();
-        }
+            else
+            {
+                // craftFlag is true once enough villagers have been sent for goalItem's cost
+                craftFlag = GatherRequiredResources();
+            }
 
-        // if there is an item in the stash, use it right away
-        if (camp.itemStash.Count > 0)
-            camp.UseItem(camp.itemStash[0]);
+            // if there is an item in the stash, use it right away
+            if (camp.itemStash.Count > 0)
+                camp.UseItem(camp.itemStash[0]);
+        }
     }
 
     void DetermineGoalItem()

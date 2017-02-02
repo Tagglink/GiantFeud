@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public enum VillagerState { NONE, IDLE, WALKING, GATHERING }
 public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOURCE, ESCAPE, WALK }
@@ -106,18 +107,22 @@ public class Villager : MonoBehaviour {
         Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
         Vector2 currentTileCenter = transform.position - feetPositionOffset;
         Vector2 directionToTile = dstTileCenter - currentTileCenter;
+
         Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
-        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, 45.0f, 4);
+        float[] angles = new float[] { 45.0f, 135.0f, 225.0f, 315.0f };
+        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, angles);
+        int hitCount = angles.Length;
 
         Collider2D lastCollider = null;
 
         var walkableTileLayerMask = 1 << 8;
 
-        /*do
+        do
         {
-            hit = Physics2D.Raycast(moveOptions[0].origin, moveOptions[0].direction, 0.5f, walkableTileLayerMask);
-            if (!hit)
-                hit = Physics2D.Raycast(moveOptions[1].origin, moveOptions[1].direction, 0.5f, walkableTileLayerMask);
+            do
+            {
+                hit = Physics2D.Raycast(moveOptions[angles.Length - hitCount].origin, moveOptions[angles.Length - hitCount].direction, 0.5f, walkableTileLayerMask);
+            } while (!hit && --hitCount != 0);
 
             if (lastCollider)
                 lastCollider.enabled = true; // re-enable the collider as we have passed it
@@ -127,11 +132,12 @@ public class Villager : MonoBehaviour {
                 ret.Add(hit.transform);
                 hit.collider.enabled = false; // disable the collider as to not hit it again
                 lastCollider = hit.collider; // cache the collider to re-enable later
-
-                currentTileCenter = hit.transform.position + tileCenterPositionOffset;
-                directionToTile = dstTileCenter - currentTileCenter;
+                
+                rayToTile.origin = hit.transform.position + tileCenterPositionOffset;
+                rayToTile.direction = dstTileCenter - rayToTile.origin;
+                moveOptions = RayAngleAdjust(rayToTile, angles);
             }
-        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.*/
+        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
 
         if (lastCollider)
             lastCollider.enabled = true;
@@ -141,7 +147,7 @@ public class Villager : MonoBehaviour {
 
     // takes a ray and returns two other rays fixed to a certain dividing of angles.
     // the first ray in the list is the closest rounded
-    Ray2D[] RayAngleAdjust(Ray2D originRay, float offset, int divides)
+    /*Ray2D[] RayAngleAdjust(Ray2D originRay, float offset, int divides)
     {
         if (divides == 0)
             return new Ray2D[2]; // can't divide by zero!
@@ -151,6 +157,11 @@ public class Villager : MonoBehaviour {
         Vector2 direction = originRay.direction - originRay.origin;
         float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
         int step = 360 / divides;
+
+        while (angle <= 0)
+            angle += 360;
+
+        angle -= offset;
 
         float steps = Mathf.Round(angle / step);
         float floored = Mathf.Floor(angle / step);
@@ -167,6 +178,63 @@ public class Villager : MonoBehaviour {
         ret[1].direction = new Vector2(Mathf.Cos(a2 * Mathf.Deg2Rad), Mathf.Sin(a2 * Mathf.Deg2Rad)) + originRay.origin;
 
         return ret;
+    }*/
+
+        // assuming the list of angles is sorted by lowest first
+        // and the angles are limited to 0 <= x < 360
+    Ray2D[] RayAngleAdjust(Ray2D originRay, float[] angles)
+    {
+        Ray2D[] ret = new Ray2D[angles.Length];
+
+        float angle = Mathf.Rad2Deg * Mathf.Atan2(originRay.direction.y, originRay.direction.x);
+        float a;
+
+        while (angle < 0)
+            angle += 360;
+
+        angles = SortByPivot(angles, angle);
+
+        for (int i = 0; i < angles.Length; i++)
+        {
+            a = angles[i];
+            ret[i].origin = originRay.origin;
+            ret[i].direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * a), Mathf.Sin(Mathf.Deg2Rad * a));
+        }
+
+        return ret;
+    }
+
+    float[] SortByPivot(float[] nums, float pivot)
+    {
+        List<float> sortedNums = new List<float>();
+        float num_current;
+
+        sortedNums.Add(nums[0]);
+
+        for (int i = 0; i < nums.Length; i++)
+        {
+            num_current = nums[i];
+
+            for (int j = 0; j < sortedNums.Count; j++)
+            {
+                if (sortedNums[j] != Closest(pivot, num_current, sortedNums[j]))
+                {
+                    sortedNums.Insert(j, num_current);
+                }
+            }
+        }
+
+        return sortedNums.ToArray();
+    }
+
+    // returns either a1 or a2 depending on which one is closest to pivot
+    // (a1 has priority)
+    float Closest(float pivot, float a1, float a2)
+    {
+        if (Mathf.Abs(pivot - a1) <= Mathf.Abs(pivot - a2))
+            return a1;
+        else
+            return a2;
     }
 
     void Move()
