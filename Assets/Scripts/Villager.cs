@@ -132,12 +132,12 @@ public class Villager : MonoBehaviour {
                 ret.Add(hit.transform);
                 hit.collider.enabled = false; // disable the collider as to not hit it again
                 lastCollider = hit.collider; // cache the collider to re-enable later
-                
+
                 rayToTile.origin = hit.transform.position + tileCenterPositionOffset;
                 rayToTile.direction = dstTileCenter - rayToTile.origin;
                 moveOptions = RayAngleAdjust(rayToTile, angles);
             }
-        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
+        } while (false);//hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
 
         if (lastCollider)
             lastCollider.enabled = true;
@@ -180,8 +180,11 @@ public class Villager : MonoBehaviour {
         return ret;
     }*/
 
-        // assuming the list of angles is sorted by lowest first
-        // and the angles are limited to 0 <= x < 360
+    // assuming the list of angles is sorted by lowest first
+    // and the angles are limited to 0 <= x < 360
+    // returns a list of rays with a length equal to the length of angles,
+    // with directions adjusted to the angles.
+    // the ray with a direction closest to originRay is first in the list, and so on
     Ray2D[] RayAngleAdjust(Ray2D originRay, float[] angles)
     {
         Ray2D[] ret = new Ray2D[angles.Length];
@@ -192,7 +195,7 @@ public class Villager : MonoBehaviour {
         while (angle < 0)
             angle += 360;
 
-        angles = SortByPivot(angles, angle);
+        angles = SortAnglesByPivot(angles, angle);
 
         for (int i = 0; i < angles.Length; i++)
         {
@@ -204,22 +207,29 @@ public class Villager : MonoBehaviour {
         return ret;
     }
 
-    float[] SortByPivot(float[] nums, float pivot)
+    // sorts a list of angles by closest to pivot.
+    float[] SortAnglesByPivot(float[] nums, float pivot)
     {
         List<float> sortedNums = new List<float>();
         float num_current;
 
         sortedNums.Add(nums[0]);
 
-        for (int i = 0; i < nums.Length; i++)
+        for (int i = 1; i < nums.Length; i++)
         {
             num_current = nums[i];
 
             for (int j = 0; j < sortedNums.Count; j++)
             {
-                if (sortedNums[j] != Closest(pivot, num_current, sortedNums[j]))
+                if (sortedNums[j] != ClosestAngle(pivot, num_current, sortedNums[j])) // if it's closer, place before
                 {
                     sortedNums.Insert(j, num_current);
+                    break;
+                }
+                else if (j == sortedNums.Count - 1) // if it's the furthest away number, place at end
+                {
+                    sortedNums.Add(num_current);
+                    break;
                 }
             }
         }
@@ -232,6 +242,21 @@ public class Villager : MonoBehaviour {
     float Closest(float pivot, float a1, float a2)
     {
         if (Mathf.Abs(pivot - a1) <= Mathf.Abs(pivot - a2))
+            return a1;
+        else
+            return a2;
+    }
+
+    float ClosestAngle(float pivot, float a1, float a2)
+    {
+        int pivotStage = (int)Mathf.Round(pivot / 360);
+        int a1Stage = (int)Mathf.Round(a1 / 360);
+        int a2Stage = (int)Mathf.Round(a2 / 360);
+
+        float b1 = a1 + (pivotStage - a1Stage) * 360;
+        float b2 = a2 + (pivotStage - a2Stage) * 360;
+
+        if (Mathf.Abs(pivot - b1) <= Mathf.Abs(pivot - b2))
             return a1;
         else
             return a2;
