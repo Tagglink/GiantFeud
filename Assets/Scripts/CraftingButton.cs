@@ -5,30 +5,38 @@ public class CraftingButton : MonoBehaviour {
 
     private List<GameObject> children;
     private List<Vector3> startPositions;
-    public bool retracted;
-    public bool lerping;
+    private List<Vector3> startPoints;
+    private List<Vector3> endPoints;
+    private Vector3 startScale;
+    private Vector3 endScale;
+    public displayState state;
     private float lerpTime;
     private float speed;
 
 	void Start () {
         lerpTime = 0;
         speed = 2;
-        retracted = true;
-        lerping = false;
+        state = displayState.HIDDEN;
         children = GetChildren();
         startPositions = GetPositions(children);
         HardRetract(children);
+        startPoints = startPositions;
+        endPoints = startPositions;
     }
 	
 	void Update () {
-	    if (lerping)
+	    if (state == displayState.LERPING)
         {
             Move();
 
             if (lerpTime >= 1)
             {
-                retracted = !retracted;
-                lerping = false;
+                if (children[0].transform.localPosition == Vector3.zero)
+                {
+                    state = displayState.HIDDEN;
+                }
+                else
+                    state = displayState.DISPLAYING;
                 lerpTime = 0;
             }
         }
@@ -41,44 +49,49 @@ public class CraftingButton : MonoBehaviour {
         {
             GameObject child = children[i];
             RectTransform rectTransform = child.GetComponent<RectTransform>();
-
-            if (retracted)
-            {
-                rectTransform.localPosition = Vector3.Lerp(Vector3.zero, startPositions[i], 1 - Curve(lerpTime));
-                rectTransform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, 1 - Curve(lerpTime));
-            }
-            else
-            {
-                rectTransform.localPosition = Vector3.Lerp(startPositions[i], Vector3.zero, 1 - Curve(lerpTime));
-                rectTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, 1 - Curve(lerpTime));
-            }
+            
+            rectTransform.localPosition = Vector3.Lerp(startPoints[i], endPoints[i], 1 - Curve(lerpTime));
+            rectTransform.localScale = Vector3.Lerp(startScale, endScale, 1 - Curve(lerpTime));
         }
     }
 
     public void ToggleMovement()
     {
-        lerping = true;
-        if (!retracted)
+        if (state == displayState.HIDDEN)
         {
-            RetractChildren();
+            startPoints = startPositions;
+            for (int i = 0; i < children.Count; i++)
+            {
+                endPoints[i] = Vector3.zero;
+            }
+            startScale = Vector3.one;
+            endScale = Vector3.zero;
         }
+        else
+        {
+            RetractChildren(gameObject);
+            endPoints = startPositions;
+            for (int i = 0; i < children.Count; i++)
+            {
+                startPoints[i] = Vector3.zero;
+            }
+            startScale = Vector3.zero;
+            endScale = Vector3.one;
+        }
+        state = displayState.LERPING;
     }
 
-    public void RetractChildren()
+    public void RetractChildren(GameObject origin)
     {
         foreach (GameObject c in children)
         {
             ItemButton itemButton = c.GetComponent<ItemButton>();
-            if (!itemButton.hidden)
+            if (itemButton.state != displayState.HIDDEN && itemButton.gameObject != origin)
             {
-                itemButton.StartLerping();
+                if (!itemButton.RetractIfLerping())
+                    itemButton.StartLerping();
             }
         }
-    }
-
-    bool LerpingAndHidden(ItemButton itemButton)
-    {
-        return itemButton.lerping && itemButton.hidden;
     }
 
     List<GameObject> GetChildren()

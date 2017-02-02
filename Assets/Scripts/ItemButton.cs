@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+public enum displayState { HIDDEN, LERPING, DISPLAYING }
+
 public class ItemButton : MonoBehaviour {
 
     public ItemID itemID;
@@ -12,19 +14,24 @@ public class ItemButton : MonoBehaviour {
 
     // Lerp variables
 
+    public displayState state;
+
     private float lerpTime;
     private float speed;
-    public bool lerping;
-    public bool hidden;
+    private Vector3 hiddenPoint;
+    private Vector3 displayPoint;
     private Vector3 startPoint;
+    private Vector3 endPoint;
+    private Vector3 startScale;
+    private Vector3 endScale;
 
     void Start () {
-        lerping = false;
-        hidden = true;
+        state = displayState.HIDDEN;
         speed = 2;
         infoBox = transform.GetChild(0).gameObject;
-        startPoint = infoBox.transform.localPosition;
-        infoBox.transform.localScale = Vector3.zero;
+        displayPoint = infoBox.transform.localPosition;
+        hiddenPoint = Vector3.zero;
+        infoBox.transform.localScale = hiddenPoint;
         infoBox.transform.localPosition = Vector3.zero;
         infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
         infoBox.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(Craft(itemID));
@@ -50,39 +57,61 @@ public class ItemButton : MonoBehaviour {
 	public void Move()
     {
         StartLerping();
-        GetComponentInParent<CraftingButton>().RetractChildren();
+        GetComponentInParent<CraftingButton>().RetractChildren(gameObject);
     }
 
     public void StartLerping()
     {
-        lerping = true;
+        switch (state)
+        {
+            case displayState.DISPLAYING:
+                endPoint = hiddenPoint;
+                startPoint = displayPoint;
+                startScale = Vector3.one;
+                endScale = Vector3.zero;
+                break;
+            case displayState.HIDDEN:
+                startPoint = hiddenPoint;
+                endPoint = displayPoint;
+                startScale = Vector3.zero;
+                endScale = Vector3.one;
+                break;
+        }
+        state = displayState.LERPING;
     }
 
-    public void SwitchDirection()
+    public bool RetractIfLerping()
     {
-        hidden = !hidden;
+        if (state == displayState.LERPING)
+        {
+            startPoint = infoBox.transform.localPosition;
+            endPoint = hiddenPoint;
+            startScale = infoBox.transform.localScale;
+            endScale = Vector3.zero;
+            return true;
+        }
+        else
+            return false;
     }
 
     void Update()
     {
-        if (lerping)
+        if (state == displayState.LERPING)
         {
             lerpTime += Time.deltaTime * speed;
-            if (hidden)
-            {
-                infoBox.transform.localPosition = Vector3.Lerp(Vector3.zero, startPoint, 1 - Curve(lerpTime));
-                infoBox.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, 1 - Curve(lerpTime));
-            }
-            else
-            {
-                infoBox.transform.localPosition = Vector3.Lerp(startPoint, Vector3.zero, 1 - Curve(lerpTime));
-                infoBox.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, 1 - Curve(lerpTime));
-            }
+            infoBox.transform.localPosition = Vector3.Lerp(startPoint, endPoint, 1 - Curve(lerpTime));
+            infoBox.transform.localScale = Vector3.Lerp(startScale, endScale, 1 - Curve(lerpTime));
         }
         if (lerpTime >= 1)
         {
-            lerping = false;
-            hidden = !hidden;
+            if (infoBox.transform.localPosition == hiddenPoint)
+            {
+                state = displayState.HIDDEN;
+            }
+            else
+            {
+                state = displayState.DISPLAYING;
+            }
             lerpTime = 0;
         }
     }

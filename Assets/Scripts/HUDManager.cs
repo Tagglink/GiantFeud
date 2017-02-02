@@ -39,23 +39,23 @@ public class HUDManager : MonoBehaviour {
     {
         if (parent == weaponButton)
         {
-            if (!consumableButton.GetComponent<CraftingButton>().retracted)
+            if (consumableButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(consumableButton);
-            if (!armourButton.GetComponent<CraftingButton>().retracted)
+            if (armourButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(armourButton);
         }
         else if (parent == armourButton)
         {
-            if (!weaponButton.GetComponent<CraftingButton>().retracted)
+            if (weaponButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(weaponButton);
-            if (!consumableButton.GetComponent<CraftingButton>().retracted)
+            if (consumableButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(consumableButton);
         }
         else if (parent == consumableButton)
         {
-            if (!weaponButton.GetComponent<CraftingButton>().retracted)
+            if (weaponButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(weaponButton);
-            if (!armourButton.GetComponent<CraftingButton>().retracted)
+            if (armourButton.GetComponent<CraftingButton>().state != displayState.HIDDEN)
                 ToggleMovement(armourButton);
         }
     }
