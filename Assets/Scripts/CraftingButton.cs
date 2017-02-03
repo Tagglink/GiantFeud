@@ -20,8 +20,8 @@ public class CraftingButton : MonoBehaviour {
         children = GetChildren();
         startPositions = GetPositions(children);
         HardRetract(children);
-        startPoints = startPositions;
-        endPoints = startPositions;
+        startPoints = new List<Vector3>(startPositions);
+        endPoints = new List<Vector3>(startPositions);
     }
 	
 	void Update () {
@@ -57,9 +57,9 @@ public class CraftingButton : MonoBehaviour {
 
     public void ToggleMovement()
     {
-        if (state == displayState.HIDDEN)
+        if (state == displayState.DISPLAYING)
         {
-            startPoints = startPositions;
+            startPoints = new List<Vector3>(startPositions);
             for (int i = 0; i < children.Count; i++)
             {
                 endPoints[i] = Vector3.zero;
@@ -67,16 +67,28 @@ public class CraftingButton : MonoBehaviour {
             startScale = Vector3.one;
             endScale = Vector3.zero;
         }
-        else
+        else if (state == displayState.HIDDEN)
         {
             RetractChildren(gameObject);
-            endPoints = startPositions;
+            endPoints = new List<Vector3>(startPositions);
             for (int i = 0; i < children.Count; i++)
             {
                 startPoints[i] = Vector3.zero;
             }
             startScale = Vector3.zero;
             endScale = Vector3.one;
+        }
+        else if (state == displayState.LERPING)
+        {
+            RetractChildren(gameObject);
+            for (int i = 0; i < children.Count; i++)
+            {
+                endPoints[i] = Vector3.zero;
+            }
+            startPoints = new List<Vector3>(startPositions);
+            lerpTime = 0.2f;
+            startScale = Vector3.one;
+            endScale = Vector3.zero;
         }
         state = displayState.LERPING;
     }
