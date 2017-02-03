@@ -99,169 +99,6 @@ public class Villager : MonoBehaviour {
         Pathfind(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
-    Transform[] FindTilePathTo(GameObject tile)
-    {
-        List<Transform> ret = new List<Transform>();
-        
-        RaycastHit2D hit;
-        Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
-        Vector2 currentTileCenter = transform.position - feetPositionOffset;
-        Vector2 directionToTile = dstTileCenter - currentTileCenter;
-
-        Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
-        float[] angles = new float[] { 45.0f, 135.0f, 225.0f, 315.0f };
-        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, angles);
-        int hitCount = angles.Length;
-
-        Collider2D lastCollider = null;
-
-        var walkableTileLayerMask = 1 << 8;
-
-        do
-        {
-            do
-            {
-                hit = Physics2D.Raycast(moveOptions[angles.Length - hitCount].origin, moveOptions[angles.Length - hitCount].direction, 0.5f, walkableTileLayerMask);
-            } while (!hit && --hitCount != 0);
-
-            if (lastCollider)
-                lastCollider.enabled = true; // re-enable the collider as we have passed it
-
-            if (hit)
-            {
-                ret.Add(hit.transform);
-                hit.collider.enabled = false; // disable the collider as to not hit it again
-                lastCollider = hit.collider; // cache the collider to re-enable later
-
-                rayToTile.origin = hit.transform.position + tileCenterPositionOffset;
-                rayToTile.direction = dstTileCenter - rayToTile.origin;
-                moveOptions = RayAngleAdjust(rayToTile, angles);
-            }
-        } while (false);//hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
-
-        if (lastCollider)
-            lastCollider.enabled = true;
-
-        return ret.ToArray();
-    }
-
-    // takes a ray and returns two other rays fixed to a certain dividing of angles.
-    // the first ray in the list is the closest rounded
-    /*Ray2D[] RayAngleAdjust(Ray2D originRay, float offset, int divides)
-    {
-        if (divides == 0)
-            return new Ray2D[2]; // can't divide by zero!
-
-        Ray2D[] ret = new Ray2D[] { originRay, originRay };
-
-        Vector2 direction = originRay.direction - originRay.origin;
-        float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
-        int step = 360 / divides;
-
-        while (angle <= 0)
-            angle += 360;
-
-        angle -= offset;
-
-        float steps = Mathf.Round(angle / step);
-        float floored = Mathf.Floor(angle / step);
-
-        float a1 = steps * step + offset;
-        float a2;
-
-        if (steps - floored == 1)
-            a2 = floored * step + offset;
-        else
-            a2 = (floored + 1) * step + offset;
-
-        ret[0].direction = new Vector2(Mathf.Cos(a1 * Mathf.Deg2Rad), Mathf.Sin(a1 * Mathf.Deg2Rad)) + originRay.origin;
-        ret[1].direction = new Vector2(Mathf.Cos(a2 * Mathf.Deg2Rad), Mathf.Sin(a2 * Mathf.Deg2Rad)) + originRay.origin;
-
-        return ret;
-    }*/
-
-    // assuming the list of angles is sorted by lowest first
-    // and the angles are limited to 0 <= x < 360
-    // returns a list of rays with a length equal to the length of angles,
-    // with directions adjusted to the angles.
-    // the ray with a direction closest to originRay is first in the list, and so on
-    Ray2D[] RayAngleAdjust(Ray2D originRay, float[] angles)
-    {
-        Ray2D[] ret = new Ray2D[angles.Length];
-
-        float angle = Mathf.Rad2Deg * Mathf.Atan2(originRay.direction.y, originRay.direction.x);
-        float a;
-
-        while (angle < 0)
-            angle += 360;
-
-        angles = SortAnglesByPivot(angles, angle);
-
-        for (int i = 0; i < angles.Length; i++)
-        {
-            a = angles[i];
-            ret[i].origin = originRay.origin;
-            ret[i].direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * a), Mathf.Sin(Mathf.Deg2Rad * a));
-        }
-
-        return ret;
-    }
-
-    // sorts a list of angles by closest to pivot.
-    float[] SortAnglesByPivot(float[] nums, float pivot)
-    {
-        List<float> sortedNums = new List<float>();
-        float num_current;
-
-        sortedNums.Add(nums[0]);
-
-        for (int i = 1; i < nums.Length; i++)
-        {
-            num_current = nums[i];
-
-            for (int j = 0; j < sortedNums.Count; j++)
-            {
-                if (sortedNums[j] != ClosestAngle(pivot, num_current, sortedNums[j])) // if it's closer, place before
-                {
-                    sortedNums.Insert(j, num_current);
-                    break;
-                }
-                else if (j == sortedNums.Count - 1) // if it's the furthest away number, place at end
-                {
-                    sortedNums.Add(num_current);
-                    break;
-                }
-            }
-        }
-
-        return sortedNums.ToArray();
-    }
-
-    // returns either a1 or a2 depending on which one is closest to pivot
-    // (a1 has priority)
-    float Closest(float pivot, float a1, float a2)
-    {
-        if (Mathf.Abs(pivot - a1) <= Mathf.Abs(pivot - a2))
-            return a1;
-        else
-            return a2;
-    }
-
-    float ClosestAngle(float pivot, float a1, float a2)
-    {
-        int pivotStage = (int)Mathf.Round(pivot / 360);
-        int a1Stage = (int)Mathf.Round(a1 / 360);
-        int a2Stage = (int)Mathf.Round(a2 / 360);
-
-        float b1 = a1 + (pivotStage - a1Stage) * 360;
-        float b2 = a2 + (pivotStage - a2Stage) * 360;
-
-        if (Mathf.Abs(pivot - b1) <= Mathf.Abs(pivot - b2))
-            return a1;
-        else
-            return a2;
-    }
-
     void Move()
     {
         if (ValidateMovement())
@@ -421,5 +258,124 @@ public class Villager : MonoBehaviour {
         float x2 = ray.direction.x, y2 = ray.direction.y;
 
         return Mathf.Abs(((y2 - y1) * p.x) - ((x2 - x1) * p.y) + (x2 * y1) - (y2 * x1)) / Mathf.Sqrt(Mathf.Pow((y2 - y1), 2) + Mathf.Pow((x2 - x1), 2));
+    }
+
+    Transform[] FindTilePathTo(GameObject tile)
+    {
+        List<Transform> ret = new List<Transform>();
+
+        RaycastHit2D hit;
+        Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
+        Vector2 currentTileCenter = transform.position - feetPositionOffset;
+        Vector2 directionToTile = dstTileCenter - currentTileCenter;
+
+        Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
+        float[] angles = new float[] { 45.0f, 135.0f, 225.0f, 315.0f };
+        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, angles);
+        int hitCount;
+
+        Collider2D lastCollider = null;
+
+        var walkableTileLayerMask = 1 << 8;
+
+        do
+        {
+            hitCount = angles.Length;
+            do
+            {
+                hit = Physics2D.Raycast(moveOptions[angles.Length - hitCount].origin, moveOptions[angles.Length - hitCount].direction, 0.7f, walkableTileLayerMask);
+            } while (!hit && --hitCount != 0);
+
+            if (lastCollider)
+                lastCollider.enabled = true; // re-enable the collider as we have passed it
+
+            if (hit)
+            {
+                ret.Add(hit.transform);
+                hit.collider.enabled = false; // disable the collider as to not hit it again
+                lastCollider = hit.collider; // cache the collider to re-enable later
+
+                rayToTile.origin = hit.transform.position + tileCenterPositionOffset;
+                rayToTile.direction = dstTileCenter - rayToTile.origin;
+                moveOptions = RayAngleAdjust(rayToTile, angles);
+            }
+        } while (hit && hit.transform.gameObject != tile); // if the destination tile is hit, we're done here.
+
+        if (lastCollider)
+            lastCollider.enabled = true;
+
+        return ret.ToArray();
+    }
+
+    // assuming the list of angles is sorted by lowest first
+    // and the angles are limited to 0 <= x < 360
+    // returns a list of rays with a length equal to the length of angles,
+    // with directions adjusted to the angles.
+    // the ray with a direction closest to originRay is first in the list, and so on
+    Ray2D[] RayAngleAdjust(Ray2D originRay, float[] angles)
+    {
+        Ray2D[] ret = new Ray2D[angles.Length];
+
+        float angle = Mathf.Rad2Deg * Mathf.Atan2(originRay.direction.y, originRay.direction.x);
+        float a;
+
+        while (angle < 0)
+            angle += 360;
+
+        angles = SortAnglesByPivot(angles, angle);
+
+        for (int i = 0; i < angles.Length; i++)
+        {
+            a = angles[i];
+            ret[i].origin = originRay.origin;
+            ret[i].direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * a), Mathf.Sin(Mathf.Deg2Rad * a));
+        }
+
+        return ret;
+    }
+
+    // sorts a list of angles by closest to pivot.
+    float[] SortAnglesByPivot(float[] nums, float pivot)
+    {
+        List<float> sortedNums = new List<float>();
+        float num_current;
+
+        sortedNums.Add(nums[0]);
+
+        for (int i = 1; i < nums.Length; i++)
+        {
+            num_current = nums[i];
+
+            for (int j = 0; j < sortedNums.Count; j++)
+            {
+                if (sortedNums[j] != ClosestAngle(pivot, num_current, sortedNums[j])) // if it's closer, place before
+                {
+                    sortedNums.Insert(j, num_current);
+                    break;
+                }
+                else if (j == sortedNums.Count - 1) // if it's the furthest away number, place at end
+                {
+                    sortedNums.Add(num_current);
+                    break;
+                }
+            }
+        }
+
+        return sortedNums.ToArray();
+    }
+
+    float ClosestAngle(float pivot, float a1, float a2)
+    {
+        int pivotStage = (int)Mathf.Round(pivot / 360);
+        int a1Stage = (int)Mathf.Round(a1 / 360);
+        int a2Stage = (int)Mathf.Round(a2 / 360);
+
+        float b1 = a1 + (pivotStage - a1Stage) * 360;
+        float b2 = a2 + (pivotStage - a2Stage) * 360;
+
+        if (Mathf.Abs(pivot - b1) <= Mathf.Abs(pivot - b2))
+            return a1;
+        else
+            return a2;
     }
 }

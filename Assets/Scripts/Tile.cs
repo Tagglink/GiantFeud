@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 
 public enum TileType { NONE, WOODS, STONE, WATER, CROPS, CATTLE, GIANTS, CAMP }
