@@ -14,6 +14,6 @@ public class HUDHealthDisplayer : MonoBehaviour {
 	void Update () {
         GetComponentInChildren<Text>().text = giant.stats.hp + " / " + giant.stats.maxHP;
         float healthPercentage = (float)giant.stats.hp / giant.stats.maxHP;
-        GetComponent<Image>().fillAmount = healthPercentage;
+        GetComponentsInChildren<Image>()[1].fillAmount = healthPercentage;
 	}
 }

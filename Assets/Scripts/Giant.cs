@@ -58,11 +58,8 @@ public class Giant : MonoBehaviour {
     void Attack()
     {
         int damageDealt;
-
-        if (currentWeapon != null)
-            damageDealt = stats.atk + currentWeapon.stats.atk;
-        else
-            damageDealt = stats.atk;
+        
+        damageDealt = stats.atk;
 
         enemyGiant.GetComponent<Giant>().TakeDamage(damageDealt);
     }
