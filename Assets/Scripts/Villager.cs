@@ -96,7 +96,7 @@ public class Villager : MonoBehaviour {
     {
         MoveIntoBounds();
         item = id;
-        Pathfind(camp.giantTile, VillagerArriveAction.USE_ITEM);
+        MoveTo(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
     void Move()
@@ -205,7 +205,7 @@ public class Villager : MonoBehaviour {
 
         GameObject tileNext;
 
-        if (LineIntersect(rayToTile, cornerUpperPos, cornerLowerPos))
+        if (LineIntersect(rayToTile, cornerUpperPos, cornerLowerPos, Vector2.Distance(dstTileCenter, currentTileCenter)))
         {
             arriveActionNext = actionAtArrival;
             targetTileNext = tile;
@@ -219,13 +219,33 @@ public class Villager : MonoBehaviour {
         }
     }
 
-    bool LineIntersect(Ray2D ray, Vector2 lineEnd1, Vector2 lineEnd2)
+    bool LineIntersect(Ray2D ray, Vector2 lineEnd1, Vector2 lineEnd2, float maxDistance)
     {
-        float k = ray.direction.y / ray.direction.x;
-        float x = lineEnd1.x - ray.origin.x;
-        float y = k * x + ray.origin.y;
+        Vector2 point = ray.GetPoint(maxDistance);
 
-        return (y < lineEnd1.y && y > lineEnd2.y) || (y < lineEnd2.y && y > lineEnd1.y);
+        float lineTilt = (lineEnd1.y - lineEnd2.y) / (lineEnd1.x - lineEnd2.x);
+        float rayTilt = ray.direction.y / ray.direction.x;
+
+        if (lineTilt == rayTilt)
+            return false;
+
+        Vector2 intersection = GetLineIntersection(ray.origin, point, lineEnd1, lineEnd2);
+
+        return ray.origin.x > point.x ? intersection.x < ray.origin.x && intersection.x > point.x : intersection.x > ray.origin.x && intersection.x < point.x;
+    }
+
+    Vector2 GetLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    {
+        Vector2 ret = new Vector2();
+
+        float divisor = ((p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x));
+        float factor1 = (p1.x * p2.y - p1.y * p2.x);
+        float factor2 = (p3.x * p4.y - p3.y * p4.x);
+
+        ret.x = (factor1 * (p3.x - p4.x) - (p1.x - p2.x) * factor2) / divisor;
+        ret.y = (factor1 * (p3.y - p4.y) - (p1.y - p2.y) * factor2) / divisor;
+
+        return ret;
     }
 
     void MoveTo(GameObject tile, VillagerArriveAction actionAtArrival)
