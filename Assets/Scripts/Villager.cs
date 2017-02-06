@@ -274,8 +274,9 @@ public class Villager : MonoBehaviour {
 
     float ShortestDistanceFromRayToPoint(Ray2D ray, Vector2 p)
     {
+        Vector2 rayPoint = ray.GetPoint(1.0f);
         float x1 = ray.origin.x, y1 = ray.origin.y;
-        float x2 = ray.direction.x, y2 = ray.direction.y;
+        float x2 = rayPoint.x, y2 = rayPoint.y;
 
         return Mathf.Abs(((y2 - y1) * p.x) - ((x2 - x1) * p.y) + (x2 * y1) - (y2 * x1)) / Mathf.Sqrt(Mathf.Pow((y2 - y1), 2) + Mathf.Pow((x2 - x1), 2));
     }
