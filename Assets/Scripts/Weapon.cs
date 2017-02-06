@@ -4,8 +4,9 @@ using System.Collections;
 public class Weapon : Equipment {
 
 	// Hi
-    public Weapon(string _name, string _description, Resources _resourceCost, Sprite _icon, float _craftingTime, Stats _stats, int _reinforcementCount, Stats _reinforcementStats)
-        : base(_name, _description, _resourceCost, _icon, _craftingTime, _stats, _reinforcementCount, _reinforcementStats)
+    // Why hello there how do you do on this fine evening?
+    public Weapon(string _name, string _description, Resources _resourceCost, Sprite _icon, float _craftingTime, bool _giantUse, Stats _stats, int _reinforcementCount, Stats _reinforcementStats)
+        : base(_name, _description, _resourceCost, _icon, _craftingTime, _giantUse, _stats, _reinforcementCount, _reinforcementStats)
     {
 
     }

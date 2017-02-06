@@ -7,8 +7,8 @@ public class Giant : MonoBehaviour {
 
     public Weapon currentWeapon;
     public Armour currentArmour;
-    public Dictionary<ItemID, Stats> buffs;
-    public Dictionary<ItemID, Stats> multipliers;
+    public List<KeyValuePair<ItemID, Stats>> buffs;
+    public List<KeyValuePair<ItemID, Stats>> multipliers;
     public Stats baseStats;
     public Stats stats;
     
@@ -21,18 +21,18 @@ public class Giant : MonoBehaviour {
 
     void Start()
     {
-        buffs = new Dictionary<ItemID, Stats>();
-        multipliers = new Dictionary<ItemID, Stats>();
-        stats = new Stats();
+        buffs = new List<KeyValuePair<ItemID, Stats>>();
+        multipliers = new List<KeyValuePair<ItemID, Stats>>();
         statsChanged = true;
         timer = 0;
         atkTime = 0;
 
         // default Giant stats
         baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
+        stats = baseStats;
 
-        currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
-        currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
+        currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
+        currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
     }
 
     void Update()
@@ -123,26 +123,38 @@ public class Giant : MonoBehaviour {
 
     public void AddBuff(ItemID item, Stats buff)
     {
-        buffs.Add(item, buff);
+        buffs.Add(new KeyValuePair<ItemID, Stats>(item, buff));
         statsChanged = true;
     }
 
     public void RemoveBuff(ItemID item)
     {
-        buffs.Remove(item);
+        buffs = RemoveFromKeyValueList(buffs, item);
         statsChanged = true;
     }
 
-    public void AddMultiplier(ItemID item, Stats multiplier)
+    public void AddMultiplier(ItemID item, Stats buff)
     {
-        multipliers.Add(item, multiplier);
+        multipliers.Add(new KeyValuePair<ItemID, Stats>(item, buff));
         statsChanged = true;
     }
 
     public void RemoveMultiplier(ItemID item)
     {
-        multipliers.Remove(item);
+        multipliers = RemoveFromKeyValueList(multipliers, item);
         statsChanged = true;
+    }
+
+    List<KeyValuePair<ItemID, Stats>> RemoveFromKeyValueList(List<KeyValuePair<ItemID, Stats>> list, ItemID id)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            KeyValuePair<ItemID, Stats> pair = list[i];
+            if (id == pair.Key)
+                list.RemoveAt(i);
+        }
+
+        return list;
     }
 
     IEnumerator DelayTemporaryBuff(Consumable consumable)
@@ -154,8 +166,10 @@ public class Giant : MonoBehaviour {
     void UpdateStats()
     {
         Stats multiplier = new Stats(0, 0, 0, 0, 0, 0);
+        Stats baseStatsWithoutHp = baseStats;
+        baseStatsWithoutHp.hp = stats.hp;
 
-        stats = baseStats;
+        stats = baseStatsWithoutHp;
 
         stats += currentArmour.stats + (currentArmour.reinforcementStats * currentArmour.reinforcementCount);
         stats += currentWeapon.stats + (currentWeapon.reinforcementStats * currentWeapon.reinforcementCount);

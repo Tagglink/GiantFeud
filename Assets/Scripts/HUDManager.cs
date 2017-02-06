@@ -3,9 +3,16 @@ using System.Collections.Generic;
 
 public class HUDManager : MonoBehaviour {
 
-    public GameObject weaponButton;
-    public GameObject armourButton;
-    public GameObject consumableButton;
+    public GameObject weaponButton;     // inspector set
+    public GameObject armourButton;     // inspector set
+    public GameObject consumableButton; // inspector set
+    
+    public Camp playerCamp;             // inspector set
+
+    void Update()
+    {
+        
+    }
 
     public void ToggleState(GameObject parent)
     {
