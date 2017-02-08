@@ -50,7 +50,8 @@ public class Giant : MonoBehaviour {
 
         if (stats.hp < 0)
         {
-            stats.hp = 0; // (lose)
+            stats.hp = 0;
+            GameManager.EndGame(this);
         }
     }
 

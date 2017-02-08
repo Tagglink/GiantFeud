@@ -21,7 +21,7 @@ public class AI : MonoBehaviour {
         goalItem = ItemID.NULL;
         action = AIAction.NONE;
         craftFlag = false;
-        active = false;
+        active = true;
         buildPathIndex = 0;
 
         buildPath = new ItemID[]
