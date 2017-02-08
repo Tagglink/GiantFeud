@@ -9,8 +9,8 @@ public class Consumable : Item {
     public Action<Giant> action;
     public Action<Giant> reverseAction;
 
-    public Consumable(string _name, string _description, Resources _resourceCost, Sprite _icon, float _craftingTime, Stats _stats, float _duration, Action<Giant> _action, Action<Giant> _reverseAction) : 
-        base(_name, _description, _resourceCost, _icon, _craftingTime)
+    public Consumable(string _name, string _description, Resources _resourceCost, Sprite _icon, float _craftingTime, bool _giantUse, Stats _stats, float _duration, Action<Giant> _action, Action<Giant> _reverseAction) : 
+        base(_name, _description, _resourceCost, _icon, _craftingTime, _giantUse)
     {
         stats = _stats;
         duration = _duration;

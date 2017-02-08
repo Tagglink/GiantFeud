@@ -14,6 +14,8 @@ public class Camp : MonoBehaviour {
     public GameObject homeTile; // inspector set
     public GameObject giantTile; // inspector set
 
+    public HUDCraftingProgressMeter craftingProgressMeter; // inspector set
+
     [HideInInspector]
     public Giant giantScript;
 
@@ -21,8 +23,11 @@ public class Camp : MonoBehaviour {
     public bool isCrafting;
     public float craftingProgress;
 
-	// Use this for initialization
-	void Start () {
+    public float craftingStartTime;
+    public Item currentlyCraftingItem;
+
+    // Use this for initialization
+    void Start () {
         maxVillagers = 6;
         itemStash = new List<ItemID>();
         villagers = new List<GameObject>();
@@ -41,7 +46,10 @@ public class Camp : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    if (isCrafting)
+        {
+            craftingProgress = (Time.realtimeSinceStartup - craftingStartTime) / currentlyCraftingItem.craftingTime;
+        }
 	}
 
     public bool SendVillagerToGather(GameObject tile)
@@ -62,7 +70,7 @@ public class Camp : MonoBehaviour {
         return true;
     }
 
-    public bool SendVillagerToUseItem(ItemID item)
+    public bool SendVillagerToUseItem(ItemID itemId)
     {
         List<GameObject> idleVillagers = GetIdleVillagers();
         Villager villager;
@@ -70,6 +78,8 @@ public class Camp : MonoBehaviour {
         if (idleVillagers.Count > 0)
         {
             villager = idleVillagers[0].GetComponent<Villager>();
+            villager.UseItem(itemId);
+            return true;
         }
         else
         {
@@ -77,9 +87,6 @@ public class Camp : MonoBehaviour {
             // (do not send if it's the opponent's camp)
             return false;
         }
-
-        villager.UseItem(item);
-        return true;
     }
 
     public List<GameObject> GetIdleVillagers()
@@ -132,14 +139,13 @@ public class Camp : MonoBehaviour {
         return ret;
     }
 
-    public bool Craft(ItemID itemID)
+    public bool Craft(ItemID itemId)
     {
-        Item it = Items.itemList[itemID];
+        Item item = Items.itemList[itemId];
 
-        if (it.resourceCost <= resources)
+        if (!isCrafting && item.resourceCost <= resources)
         {
-            resources -= it.resourceCost;
-            StartCoroutine(WaitForCraft(itemID, it));
+            StartCraft(item, itemId);
             return true;
         }
         else
@@ -149,16 +155,38 @@ public class Camp : MonoBehaviour {
         }
     }
 
+    void StartCraft(Item item, ItemID itemId)
+    {
+        craftingStartTime = Time.realtimeSinceStartup;
+        isCrafting = true;
+        resources -= item.resourceCost;
+        currentlyCraftingItem = item;
+
+        if (craftingProgressMeter)
+            craftingProgressMeter.Enabled(true);
+
+        StartCoroutine(WaitForCraft(itemId, item));
+    }
+
     // returns false if item was not found in the item stash
     public bool UseItem(ItemID id)
     {
-        for (int i = 0; i < itemStash.Count; i++) { 
+        ItemID currentItem;
+        Item item;
+        int i;
 
-            ItemID item = itemStash[i];
+        for (i = 0; i < itemStash.Count; i++) { 
 
-            if (item == id)
+            currentItem = itemStash[i];
+
+            if (currentItem == id)
             {
-                SendVillagerToUseItem(id);
+                item = Items.itemList[id];
+                if (item.giantUse)
+                    SendVillagerToUseItem(id);
+                else
+                    UseItemAtCamp(item);
+
                 itemStash.RemoveAt(i);
                 return true;
             }
@@ -166,9 +194,35 @@ public class Camp : MonoBehaviour {
         return false;
     }
 
+    void UseItemAtCamp(Item item)
+    {
+        if (item is Equipment)
+        {
+            // error: camp can't use equipments
+            return;
+        }
+
+        Consumable cons = item as Consumable;
+        cons.action(giantScript);
+
+        StartCoroutine(DelayTemporaryBuff(cons));
+    }
+
+    IEnumerator DelayTemporaryBuff(Consumable consumable)
+    {
+        yield return new WaitForSeconds(consumable.craftingTime);
+        consumable.reverseAction(giantScript);
+    }
+
     IEnumerator WaitForCraft(ItemID id, Item item)
     {
         yield return new WaitForSeconds(item.craftingTime);
         itemStash.Add(id);
+        isCrafting = false;
+        currentlyCraftingItem = null;
+        craftingProgress = 0.0f;
+
+        if (craftingProgressMeter)
+            craftingProgressMeter.Enabled(false);
     }
 }
