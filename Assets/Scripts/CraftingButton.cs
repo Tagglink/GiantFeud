@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 public class CraftingButton : MonoBehaviour {
 
@@ -23,6 +24,8 @@ public class CraftingButton : MonoBehaviour {
         HardRetract(children);
         startPoints = new List<Vector3>(startPositions);
         endPoints = new List<Vector3>(startPositions);
+
+        MakeInfoBoxesCircular(children, 160f);
     }
 	
 	void Update () {
@@ -149,6 +152,29 @@ public class CraftingButton : MonoBehaviour {
         return ret;
     }
 
+    void MakeInfoBoxesCircular(List<GameObject> gameObjects, float radius)
+    {
+        float angleStep = 360.0f / gameObjects.Count;
+        Vector3 pos;
+        int i;
+
+        for (i = 0; i < gameObjects.Count; i++)
+        {
+            pos = new Vector3(Mathf.Cos(Mathf.Deg2Rad * (angleStep * i + 90)) * radius, Mathf.Sin(Mathf.Deg2Rad * (angleStep * i + 90)) * radius);
+            gameObjects[i].GetComponent<ItemButton>().displayPoint = pos;
+        }
+    }
+
+    List<GameObject> GetChildrenOf(List<GameObject> gameObjects, int index)
+    {
+        List<GameObject> ret = new List<GameObject>();
+
+        foreach (GameObject obj in gameObjects)
+            ret.Add(obj.transform.GetChild(index).gameObject);
+
+        return ret;
+    }
+    
     void SetEventTriggerEnabled(bool val)
     {
         foreach (GameObject child in children)

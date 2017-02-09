@@ -17,11 +17,11 @@ public class ItemButton : MonoBehaviour {
     // Lerp variables
 
     public displayState state;
+    public Vector3 displayPoint;
 
     private float lerpTime;
     private float speed;
     private Vector3 hiddenPoint;
-    private Vector3 displayPoint;
     private Vector3 startPoint;
     private Vector3 endPoint;
     private Vector3 startScale;
@@ -31,7 +31,6 @@ public class ItemButton : MonoBehaviour {
         state = displayState.HIDDEN;
         speed = 2;
         infoBox = transform.GetChild(0).gameObject;
-        displayPoint = infoBox.transform.localPosition;
         hiddenPoint = Vector3.zero;
         infoBox.transform.localScale = hiddenPoint;
         infoBox.transform.localPosition = Vector3.zero;
@@ -40,7 +39,6 @@ public class ItemButton : MonoBehaviour {
         GetComponent<Button>().onClick.AddListener(Craft(itemID));
         eventTrigger = GetComponent<EventTrigger>();
         eventTrigger.enabled = false;
-
 
         // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
