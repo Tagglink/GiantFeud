@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class CraftingButton : MonoBehaviour {
@@ -34,9 +35,13 @@ public class CraftingButton : MonoBehaviour {
                 if (children[0].transform.localPosition == Vector3.zero)
                 {
                     state = displayState.HIDDEN;
+                    SetEventTriggerEnabled(false);
                 }
                 else
+                {
                     state = displayState.DISPLAYING;
+                    SetEventTriggerEnabled(true);
+                }
                 lerpTime = 0;
             }
         }
@@ -142,6 +147,14 @@ public class CraftingButton : MonoBehaviour {
         }
 
         return ret;
+    }
+
+    void SetEventTriggerEnabled(bool val)
+    {
+        foreach (GameObject child in children)
+        {
+            child.GetComponent<EventTrigger>().enabled = val;
+        }
     }
 
     void HardRetract(List<GameObject> gameObjects)
