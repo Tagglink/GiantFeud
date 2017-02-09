@@ -14,6 +14,7 @@ public class Giant : MonoBehaviour {
     
     public GameObject enemyGiant; // inspector set
     public GameObject camp; // inspector set
+    public GameObject gameManager; //inspector set
 
     private int timer;
     private int atkTime;
@@ -51,7 +52,7 @@ public class Giant : MonoBehaviour {
         if (stats.hp < 0)
         {
             stats.hp = 0;
-            GameManager.EndGame(this);
+            gameManager.GetComponent<GameManager>().EndGame(this);
         }
     }
 
