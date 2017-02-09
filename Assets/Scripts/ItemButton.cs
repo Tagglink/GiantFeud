@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using UnityEngine.EventSystems;
 
 public enum displayState { HIDDEN, LERPING, DISPLAYING }
 
@@ -34,8 +35,8 @@ public class ItemButton : MonoBehaviour {
         infoBox.transform.localScale = hiddenPoint;
         infoBox.transform.localPosition = Vector3.zero;
         infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
-        infoBox.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(Craft(itemID));
-        infoBox.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(Use(itemID));
+
+        GetComponent<Button>().onClick.AddListener(Craft(itemID));
 
         // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
@@ -51,6 +52,14 @@ public class ItemButton : MonoBehaviour {
     {
         return new UnityAction(() => {
             playerCamp.UseItem(id);
+        });
+    }
+
+    UnityAction Reinforce(ItemID id)
+    {
+        return new UnityAction(() =>
+        {
+            
         });
     }
 

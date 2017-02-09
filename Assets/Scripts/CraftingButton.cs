@@ -18,7 +18,7 @@ public class CraftingButton : MonoBehaviour {
         speed = 2;
         state = displayState.HIDDEN;
         children = GetChildren();
-        startPositions = GetPositions(children);
+        startPositions = MakePositionsCircular(children, 130f);
         HardRetract(children);
         startPoints = new List<Vector3>(startPositions);
         endPoints = new List<Vector3>(startPositions);
@@ -123,6 +123,24 @@ public class CraftingButton : MonoBehaviour {
         {
             ret.Add(a.GetComponent<RectTransform>().localPosition);
         }
+        return ret;
+    }
+
+    List<Vector3> MakePositionsCircular(List<GameObject> gameObjects, float radius)
+    {
+        float angleStep = 360.0f / gameObjects.Count;
+        List<Vector3> ret = new List<Vector3>();
+        Vector3 pos;
+
+        ret.Capacity = gameObjects.Count;
+
+        for (int i = 0; i < gameObjects.Count; i++)
+        {
+            pos = new Vector3(Mathf.Cos(Mathf.Deg2Rad * (angleStep * i + 90)) * radius, Mathf.Sin(Mathf.Deg2Rad * (angleStep * i + 90)) * radius);
+            ret.Add(pos);
+            gameObjects[i].GetComponent<RectTransform>().localPosition = pos;
+        }
+
         return ret;
     }
 
