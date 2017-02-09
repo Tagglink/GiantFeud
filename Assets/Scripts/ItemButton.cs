@@ -11,6 +11,7 @@ public class ItemButton : MonoBehaviour {
 
     public ItemID itemID;
     public Camp playerCamp; // inspector set
+    public EventTrigger eventTrigger;
     private GameObject infoBox;
 
     // Lerp variables
@@ -37,6 +38,9 @@ public class ItemButton : MonoBehaviour {
         infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
 
         GetComponent<Button>().onClick.AddListener(Craft(itemID));
+        eventTrigger = GetComponent<EventTrigger>();
+        eventTrigger.enabled = false;
+
 
         // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
