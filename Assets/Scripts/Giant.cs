@@ -14,7 +14,7 @@ public class Giant : MonoBehaviour {
     
     public GameObject enemyGiant; // inspector set
     public GameObject camp; // inspector set
-    public GameObject gameManager; //inspector set
+    public GameObject gameManager; // inspector set
 
     public int hp;
 

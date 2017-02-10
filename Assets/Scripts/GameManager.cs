@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -29,13 +30,15 @@ public class GameManager : MonoBehaviour {
 
     void PlayEndAnimation(bool loss)
     {
+        victoryScreen.GetComponent<RectTransform>().localScale = Vector3.one;
+        Transform text = victoryScreen.transform.GetChild(1);
         if (loss)
         {
-            
+            text.GetComponent<Text>().text = "A   LOSER   IS   YOU";
         }
         else
         {
-
+            text.GetComponent<Text>().text = "A   WINNER   IS   YOU";
         }
     }
 }
