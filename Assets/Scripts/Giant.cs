@@ -16,6 +16,8 @@ public class Giant : MonoBehaviour {
     public GameObject camp; // inspector set
     public GameObject gameManager; //inspector set
 
+    public int hp;
+
     private int timer;
     private int atkTime;
     private bool statsChanged;
@@ -29,7 +31,7 @@ public class Giant : MonoBehaviour {
         atkTime = 0;
 
         // default Giant stats
-        baseStats = new Stats(5, 0.5f, 0, 3000, 3000, 0);
+        baseStats = new Stats(5, 0.5f, 0, 3000, 0);
         stats = baseStats;
 
         currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
@@ -44,14 +46,14 @@ public class Giant : MonoBehaviour {
             statsChanged = false;
         }
 
-        if (stats.hp > stats.maxHP)
+        if (hp > stats.maxHP)
         {
-            stats.hp = stats.maxHP;
+            hp = stats.maxHP;
         }
 
-        if (stats.hp < 0)
+        if (hp < 0)
         {
-            stats.hp = 0;
+            hp = 0;
             gameManager.GetComponent<GameManager>().EndGame(this);
         }
     }

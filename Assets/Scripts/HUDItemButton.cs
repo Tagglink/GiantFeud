@@ -7,12 +7,14 @@ using UnityEngine.EventSystems;
 
 public enum displayState { HIDDEN, LERPING, DISPLAYING }
 
-public class ItemButton : MonoBehaviour {
+public class HUDItemButton : MonoBehaviour {
 
-    public ItemID itemID;
     public Camp playerCamp; // inspector set
+    public HUDItemInfoBox itemInfoBox; // inspector set
+    public ItemID itemID;
     public EventTrigger eventTrigger;
-    private GameObject infoBox;
+
+    //private GameObject infoBox;
 
     // Lerp variables
 
@@ -29,12 +31,12 @@ public class ItemButton : MonoBehaviour {
 
     void Start () {
         state = displayState.HIDDEN;
-        speed = 2;
-        infoBox = transform.GetChild(0).gameObject;
+        speed = 3;
+        //infoBox = transform.GetChild(0).gameObject;
         hiddenPoint = Vector3.zero;
-        infoBox.transform.localScale = hiddenPoint;
-        infoBox.transform.localPosition = Vector3.zero;
-        infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
+        //infoBox.transform.localScale = hiddenPoint;
+        //infoBox.transform.localPosition = Vector3.zero;
+        //infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
 
         GetComponent<Button>().onClick.AddListener(Craft(itemID));
         eventTrigger = GetComponent<EventTrigger>();
@@ -67,8 +69,11 @@ public class ItemButton : MonoBehaviour {
 
 	public void Move()
     {
+        /*
         StartLerping();
-        GetComponentInParent<CraftingButton>().RetractChildren(gameObject);
+        GetComponentInParent<CraftingButton>().RetractChildren(gameObject);*/
+
+        itemInfoBox.Show(itemID);
     }
 
     public void StartLerping()
@@ -95,9 +100,9 @@ public class ItemButton : MonoBehaviour {
     {
         if (state == displayState.LERPING)
         {
-            startPoint = infoBox.transform.localPosition;
+            //startPoint = infoBox.transform.localPosition;
             endPoint = hiddenPoint;
-            startScale = infoBox.transform.localScale;
+            //startScale = infoBox.transform.localScale;
             endScale = Vector3.zero;
             return true;
         }
@@ -110,12 +115,12 @@ public class ItemButton : MonoBehaviour {
         if (state == displayState.LERPING)
         {
             lerpTime += Time.deltaTime * speed;
-            infoBox.transform.localPosition = Vector3.Lerp(startPoint, endPoint, 1 - Curve(lerpTime));
-            infoBox.transform.localScale = Vector3.Lerp(startScale, endScale, 1 - Curve(lerpTime));
+            //infoBox.transform.localPosition = Vector3.Lerp(startPoint, endPoint, 1 - Curve(lerpTime));
+            //infoBox.transform.localScale = Vector3.Lerp(startScale, endScale, 1 - Curve(lerpTime));
         }
         if (lerpTime >= 1)
         {
-            if (infoBox.transform.localPosition == hiddenPoint)
+            /*if (infoBox.transform.localPosition == hiddenPoint)
             {
                 state = displayState.HIDDEN;
             }
@@ -123,7 +128,7 @@ public class ItemButton : MonoBehaviour {
             {
                 state = displayState.DISPLAYING;
             }
-            lerpTime = 0;
+            lerpTime = 0;*/
         }
     }
 

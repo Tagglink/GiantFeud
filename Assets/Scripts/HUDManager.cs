@@ -30,6 +30,7 @@ public class HUDManager : MonoBehaviour {
     void ToggleMovement(GameObject parent)
     {
         parent.GetComponent<CraftingButton>().ToggleMovement();
+        parent.transform.SetAsLastSibling();
     }
 
     //List<GameObject> GetChildren(GameObject parent)

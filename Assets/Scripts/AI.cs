@@ -89,7 +89,7 @@ public class AI : MonoBehaviour {
 
     AIAction DetermineAction()
     {
-        if (giant.stats.hp < giant.stats.maxHP / 2)
+        if (giant.hp < giant.stats.maxHP / 2)
         {
             return AIAction.HEAL;
         }

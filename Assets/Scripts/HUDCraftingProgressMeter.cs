@@ -18,8 +18,6 @@ public class HUDCraftingProgressMeter : MonoBehaviour {
         itemIcon = childImages[2];
         progressBarFrame = GetComponent<Image>();
         percentageText = GetComponentInChildren<Text>();
-
-        Enabled(false);
 	}
 	
 	// Update is called once per frame

@@ -17,7 +17,7 @@ public class CraftingButton : MonoBehaviour {
 
 	void Start () {
         lerpTime = 0;
-        speed = 2;
+        speed = 3;
         state = displayState.HIDDEN;
         children = GetChildren();
         startPositions = MakePositionsCircular(children, 130f);
@@ -105,7 +105,7 @@ public class CraftingButton : MonoBehaviour {
     {
         foreach (GameObject c in children)
         {
-            ItemButton itemButton = c.GetComponent<ItemButton>();
+            HUDItemButton itemButton = c.GetComponent<HUDItemButton>();
             if (itemButton.state != displayState.HIDDEN && itemButton.gameObject != origin)
             {
                 if (!itemButton.RetractIfLerping())
@@ -161,7 +161,7 @@ public class CraftingButton : MonoBehaviour {
         for (i = 0; i < gameObjects.Count; i++)
         {
             pos = new Vector3(Mathf.Cos(Mathf.Deg2Rad * (angleStep * i + 90)) * radius, Mathf.Sin(Mathf.Deg2Rad * (angleStep * i + 90)) * radius);
-            gameObjects[i].GetComponent<ItemButton>().displayPoint = pos;
+            gameObjects[i].GetComponent<HUDItemButton>().displayPoint = pos;
         }
     }
 

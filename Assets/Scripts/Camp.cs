@@ -162,9 +162,6 @@ public class Camp : MonoBehaviour {
         resources -= item.resourceCost;
         currentlyCraftingItem = item;
 
-        if (craftingProgressMeter)
-            craftingProgressMeter.Enabled(true);
-
         StartCoroutine(WaitForCraft(itemId, item));
     }
 
@@ -221,8 +218,5 @@ public class Camp : MonoBehaviour {
         isCrafting = false;
         currentlyCraftingItem = null;
         craftingProgress = 0.0f;
-
-        if (craftingProgressMeter)
-            craftingProgressMeter.Enabled(false);
     }
 }
