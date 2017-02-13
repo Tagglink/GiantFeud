@@ -29,6 +29,7 @@ public class Giant : MonoBehaviour {
         statsChanged = true;
         timer = 0;
         atkTime = 0;
+        hp = 3000;
 
         // default Giant stats
         baseStats = new Stats(5, 0.5f, 0, 3000, 0);
