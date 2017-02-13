@@ -35,14 +35,18 @@ public class Villager : MonoBehaviour {
         gatherTime = 5.0f;
         resourcesCarried = 0;
         efficiency = 1;
+
         resource = ResourceType.NONE;
         state = VillagerState.IDLE;
         arriveAction = VillagerArriveAction.NONE;
         arriveActionNext = VillagerArriveAction.NONE;
         item = ItemID.NULL;
+
         targetTileNext = null;
+
         camp = GetComponentInParent<Camp>();
         animator = GetComponent<Animator>();
+
         tileCenterPositionOffset = new Vector3(0, 0.25f, 0);
         feetPositionOffset = new Vector3(0, 0.265f, 0);
 	}
