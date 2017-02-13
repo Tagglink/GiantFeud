@@ -34,8 +34,8 @@ public class Giant : MonoBehaviour {
         baseStats = new Stats(5, 0.5f, 0, 3000, 0);
         stats = baseStats;
 
-        currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
-        currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0, 0));
+        currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0));
+        currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0));
     }
 
     void Update()
@@ -70,7 +70,7 @@ public class Giant : MonoBehaviour {
 
     public void TakeDamage(int damageTaken)
     {
-        stats.hp -= damageTaken - stats.def;
+        hp -= damageTaken - stats.def;
     }
 
     public void UseItem(Item item)
@@ -169,11 +169,9 @@ public class Giant : MonoBehaviour {
 
     void UpdateStats()
     {
-        Stats multiplier = new Stats(0, 0, 0, 0, 0, 0);
-        Stats baseStatsWithoutHp = baseStats;
-        baseStatsWithoutHp.hp = stats.hp;
+        Stats multiplier = new Stats(0, 0, 0, 0, 0);
 
-        stats = baseStatsWithoutHp;
+        stats = baseStats;
 
         stats += currentArmour.stats + (currentArmour.reinforcementStats * currentArmour.reinforcementCount);
         stats += currentWeapon.stats + (currentWeapon.reinforcementStats * currentWeapon.reinforcementCount);
@@ -200,7 +198,7 @@ public class Giant : MonoBehaviour {
         }
         if (timer % 50 == 0)
         {
-            stats.hp += stats.hpPerSec;
+            hp += stats.hpPerSec;
         }
     }
 }
