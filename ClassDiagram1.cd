@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Item">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAQAAAAAAAAIAAAAAAAAAAEAAEAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Weapon">
+    <Position X="2.75" Y="6.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AI" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAFAAAACAABAAAAABQABAIQgAAAAAAAgAAMAAAhAA=</HashCode>
+      <FileName>Assets\Scripts\AI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Armour">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Armour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camp" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYEAAQgCCJACGAACABAABAAAAMIigEgAAAAAACIAAA=</HashCode>
+      <FileName>Assets\Scripts\Camp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Consumable">
+    <Position X="3.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Consumable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crafting" Collapsed="true">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAABAAAAAAAAAAAAAAgAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Crafting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CraftingButton" Collapsed="true">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUIAAAAAaCAAEQAAEIAAEAAAAADQQAGgQAAAAAABAA=</HashCode>
+      <FileName>Assets\Scripts\CraftingButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Equipment">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Equipment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAACAAAAAAABAAAAAAABAAAAAAAYAAA=</HashCode>
+      <FileName>Assets\Scripts\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Giant" Collapsed="true">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQHAAQYEiAABIIAgCBgAEAAAIAQAAQgAADAgBAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Giant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUDCraftingProgressMeter" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAQASAAAIAAAAAAAAAAABAAAAAAACAAAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\HUDCraftingProgressMeter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUDHealthDisplayer" Collapsed="true">
+    <Position X="9" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAABAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\HUDHealthDisplayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUDItemButton" Collapsed="true">
+    <Position X="10.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACAAABKCgAEAAAMIAAAACAAAVgQAEgAAAAAEgAEA=</HashCode>
+      <FileName>Assets\Scripts\HUDItemButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUDItemInfoBox" Collapsed="true">
+    <Position X="12.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAJCwAgAgIUAIABAEAABAGAAAAAAAgAAEQgAA=</HashCode>
+      <FileName>Assets\Scripts\HUDItemInfoBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUDManager" Collapsed="true">
+    <Position X="5.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAAAAACAAAAAAAAAAAAAAAgAAAAQAAABUAAAA=</HashCode>
+      <FileName>Assets\Scripts\HUDManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Items" Collapsed="true">
+    <Position X="7.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAEAAAAAAAgKAAAAgAAQIAACAABAAABgCAAAQCAA=</HashCode>
+      <FileName>Assets\Scripts\Items.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Map" Collapsed="true">
+    <Position X="9" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAgAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="10.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEABAACAABAAAAAAAAAAAAAAAQAAAABBAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceDisplayer" Collapsed="true">
+    <Position X="12.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAACAAAACAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ResourceDisplayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tile" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAEAAACAAACAAAgAAAAAAAAABAAAEAAAAgAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Villager" Collapsed="true">
+    <Position X="9" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAQEAIQoAqAQBCNBQAQAEGQQACXIAQIEAgAAAEBAAAA=</HashCode>
+      <FileName>Assets\Scripts\Villager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Test" Collapsed="true">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAABAAAAAAAAEAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Test.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Resources" Collapsed="true">
+    <Position X="5.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAABAAAAAAAAAAkAABAAAAAQAAEAIAAAAAAABQA=</HashCode>
+      <FileName>Assets\Scripts\Resources.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Stats" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAYAUAgAAAABAAAAAAgAAAABAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Stats.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="AIAction" Collapsed="true">
+    <Position X="5.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAQAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\AI.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="displayState" Collapsed="true">
+    <Position X="7.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAA=</HashCode>
+      <FileName>Assets\Scripts\HUDItemButton.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ItemID" Collapsed="true">
+    <Position X="9" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEEFAACAgAEICAAAAEAARABMAAAAAIgAAgAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Items.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ResourceType" Collapsed="true">
+    <Position X="10.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAgAAAAAAQAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Resources.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TileType" Collapsed="true">
+    <Position X="5.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAEAAACAgAAAAAAQAAEAAAAAAAAAAEAAAAAAAAQAA=</HashCode>
+      <FileName>Assets\Scripts\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TileState" Collapsed="true">
+    <Position X="12.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VillagerState" Collapsed="true">
+    <Position X="9" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAQAAAAAAAIAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Villager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VillagerArriveAction" Collapsed="true">
+    <Position X="7.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAACAAQAAAAAAChAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Villager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
