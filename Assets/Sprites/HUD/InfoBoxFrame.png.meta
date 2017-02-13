@@ -1,9 +1,18 @@
 fileFormatVersion: 2
 guid: 57ec834f77729a74389b7c0e34d3dc71
-timeCreated: 1486557687
+timeCreated: 1486986196
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    8900000: generatedCubemap
+    21300000: InfoBoxFrame_0
+    21300002: InfoBoxFrame_1
+    21300004: InfoBoxFrame_2
+    21300006: InfoBoxFrame_3
+    21300008: InfoBoxFrame_4
+    21300010: InfoBoxFrame_5
+    21300012: InfoBoxFrame_6
+    21300014: InfoBoxFrame_7
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -29,8 +38,8 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
-    aniso: -1
+    filterMode: 1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -43,7 +52,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 14, y: 14, z: 14, w: 14}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -51,7 +60,111 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: InfoBoxFrame_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_1
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 96
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_2
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 96
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_4
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 48
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_6
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 0
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: InfoBoxFrame_7
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 0
+        width: 229
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

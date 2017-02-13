@@ -22,10 +22,16 @@ public class HUDItemInfoBox : MonoBehaviour {
     Image[] finalStatGauges;
     Image[] currentStatGauges;
 
+    Color itemGaugeColor;
+    Color playerGaugeColor;
+
 	// Use this for initialization
 	void Start () {
         Transform equipmentEffectObj = transform.Find("ItemEquipmentEffect");
         Transform resourceCostObj = transform.Find("ResourceCost");
+
+        itemGaugeColor = new Color(0.5f, 0.5f, 0f, 0.5f);
+        playerGaugeColor = new Color(0f, 0.5f, 0.5f, 0.5f);
 
         maxResourceGaugeHeight = 50;
         maxStatGaugeHeight = 74;
@@ -42,6 +48,11 @@ public class HUDItemInfoBox : MonoBehaviour {
         requiredResourcesGauges = GetGaugeComponents(resourceCostObj, 3);
         currentStatGauges = GetGaugeComponents(equipmentEffectObj, 2);
         finalStatGauges = GetGaugeComponents(equipmentEffectObj, 3);
+
+        ChangeGaugeColors(currentResourcesGauges, playerGaugeColor);
+        ChangeGaugeColors(currentStatGauges, playerGaugeColor);
+        ChangeGaugeColors(requiredResourcesGauges, itemGaugeColor);
+        ChangeGaugeColors(finalStatGauges, itemGaugeColor);
 
         enabled = true;
 	}
@@ -127,8 +138,8 @@ public class HUDItemInfoBox : MonoBehaviour {
         images[0].fillAmount = (float)stats.atk / maxHeight;
         images[1].fillAmount = (float)stats.def / maxHeight;
         images[2].fillAmount = stats.atkspd / maxHeight;
-        images[4].fillAmount = (float)stats.maxHP / maxHeight;
-        images[5].fillAmount = (float)stats.hpPerSec / maxHeight;
+        images[3].fillAmount = (float)stats.maxHP / maxHeight;
+        images[4].fillAmount = (float)stats.hpPerSec / maxHeight;
     }
 
     void InjectTexts(Text[] texts, Stats stats)
@@ -136,8 +147,8 @@ public class HUDItemInfoBox : MonoBehaviour {
         texts[0].text = "" + stats.atk;
         texts[1].text = "" + stats.def;
         texts[2].text = "" + stats.atkspd;
-        texts[4].text = "" + stats.maxHP;
-        texts[5].text = "" + stats.hpPerSec;
+        texts[3].text = "" + stats.maxHP;
+        texts[4].text = "" + stats.hpPerSec;
     }
 
     void InjectTexts(Text[] texts, Resources resources)
@@ -147,5 +158,10 @@ public class HUDItemInfoBox : MonoBehaviour {
         texts[2].text = "" + resources.water;
         texts[3].text = "" + resources.wheat;
         texts[4].text = "" + resources.wood;
+    }
+    void ChangeGaugeColors(Image[] gauges, Color color)
+    {
+        foreach (Image img in gauges)
+            img.color = color;
     }
 }
