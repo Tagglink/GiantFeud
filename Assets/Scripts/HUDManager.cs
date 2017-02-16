@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour {
 
@@ -8,6 +8,16 @@ public class HUDManager : MonoBehaviour {
     public GameObject consumableButton; // inspector set
     
     public Camp playerCamp;             // inspector set
+
+    public GameObject townName;         // inspector set
+
+    void Start()
+    {
+        if (PlayerPrefs.HasKey("Town Name"))
+            townName.GetComponent<Text>().text = PlayerPrefs.GetString("Town Name");
+        else
+            townName.GetComponent<Text>().text = "Your Town";
+    }
 
     void Update()
     {
