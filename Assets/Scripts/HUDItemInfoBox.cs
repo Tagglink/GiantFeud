@@ -7,20 +7,12 @@ public class HUDItemInfoBox : MonoBehaviour {
     public Camp playerCamp; // inspector set
     public Giant playerGiant; // inspector set
 
-    int maxResourceGaugeHeight;
-    int maxStatGaugeHeight;
-
     Text itemName;
     Text itemDesc;
     Text consumableEffect;
-    Text[] resourceCostValues;
-    Text[] statValues;
-
-    Image itemIcon;
-    Image[] requiredResourcesGauges;
-    Image[] currentResourcesGauges;
-    Image[] finalStatGauges;
-    Image[] currentStatGauges;
+    
+    HUDGauge[] resourceGauges;
+    HUDGauge[] statGauges;
 
     Color itemGaugeColor;
     Color playerGaugeColor;
@@ -33,49 +25,20 @@ public class HUDItemInfoBox : MonoBehaviour {
         itemGaugeColor = new Color(0.5f, 0.5f, 0f, 0.5f);
         playerGaugeColor = new Color(0f, 0.5f, 0.5f, 0.5f);
 
-        maxResourceGaugeHeight = 50;
-        maxStatGaugeHeight = 74;
-
-        itemIcon = transform.Find("ItemIconFrame/ItemIcon").GetComponent<Image>();
-
         itemName = transform.Find("ItemName").GetComponent<Text>();
         itemDesc = transform.Find("ItemDescription").GetComponent<Text>();
-        resourceCostValues = GetTextValues(transform.Find("ResourceCost"));
-        statValues = GetTextValues(transform.Find("ItemEquipmentEffect"));
         consumableEffect = transform.Find("ItemConsumableEffect/EffectDescription").GetComponent<Text>();
-        
-        currentResourcesGauges = GetGaugeComponents(resourceCostObj, 2);
-        requiredResourcesGauges = GetGaugeComponents(resourceCostObj, 3);
-        currentStatGauges = GetGaugeComponents(equipmentEffectObj, 2);
-        finalStatGauges = GetGaugeComponents(equipmentEffectObj, 3);
 
-        ChangeGaugeColors(currentResourcesGauges, playerGaugeColor);
-        ChangeGaugeColors(currentStatGauges, playerGaugeColor);
-        ChangeGaugeColors(requiredResourcesGauges, itemGaugeColor);
-        ChangeGaugeColors(finalStatGauges, itemGaugeColor);
+        resourceGauges = resourceCostObj.GetComponentsInChildren<HUDGauge>();
+        statGauges = equipmentEffectObj.GetComponentsInChildren<HUDGauge>();
+
+        ChangeGaugeColors(resourceGauges, playerGaugeColor, 0);
+        ChangeGaugeColors(resourceGauges, itemGaugeColor, 1);
+        ChangeGaugeColors(statGauges, playerGaugeColor, 0);
+        ChangeGaugeColors(statGauges, itemGaugeColor, 1);
 
         enabled = true;
 	}
-
-    Text[] GetTextValues(Transform parent)
-    {
-        Text[] ret = new Text[parent.childCount];
-
-        for (int i = 0; i < ret.Length; i++)
-            ret[i] = parent.GetChild(i).GetComponentInChildren<Text>();
-
-        return ret;
-    }
-
-    Image[] GetGaugeComponents(Transform parent, int child)
-    {
-        Image[] ret = new Image[parent.childCount];
-
-        for (int i = 0; i < ret.Length; i++)
-            ret[i] = parent.GetChild(i).GetChild(child).GetComponent<Image>();
-
-        return ret;
-    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -104,10 +67,17 @@ public class HUDItemInfoBox : MonoBehaviour {
         itemName.text = item.name;
         itemDesc.text = item.description;
 
-        InjectTexts(resourceCostValues, cost);
-
-        InjectGauges(requiredResourcesGauges, cost, maxResourceGaugeHeight);
-        InjectGauges(currentResourcesGauges, playerCamp.resources, maxResourceGaugeHeight);
+        resourceGauges[0].SetValue(playerCamp.resources.meat, 0);
+        resourceGauges[1].SetValue(playerCamp.resources.stone, 0);
+        resourceGauges[2].SetValue(playerCamp.resources.water, 0);
+        resourceGauges[3].SetValue(playerCamp.resources.wheat, 0);
+        resourceGauges[4].SetValue(playerCamp.resources.wood, 0);
+        
+        resourceGauges[0].SetValue(cost.meat, 1, true);
+        resourceGauges[1].SetValue(cost.stone, 1, true);
+        resourceGauges[2].SetValue(cost.water, 1, true);
+        resourceGauges[3].SetValue(cost.wheat, 1, true);
+        resourceGauges[4].SetValue(cost.wood, 1, true);
 
         if (item is Consumable)
         {
@@ -116,52 +86,24 @@ public class HUDItemInfoBox : MonoBehaviour {
         else if (item is Equipment)
         {
             itemStats = (item as Equipment).stats;
+            
+            resourceGauges[0].SetValue(playerGiant.stats.atk, 0);
+            resourceGauges[1].SetValue(playerGiant.stats.def, 0);
+            resourceGauges[2].SetValue(playerGiant.stats.atkspd, 0);
+            resourceGauges[3].SetValue(playerGiant.stats.maxHP, 0);
+            resourceGauges[4].SetValue(playerGiant.stats.hpPerSec, 0);
 
-            InjectTexts(statValues, itemStats + playerGiant.stats);
-
-            InjectGauges(currentStatGauges, playerGiant.stats, maxStatGaugeHeight);
-            InjectGauges(finalStatGauges, itemStats + playerGiant.stats, maxStatGaugeHeight);
+            resourceGauges[0].SetValue(itemStats.atk, 1, true);
+            resourceGauges[1].SetValue(itemStats.def, 1, true);
+            resourceGauges[2].SetValue(itemStats.atkspd, 1, true);
+            resourceGauges[3].SetValue(itemStats.maxHP, 1, true);
+            resourceGauges[4].SetValue(itemStats.hpPerSec, 1, true);
         }
     }
 
-    void InjectGauges(Image[] images, Resources resources, int maxHeight)
+    void ChangeGaugeColors(HUDGauge[] gauges, Color color, int index)
     {
-        images[0].fillAmount = (float)resources.meat / maxHeight;
-        images[1].fillAmount = (float)resources.stone / maxHeight;
-        images[2].fillAmount = (float)resources.water / maxHeight;
-        images[3].fillAmount = (float)resources.wheat / maxHeight;
-        images[4].fillAmount = (float)resources.wood / maxHeight;
-    }
-
-    void InjectGauges(Image[] images, Stats stats, int maxHeight)
-    {
-        images[0].fillAmount = (float)stats.atk / maxHeight;
-        images[1].fillAmount = (float)stats.def / maxHeight;
-        images[2].fillAmount = stats.atkspd / maxHeight;
-        images[3].fillAmount = (float)stats.maxHP / maxHeight;
-        images[4].fillAmount = (float)stats.hpPerSec / maxHeight;
-    }
-
-    void InjectTexts(Text[] texts, Stats stats)
-    {
-        texts[0].text = "" + stats.atk;
-        texts[1].text = "" + stats.def;
-        texts[2].text = "" + stats.atkspd;
-        texts[3].text = "" + stats.maxHP;
-        texts[4].text = "" + stats.hpPerSec;
-    }
-
-    void InjectTexts(Text[] texts, Resources resources)
-    {
-        texts[0].text = "" + resources.meat;
-        texts[1].text = "" + resources.stone;
-        texts[2].text = "" + resources.water;
-        texts[3].text = "" + resources.wheat;
-        texts[4].text = "" + resources.wood;
-    }
-    void ChangeGaugeColors(Image[] gauges, Color color)
-    {
-        foreach (Image img in gauges)
-            img.color = color;
+        foreach (HUDGauge gauge in gauges)
+            gauge.SetColor(color, index);
     }
 }

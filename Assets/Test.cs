@@ -9,7 +9,7 @@ public class Test : MonoBehaviour {
 
 	void Start () {
         StartCoroutine(Wait());
-        camp.GetComponent<Camp>().resources = new Resources(99, 99, 99, 99, 99);
+        //camp.GetComponent<Camp>().resources = new Resources(99, 99, 99, 99, 99);
 	}
 
     IEnumerator Wait()
