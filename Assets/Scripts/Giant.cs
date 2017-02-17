@@ -15,12 +15,13 @@ public class Giant : MonoBehaviour {
     public GameObject enemyGiant; // inspector set
     public GameObject camp; // inspector set
     public GameObject gameManager; // inspector set
+    public HUDStatusBox hudStatusBox; // inspector set
 
     public int hp;
+    public bool statsChanged;
 
     private int timer;
     private int atkTime;
-    private bool statsChanged;
 
     void Start()
     {
@@ -187,6 +188,9 @@ public class Giant : MonoBehaviour {
 
             stats *= multiplier;
         }
+
+        if (hudStatusBox)
+            hudStatusBox.UpdateStatGauges();
     }
 
     void FixedUpdate()

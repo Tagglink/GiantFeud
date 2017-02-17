@@ -6,34 +6,24 @@ public class HUDItemInfoBox : MonoBehaviour {
 
     public Camp playerCamp; // inspector set
     public Giant playerGiant; // inspector set
+    public HUDGauge[] resourceGauges; // inspector set
+    public HUDGauge[] statGauges; // inspector set
 
-    Text itemName;
-    Text itemDesc;
-    Text consumableEffect;
+    public Text itemName; // inspector set
+    public Text itemDesc; // inspector set
+    public Text consumableEffect; // inspector set
     
-    HUDGauge[] resourceGauges;
-    HUDGauge[] statGauges;
-
     Color itemGaugeColor;
     Color playerGaugeColor;
 
 	// Use this for initialization
 	void Start () {
-        Transform equipmentEffectObj = transform.Find("ItemEquipmentEffect");
-        Transform resourceCostObj = transform.Find("ResourceCost");
-
         itemGaugeColor = new Color(0.5f, 0.5f, 0f, 0.5f);
         playerGaugeColor = new Color(0f, 0.5f, 0.5f, 0.5f);
 
-        itemName = transform.Find("ItemName").GetComponent<Text>();
-        itemDesc = transform.Find("ItemDescription").GetComponent<Text>();
-        consumableEffect = transform.Find("ItemConsumableEffect/EffectDescription").GetComponent<Text>();
-
-        resourceGauges = resourceCostObj.GetComponentsInChildren<HUDGauge>();
-        statGauges = equipmentEffectObj.GetComponentsInChildren<HUDGauge>();
-
         ChangeGaugeColors(resourceGauges, playerGaugeColor, 0);
         ChangeGaugeColors(resourceGauges, itemGaugeColor, 1);
+
         ChangeGaugeColors(statGauges, playerGaugeColor, 0);
         ChangeGaugeColors(statGauges, itemGaugeColor, 1);
 
@@ -87,17 +77,17 @@ public class HUDItemInfoBox : MonoBehaviour {
         {
             itemStats = (item as Equipment).stats;
             
-            resourceGauges[0].SetValue(playerGiant.stats.atk, 0);
-            resourceGauges[1].SetValue(playerGiant.stats.def, 0);
-            resourceGauges[2].SetValue(playerGiant.stats.atkspd, 0);
-            resourceGauges[3].SetValue(playerGiant.stats.maxHP, 0);
-            resourceGauges[4].SetValue(playerGiant.stats.hpPerSec, 0);
+            statGauges[0].SetValue(playerGiant.stats.atk, 0);
+            statGauges[1].SetValue(playerGiant.stats.atkspd, 0);
+            statGauges[2].SetValue(playerGiant.stats.def, 0);
+            statGauges[3].SetValue(playerGiant.stats.maxHP, 0);
+            statGauges[4].SetValue(playerGiant.stats.hpPerSec, 0);
 
-            resourceGauges[0].SetValue(itemStats.atk, 1, true);
-            resourceGauges[1].SetValue(itemStats.def, 1, true);
-            resourceGauges[2].SetValue(itemStats.atkspd, 1, true);
-            resourceGauges[3].SetValue(itemStats.maxHP, 1, true);
-            resourceGauges[4].SetValue(itemStats.hpPerSec, 1, true);
+            statGauges[0].SetValue(itemStats.atk, 1, true);
+            statGauges[1].SetValue(itemStats.atkspd, 1, true);
+            statGauges[2].SetValue(itemStats.def, 1, true);
+            statGauges[3].SetValue(itemStats.maxHP, 1, true);
+            statGauges[4].SetValue(itemStats.hpPerSec, 1, true);
         }
     }
 

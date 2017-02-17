@@ -8,13 +8,12 @@ public class HUDGauge : MonoBehaviour {
 
     public float maxValue; // inspector set
 
-    Image[] gauges;
-    Text textValue;
+    public Image[] gauges; // inspector set
+    public Text textValue; // inspector set
 
     // Use this for initialization
     void Start() {
-        gauges = GetGauges();
-        textValue = transform.Find("Value").GetComponent<Text>();
+
 	}
 	
 	// Update is called once per frame
@@ -56,7 +55,7 @@ public class HUDGauge : MonoBehaviour {
             return;
         }
 
-        img.fillAmount = maxValue / value;
+        img.fillAmount = value / maxValue;
 
         if (text)
             textValue.text = "" + value;
