@@ -12,6 +12,7 @@ public class AI : MonoBehaviour {
     private ItemID goalItem;
     private AIAction action;
     private bool craftFlag;
+    private bool useItemFlag;
 
     private ItemID[] buildPath;
     private int buildPathIndex;
@@ -21,41 +22,47 @@ public class AI : MonoBehaviour {
         goalItem = ItemID.NULL;
         action = AIAction.NONE;
         craftFlag = false;
+        useItemFlag = false;
         active = true;
         buildPathIndex = 0;
 
         buildPath = new ItemID[]
         {
-            ItemID.SPEAR, ItemID.LEATHERARMOUR, ItemID.AXE, ItemID.SWORD, ItemID.STONEARMOUR, ItemID.HIDEARMOUR
+            ItemID.SPEAR
         };
     }
 
 	void Update () {
         if (active)
         {
-            action = DetermineAction();
-            DetermineGoalItem();
-
-            if (craftFlag)
+            // if there is an item in the stash, use it right away
+            if (useItemFlag)
             {
-                // attempt to craft goalItem until success
-                craftFlag = !camp.Craft(goalItem);
-                if (!craftFlag)
+                camp.UseItem(camp.itemStash[0]);
+                useItemFlag = false;
+            }
+            else {
+                action = DetermineAction();
+                DetermineGoalItem();
+
+                if (craftFlag)
                 {
-                    goalItem = ItemID.NULL; // if success, set item back to null
-                    if (action == AIAction.BUILD_PATH && buildPathIndex < buildPath.Length - 1)
-                        buildPathIndex++;
+                    // attempt to craft goalItem until success
+                    craftFlag = !camp.Craft(goalItem);
+                    if (!craftFlag)
+                    {
+                        goalItem = ItemID.NULL; // if success, set item back to null
+                        useItemFlag = true;
+                        if (action == AIAction.BUILD_PATH && buildPathIndex < buildPath.Length - 1)
+                            buildPathIndex++;
+                    }
+                }
+                else
+                {
+                    // craftFlag is true once enough villagers have been sent for goalItem's cost
+                    craftFlag = GatherRequiredResources();
                 }
             }
-            else
-            {
-                // craftFlag is true once enough villagers have been sent for goalItem's cost
-                craftFlag = GatherRequiredResources();
-            }
-
-            // if there is an item in the stash, use it right away
-            if (camp.itemStash.Count > 0)
-                camp.UseItem(camp.itemStash[0]);
         }
     }
 
