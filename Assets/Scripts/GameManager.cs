@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
         player = playerObject.GetComponent<Giant>();
-        Screen.SetResolution(1920, 1080, true);
 	}
 
     public void EndGame(Giant giant)
