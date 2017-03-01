@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
     public GameObject map;
+    public GameObject arrow;
 
     [HideInInspector]
     public Camp camp;
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour {
 
     private Color highlight;
     private int changeValue;
+    private bool arrowDirection;
+    private float arrowOffset;
 
     private Vector3 offScale;
 
@@ -33,6 +36,9 @@ public class Player : MonoBehaviour {
         changeValue = 1;
         highlight = Color.white;
 
+        arrowDirection = false;
+        arrowOffset = 1f;
+
         // testing
 
         camp.resources = new Resources(99, 99, 99, 99, 99);
@@ -40,14 +46,22 @@ public class Player : MonoBehaviour {
 
 	void Update ()
     {
-        UpdateColorCycle();
+        UpdateCycles();
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Transform mouseTile = FindNearestTransform(centerOfTiles.ToArray(), mousePosition);
         Tile mouseTileScript = null;
 
+
         if (mouseTile != null) {
             mouseTile.GetComponent<SpriteRenderer>().color = highlight;
             mouseTileScript = mouseTile.GetComponent<Tile>();
+
+            // Arrow Offset
+            arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + arrowOffset);
+        }
+        else
+        {
+            arrow.transform.position = new Vector3(0, 5);
         }
 
         if (Input.GetMouseButtonDown(1)) // Right-click
@@ -55,6 +69,12 @@ public class Player : MonoBehaviour {
             if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP)
                 camp.SendVillagerToGather(mouseTile.gameObject);
         }
+    }
+
+    void UpdateCycles()
+    {
+        UpdateColorCycle();
+        UpdateArrowCycle();
     }
 
     void UpdateColorCycle()
@@ -67,6 +87,18 @@ public class Player : MonoBehaviour {
         highlight.r -= 0.01f * changeValue;
         highlight.g -= 0.01f * changeValue;
         highlight.b -= 0.01f * changeValue;
+    }
+
+    void UpdateArrowCycle()
+    {
+        if (arrowDirection)
+            arrowOffset += 0.01f;
+        else
+            arrowOffset -= 0.01f;
+        if (arrowOffset < 0.6f)
+            arrowDirection = !arrowDirection;
+        else if (arrowOffset > 1f)
+            arrowDirection = !arrowDirection;
     }
 
     Transform FindNearestTransform(Transform[] transforms, Vector3 position)
