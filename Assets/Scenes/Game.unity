@@ -3119,7 +3119,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 4fde0750651ef7345b081e735c751550, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dc585e31de5162c46bcf1b4e5d1069a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4048,7 +4048,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: 4fde0750651ef7345b081e735c751550, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ea964ddefe3a0d049bd4c1828058577b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9688,7 +9688,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: 4fde0750651ef7345b081e735c751550, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dc585e31de5162c46bcf1b4e5d1069a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15011,6 +15011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1563978794}
+  arrow: {fileID: 0}
   camp: {fileID: 0}
 --- !u!114 &1656451966
 MonoBehaviour:
@@ -19035,7 +19036,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 4fde0750651ef7345b081e735c751550, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ea964ddefe3a0d049bd4c1828058577b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -19950,7 +19951,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 4fde0750651ef7345b081e735c751550, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dc585e31de5162c46bcf1b4e5d1069a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
