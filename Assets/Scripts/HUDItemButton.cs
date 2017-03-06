@@ -48,6 +48,7 @@ public class HUDItemButton : MonoBehaviour {
     UnityAction Craft(ItemID id)
     {
         return new UnityAction(() => {
+            GetComponent<Button>().onClick.AddListener(Use(itemID));
             playerCamp.Craft(id);
         });
     }
@@ -56,14 +57,6 @@ public class HUDItemButton : MonoBehaviour {
     {
         return new UnityAction(() => {
             playerCamp.UseItem(id);
-        });
-    }
-
-    UnityAction Reinforce(ItemID id)
-    {
-        return new UnityAction(() =>
-        {
-            
         });
     }
 
