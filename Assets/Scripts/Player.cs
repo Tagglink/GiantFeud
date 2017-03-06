@@ -17,7 +17,6 @@ public class Player : MonoBehaviour {
     private Color highlight;
     private int changeValue;
     private bool arrowDirection;
-    private float arrowOffset;
 
     private Vector3 offScale;
 
@@ -37,7 +36,6 @@ public class Player : MonoBehaviour {
         highlight = Color.white;
 
         arrowDirection = false;
-        arrowOffset = 1f;
 
         // testing
 
@@ -57,7 +55,7 @@ public class Player : MonoBehaviour {
             mouseTileScript = mouseTile.GetComponent<Tile>();
 
             // Arrow Offset
-            arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + arrowOffset);
+            arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + highlight.r);
         }
         else
         {
@@ -74,7 +72,6 @@ public class Player : MonoBehaviour {
     void UpdateCycles()
     {
         UpdateColorCycle();
-        UpdateArrowCycle();
     }
 
     void UpdateColorCycle()
@@ -87,18 +84,6 @@ public class Player : MonoBehaviour {
         highlight.r -= 0.01f * changeValue;
         highlight.g -= 0.01f * changeValue;
         highlight.b -= 0.01f * changeValue;
-    }
-
-    void UpdateArrowCycle()
-    {
-        if (arrowDirection)
-            arrowOffset += 0.01f;
-        else
-            arrowOffset -= 0.01f;
-        if (arrowOffset < 0.6f)
-            arrowDirection = !arrowDirection;
-        else if (arrowOffset > 1f)
-            arrowDirection = !arrowDirection;
     }
 
     Transform FindNearestTransform(Transform[] transforms, Vector3 position)
