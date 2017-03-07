@@ -20,7 +20,7 @@ public class Items : MonoBehaviour {
             { ItemID.STONEARMOUR,   new Armour      ("Stenrustning",    "Den här rustningen är stenhård.",          new Resources(0,0,0,0,8),       null, 0.0f, true,  new Stats(0,0,5,0,0),            0, new Stats(0, 0, 5, 0, 0))        },
             { ItemID.LEATHERARMOUR, new Armour      ("Läderrustning",   "Riktiga kläder.",                          new Resources(0,0,4,0,0),       null, 0.0f, true,  new Stats(0,0.25f,2,0,0),        0, new Stats(0, 0.25f, 2, 0, 0))    },
             { ItemID.APPLE,         new Consumable  ("Äpple",           "Håller doktorn borta.",                    new Resources(1,0,0,0,0),       null, 0.0f, true,  0.0f,  AppleAction(),            AppleReverseAction())               },
-            { ItemID.ELIXIR,        new Consumable  ("Elixir",          "En magisk brygd.",                         new Resources(0,4,8,8,0),       null, 0.0f, true,  20.0f, ElixirAction(),           ElixirReverseAction())              },
+            { ItemID.ELIXIR,        new Consumable  ("Elixir",          "En magisk brygd.",                         new Resources(0,4,8,8,0),       null, 0.0f, true,  5.0f,  ElixirAction(),           ElixirReverseAction())              },
             { ItemID.VILLAGER,      new Consumable  ("Bybo",            "En till bybo för att samla resurser.",     new Resources(0,1,2,4,0),       null, 0.0f, false, 0.0f,  VillagerAction(),         VillagerReverseAction())            },
             { ItemID.MEATSTEW,      new Consumable  ("Köttgryta",       "Bubblande med näring.",                    new Resources(0,0,3,2,0),       null, 0.0f, true,  60.0f, MeatstewAction(),         MeatstewReverseAction())            },
             { ItemID.MEATCLUB,      new Consumable  ("Köttklubba",      "Inte för att slåss.",                      new Resources(1,0,8,0,0),       null, 0.0f, true,  10.0f, MeatclubAction(),         MeatclubReverseAction())            },
@@ -43,7 +43,7 @@ public class Items : MonoBehaviour {
     static Action<Giant> ElixirAction()
     {
         return new Action<Giant>((Giant giant) => {
-            giant.AddMultiplier(ItemID.ELIXIR, new Stats(2, 2, 2, 2, 2));
+            giant.AddMultiplier(ItemID.ELIXIR, new Stats(2, 2, 2, 1, 2));
         });
     }
     static Action<Giant> ElixirReverseAction()
@@ -76,8 +76,8 @@ public class Items : MonoBehaviour {
     static Action<Giant> MeatstewAction()
     {
         return new Action<Giant>((Giant giant) => {
-            giant.hp += 100;
-            giant.AddBuff(ItemID.MEATSTEW, new Stats(2, 0, 0, 0, 2));
+            giant.hp += 300;
+            giant.AddBuff(ItemID.MEATSTEW, new Stats(5, 0, 0, 0, 10));
         });
     }
     static Action<Giant> MeatstewReverseAction()
@@ -90,14 +90,14 @@ public class Items : MonoBehaviour {
     static Action<Giant> MeatclubAction()
     {
         return new Action<Giant>((Giant giant) => {
-            giant.AddBuff(ItemID.MEATCLUB, new Stats(0, 0, 0, 0, 10));
+            giant.AddBuff(ItemID.MEATCLUB, new Stats(0, 0, 0, 0, 50));
         });
     }
     static Action<Giant> MeatclubReverseAction()
     {
         return new Action<Giant>((Giant giant) => {
             giant.RemoveBuff(ItemID.MEATCLUB);
-            giant.camp.GetComponent<Camp>().resources.wood += 1; 
+            giant.camp.GetComponent<Camp>().resources.wood += 1;
             giant.hp += 400;
         });
     }
@@ -105,7 +105,7 @@ public class Items : MonoBehaviour {
     static Action<Giant> BreadloafAction()
     {
         return new Action<Giant>((Giant giant) => {
-            giant.hp += 200;
+            giant.hp += 500;
             giant.AddBuff(ItemID.BREADLOAF, new Stats(0, 1, 0, 0, 0));
         });
     }

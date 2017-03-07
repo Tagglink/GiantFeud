@@ -5975,7 +5975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamp: {fileID: 1656451966}
   itemInfoBox: {fileID: 1492051192}
-  itemID: 9
+  itemID: 10
   eventTrigger: {fileID: 0}
   state: 0
   displayPoint: {x: 0, y: 0, z: 0}
