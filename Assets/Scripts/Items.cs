@@ -90,7 +90,7 @@ public class Items : MonoBehaviour {
     static Action<Giant> MeatclubAction()
     {
         return new Action<Giant>((Giant giant) => {
-            giant.AddBuff(ItemID.MEATCLUB, new Stats(0, 0, 0, 0, 50));
+            giant.AddBuff(ItemID.MEATCLUB, new Stats(0, 0, 0, 0, 100));
         });
     }
     static Action<Giant> MeatclubReverseAction()
