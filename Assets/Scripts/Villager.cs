@@ -48,7 +48,7 @@ public class Villager : MonoBehaviour {
         animator = GetComponent<Animator>();
 
         tileCenterPositionOffset = new Vector3(0, 0.25f, 0);
-        feetPositionOffset = new Vector3(0, 0.265f, 0);
+        feetPositionOffset = new Vector3(0, 0, 0);
 	}
 	
 	// Update is called once per frame

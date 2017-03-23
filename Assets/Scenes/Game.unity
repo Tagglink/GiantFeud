@@ -5461,6 +5461,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 628574468}
   - 114: {fileID: 628574469}
+  - 212: {fileID: 628574470}
   m_Layer: 0
   m_Name: Giant Comp
   m_TagString: Untagged
@@ -5475,7 +5476,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 628574467}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.50485504, y: 0.62705755, z: 0}
+  m_LocalPosition: {x: 2.265, y: -0.281, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -5498,6 +5499,39 @@ MonoBehaviour:
   hudStatusBox: {fileID: 0}
   hp: 0
   statsChanged: 0
+--- !u!212 &628574470
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 628574467}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 1
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 15
+  m_Sprite: {fileID: 21300000, guid: cf265d319f0df974b929a874829a3424, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 1
+  m_FlipY: 0
 --- !u!1 &629650703
 GameObject:
   m_ObjectHideFlags: 0
@@ -8321,6 +8355,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -9055,6 +9095,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -11647,6 +11693,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -12001,6 +12053,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -12125,6 +12183,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -14146,6 +14210,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -20364,6 +20434,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2077408001}
   - 114: {fileID: 2077408002}
+  - 212: {fileID: 2077408003}
   m_Layer: 0
   m_Name: Giant Player
   m_TagString: Untagged
@@ -20378,7 +20449,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2077408000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.50485504, y: 0.62705755, z: 0}
+  m_LocalPosition: {x: 0.96, y: -0.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -20401,6 +20472,39 @@ MonoBehaviour:
   hudStatusBox: {fileID: 769080648}
   hp: 0
   statsChanged: 0
+--- !u!212 &2077408003
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2077408000}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 1
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 15
+  m_Sprite: {fileID: 21300000, guid: cf265d319f0df974b929a874829a3424, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!1 &2094074858
 GameObject:
   m_ObjectHideFlags: 0
