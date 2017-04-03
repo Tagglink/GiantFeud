@@ -49,7 +49,9 @@ public class AI : MonoBehaviour {
             // if there is an item in the stash, use it right away
             if (useItemFlag)
             {
-                camp.UseItem(camp.itemStash[0]);
+                if (camp.itemStash.Count > 0)
+                    camp.UseItem(camp.itemStash[0]);
+
                 useItemFlag = false;
             }
             else {

@@ -8355,6 +8355,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -9089,6 +9095,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -11681,6 +11693,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -12035,6 +12053,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -12159,6 +12183,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0
@@ -14180,6 +14210,12 @@ Prefab:
       propertyPath: m_TagString
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 212000011111118716, guid: 744ffd19c8fd05446be7f4dd7721ec4e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6571f8ea6fdb2064186ac0349268313d,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 744ffd19c8fd05446be7f4dd7721ec4e, type: 2}
   m_IsPrefabParent: 0

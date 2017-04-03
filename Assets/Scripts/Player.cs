@@ -50,12 +50,21 @@ public class Player : MonoBehaviour {
         Tile mouseTileScript = null;
 
 
-        if (mouseTile != null) {
-            mouseTile.GetComponent<SpriteRenderer>().color = highlight;
+        if (mouseTile) {
+
             mouseTileScript = mouseTile.GetComponent<Tile>();
 
-            // Arrow Offset
-            arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + highlight.r);
+            if (mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP && !mouseTileScript.occupied && camp.GetIdleVillagers().Count > 0)
+            {
+                mouseTile.GetComponent<SpriteRenderer>().color = highlight;
+
+                // Arrow Offset
+                arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + highlight.r);
+            }
+            else
+            {
+                arrow.transform.position = new Vector3(0, 5);
+            }
         }
         else
         {
@@ -64,7 +73,7 @@ public class Player : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(1)) // Right-click
         {
-            if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP)
+            if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP && !mouseTileScript.occupied)
                 camp.SendVillagerToGather(mouseTile.gameObject);
         }
     }
