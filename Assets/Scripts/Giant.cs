@@ -17,6 +17,8 @@ public class Giant : MonoBehaviour {
     public GameObject gameManager; // inspector set
     public HUDStatusBox hudStatusBox; // inspector set
 
+    public Animator animator; // component
+
     public int hp;
     public bool statsChanged;
 
@@ -32,12 +34,15 @@ public class Giant : MonoBehaviour {
         atkTime = 0;
         hp = 10000;
 
+        animator = GetComponent<Animator>();
+
         // default Giant stats
         baseStats = new Stats(5, 0.5f, 0, 10000, 0);
-        stats = baseStats;
 
         currentWeapon = new Weapon("Fists", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0));
         currentArmour = new Armour("Garments", "Unequipped", new Resources(0, 0, 0, 0, 0), null, 0.0f, false, new Stats(0, 0, 0, 0, 0), 0, new Stats(0, 0, 0, 0, 0));
+
+        UpdateStats();
     }
 
     void Update()
@@ -190,6 +195,7 @@ public class Giant : MonoBehaviour {
         stats += currentArmour.stats + (currentArmour.reinforcementStats * currentArmour.reinforcementCount);
         stats += currentWeapon.stats + (currentWeapon.reinforcementStats * currentWeapon.reinforcementCount);
 
+
         foreach (KeyValuePair<ItemID, Stats> buff in buffs)
             stats += buff.Value;
 
@@ -203,6 +209,8 @@ public class Giant : MonoBehaviour {
 
         if (hudStatusBox)
             hudStatusBox.UpdateStatGauges();
+
+        animator.SetFloat("swing_speed", stats.atkspd);
     }
 
     void FixedUpdate()

@@ -71,7 +71,7 @@ public class Player : MonoBehaviour {
             arrow.transform.position = new Vector3(0, 5);
         }
 
-        if (Input.GetMouseButtonDown(1)) // Right-click
+        if (Input.GetMouseButtonDown(0)) // Left-click
         {
             if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP && !mouseTileScript.occupied)
                 camp.SendVillagerToGather(mouseTile.gameObject);
