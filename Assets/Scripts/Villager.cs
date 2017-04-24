@@ -8,6 +8,9 @@ public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOUR
 
 public class Villager : MonoBehaviour {
 
+    public HUDTutorial tutorial; // inspector set
+    public bool opponent;        // inspector set
+
     public VillagerState state;
     public ResourceType resource;
     public ItemID item;
@@ -181,9 +184,13 @@ public class Villager : MonoBehaviour {
 
     void GiveCampResource()
     {
+        if (tutorial.currentStep == 1 && !opponent && resource == ResourceType.WOOD)
+            tutorial.AdvanceTutorial();
+
         camp.resources.Add(resource, resourcesCarried);
         resource = ResourceType.NONE;
         resourcesCarried = 0;
+
     }
 
     IEnumerator WaitForGather(Tile at)

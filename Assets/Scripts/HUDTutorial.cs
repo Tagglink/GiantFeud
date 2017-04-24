@@ -11,7 +11,6 @@ public class HUDTutorial : MonoBehaviour {
     public int currentStep;
 
     List<TutorialStep> stepList;
-    
 
     struct TutorialStep
     {
@@ -40,7 +39,8 @@ public class HUDTutorial : MonoBehaviour {
         stepList = new List<TutorialStep>()
         {
             new TutorialStep(233, 198, -105, 228, "Klicka på träden för att samla trä!", 560, 75),
-            new TutorialStep(-725, 60, -449, 77, "Här kan du göra crafting!", 420, 75)
+            new TutorialStep(-641, -72, -382, -59, "Klicka här för att crafta!", 400, 75),
+            new TutorialStep(-635, 31, -382, 31, "Crafta ett äpple!", 285, 75)
         };
 
         currentStep = 1;

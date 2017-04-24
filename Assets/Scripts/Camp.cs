@@ -14,8 +14,6 @@ public class Camp : MonoBehaviour {
     public GameObject homeTile; // inspector set
     public GameObject giantTile; // inspector set
 
-    public HUDCraftingProgressMeter craftingProgressMeter; // inspector set
-
     [HideInInspector]
     public Giant giantScript;
 
