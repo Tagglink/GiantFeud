@@ -12,6 +12,7 @@ public class HUDItemInfoBox : MonoBehaviour {
     public Text itemName; // inspector set
     public Text itemDesc; // inspector set
     public Text consumableEffect; // inspector set
+    public Image itemImage; // inspector set
     
     Color itemGaugeColor;
     Color playerGaugeColor;
@@ -56,6 +57,8 @@ public class HUDItemInfoBox : MonoBehaviour {
 
         itemName.text = item.name;
         itemDesc.text = item.description;
+
+        itemImage.sprite = item.icon;
 
         resourceGauges[0].SetValue(playerCamp.resources.meat, 0);
         resourceGauges[1].SetValue(playerCamp.resources.stone, 0);

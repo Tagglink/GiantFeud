@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,6 +14,9 @@ public class Camp : MonoBehaviour {
     public GameObject giant; // inspector set
     public GameObject homeTile; // inspector set
     public GameObject giantTile; // inspector set
+    public HUDTutorial tutorial; // inspector set
+    public Text populationText; // inspector set
+    public bool enemyCamp; // inspector set
 
     [HideInInspector]
     public Giant giantScript;
@@ -216,5 +220,8 @@ public class Camp : MonoBehaviour {
         isCrafting = false;
         currentlyCraftingItem = null;
         craftingProgress = 0.0f;
+
+        if (!enemyCamp && tutorial.currentStep == 3 && id == ItemID.APPLE)
+            tutorial.AdvanceTutorial();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine.EventSystems;
 
@@ -11,10 +11,9 @@ public class HUDItemButton : MonoBehaviour {
 
     public Camp playerCamp; // inspector set
     public HUDItemInfoBox itemInfoBox; // inspector set
+
     public ItemID itemID;
     public EventTrigger eventTrigger;
-
-    Button button;
 
     //private GameObject infoBox;
 
@@ -31,6 +30,10 @@ public class HUDItemButton : MonoBehaviour {
     private Vector3 startScale;
     private Vector3 endScale;
 
+    private Button button;
+    private Image itemImage;
+    private Image progressImage;
+
     void Start () {
         state = displayState.HIDDEN;
         speed = 3;
@@ -41,9 +44,15 @@ public class HUDItemButton : MonoBehaviour {
         //infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
 
         button = GetComponent<Button>();
-        button.onClick.AddListener(Craft(itemID));
         eventTrigger = GetComponent<EventTrigger>();
+
+        Image[] images = GetComponentsInChildren<Image>();
+        itemImage = images[1];
+        progressImage = images[2];
+
+        button.onClick.AddListener(Craft(itemID));
         eventTrigger.enabled = false;
+        progressImage.enabled = false;
 
         // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
@@ -51,18 +60,21 @@ public class HUDItemButton : MonoBehaviour {
     UnityAction Craft(ItemID id)
     {
         return new UnityAction(() => {
+            button.onClick.RemoveAllListeners();
             button.onClick.AddListener(Use(itemID));
-            button.onClick.RemoveListener(Craft(itemID));
             playerCamp.Craft(id);
+            progressImage.enabled = true;
         });
     }
 
     UnityAction Use(ItemID id)
     {
         return new UnityAction(() => {
+            button.onClick.RemoveAllListeners();
             button.onClick.AddListener(Craft(itemID));
-            button.onClick.RemoveListener(Use(itemID));
             playerCamp.UseItem(id);
+            progressImage.enabled = false;
+            progressImage.fillAmount = 0;
         });
     }
 
@@ -111,6 +123,15 @@ public class HUDItemButton : MonoBehaviour {
 
     void Update()
     {
+        if (progressImage.enabled && playerCamp.isCrafting)
+        {
+            foreach (KeyValuePair<ItemID, Item> pair in Items.itemList)
+            {
+                if (pair.Value.name == playerCamp.currentlyCraftingItem.name && pair.Key == itemID)
+                    progressImage.fillAmount = playerCamp.craftingProgress;
+            }
+        }
+
         if (state == displayState.LERPING)
         {
             lerpTime += Time.deltaTime * speed;

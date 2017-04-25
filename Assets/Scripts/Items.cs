@@ -2,42 +2,72 @@
 using System;
 using System.Collections.Generic;
 
-public enum ItemID { NULL, AXE, CLUB, KNIFE, SWORD, SPEAR, APPLE, ELIXIR, HALBERD, VILLAGER, MEATSTEW, MEATCLUB, BREADLOAF, ASGARDMEAL, HIDEARMOUR, STONEARMOUR, LEATHERARMOUR, _LENGTH }
+public enum ItemID { NULL,
+    AXE,
+    CLUB,
+    KNIFE,
+    SWORD,
+    SPEAR,
+    APPLE,
+    ELIXIR,
+    HALBERD,
+    VILLAGER,
+    MEATSTEW,
+    MEATCLUB,
+    BREADLOAF,
+    ASGARDMEAL,
+    HIDEARMOUR,
+    STONEARMOUR,
+    LEATHERARMOUR,
+    _LENGTH
+}
 
 public class Items : MonoBehaviour {
 
     public GameObject playerGiant;
     public GameObject enemyGiant;
 
-    public Sprite[] weaponIcons;
+    public Sprite[] weaponIcons; // inspector set
+    public Sprite[] itemIcons; // inspector set
 
     public static Dictionary<ItemID, Item> itemList = new Dictionary<ItemID, Item> {
-            { ItemID.AXE,           new Weapon      ("Yxa",             "Väger 5 ton.",                             new Resources(3,0,0,0,5),       null, 0.0f, true,  new Stats(30,0,0,0,0),           0, new Stats(30, 0, 0, 0, 0))       },
-            { ItemID.CLUB,          new Weapon      ("Klubba",          "Mer likt ett träd, faktiskt.",             new Resources(6,0,0,0,0),       null, 0.0f, true,  new Stats(25,0,0,0,0),           0, new Stats(25, 0, 0, 0, 0))       },
-            { ItemID.KNIFE,         new Weapon      ("Kniv",            "Det HÄR är en kniv!",                      new Resources(1,0,0,0,1),       null, 0.0f, true,  new Stats(0,1f,0,0,0),           0, new Stats(0, 0.5f, 0, 0, 0))     },
-            { ItemID.SWORD,         new Weapon      ("Svärd",           "Ett stort stensvärd. Snabb att svinga.",   new Resources(5,0,0,0,10),      null, 0.0f, true,  new Stats(50,0.5f,0,0,0),        0, new Stats(20, 0.5f, 0, 0, 0))    },
-            { ItemID.SPEAR,         new Weapon      ("Spjut",           "Stock o sten.",                            new Resources(2,0,0,0,1),       null, 0.0f, true,  new Stats(5,0.5f,0,0,0),         0, new Stats(0, 0.2f, 0, 0, 0))     },
-            { ItemID.HALBERD,       new Weapon      ("Hillebard",       "Nej, det är inte en bard på en kulle.",    new Resources(10,0,0,0,5),      null, 0.0f, true,  new Stats(150,-0.25f,0,0,0),     0, new Stats(125, -0.25f, 0, 0, 0)) },
-            { ItemID.HIDEARMOUR,    new Armour      ("Hudrustning",     "Av den finaste kvalitén.",                 new Resources(0,0,15,0,0),      null, 0.0f, true,  new Stats(0,0,10,500,5),         0, new Stats(0, 0, 0, 500, 0))      },
-            { ItemID.STONEARMOUR,   new Armour      ("Stenrustning",    "Den här rustningen är stenhård.",          new Resources(0,0,0,0,8),       null, 0.0f, true,  new Stats(0,0,5,0,0),            0, new Stats(0, 0, 5, 0, 0))        },
-            { ItemID.LEATHERARMOUR, new Armour      ("Läderrustning",   "Riktiga kläder.",                          new Resources(0,0,4,0,0),       null, 0.0f, true,  new Stats(0,0.25f,2,0,0),        0, new Stats(0, 0.25f, 2, 0, 0))    },
-            { ItemID.APPLE,         new Consumable  ("Äpple",           "Håller doktorn borta.",                    new Resources(1,0,0,0,0),       null, 0.0f, true,  0.0f,  AppleAction(),            AppleReverseAction())               },
-            { ItemID.ELIXIR,        new Consumable  ("Elixir",          "En magisk brygd.",                         new Resources(0,4,8,8,0),       null, 0.0f, true,  5.0f,  ElixirAction(),           ElixirReverseAction())              },
-            { ItemID.VILLAGER,      new Consumable  ("Bybo",            "En till bybo för att samla resurser.",     new Resources(0,1,2,4,0),       null, 0.0f, false, 0.0f,  VillagerAction(),         VillagerReverseAction())            },
-            { ItemID.MEATSTEW,      new Consumable  ("Köttgryta",       "Bubblande med näring.",                    new Resources(0,0,3,2,0),       null, 0.0f, true,  60.0f, MeatstewAction(),         MeatstewReverseAction())            },
-            { ItemID.MEATCLUB,      new Consumable  ("Köttklubba",      "Inte för att slåss.",                      new Resources(1,0,8,0,0),       null, 0.0f, true,  10.0f, MeatclubAction(),         MeatclubReverseAction())            },
-            { ItemID.BREADLOAF,     new Consumable  ("Limpa",           "Stor som ett hus.",                        new Resources(0,8,0,2,0),       null, 0.0f, true,  10.0f, BreadloafAction(),        BreadloafReverseAction())           },
-            { ItemID.ASGARDMEAL,    new Consumable  ("Asgårdmål",       "Tors favorit.",                            new Resources(0,20,20,15,0),    null, 0.0f, true,  0.0f,  AsgardmealAction(),       AsgardmealReverseAction())          }
+            { ItemID.AXE,           new Weapon      ("Yxa",             "Väger 5 ton.",                             new Resources(3,0,0,0,5),       null, 2.0f, true,  new Stats(30,0,0,0,0),           0, new Stats(30, 0, 0, 0, 0))       },
+            { ItemID.CLUB,          new Weapon      ("Klubba",          "Mer likt ett träd, faktiskt.",             new Resources(6,0,0,0,0),       null, 2.0f, true,  new Stats(25,0,0,0,0),           0, new Stats(25, 0, 0, 0, 0))       },
+            { ItemID.KNIFE,         new Weapon      ("Kniv",            "Det HÄR är en kniv!",                      new Resources(1,0,0,0,1),       null, 2.0f, true,  new Stats(0,1f,0,0,0),           0, new Stats(0, 0.5f, 0, 0, 0))     },
+            { ItemID.SWORD,         new Weapon      ("Svärd",           "Ett stort stensvärd. Snabb att svinga.",   new Resources(5,0,0,0,10),      null, 2.0f, true,  new Stats(50,0.5f,0,0,0),        0, new Stats(20, 0.5f, 0, 0, 0))    },
+            { ItemID.SPEAR,         new Weapon      ("Spjut",           "Stock o sten.",                            new Resources(2,0,0,0,1),       null, 2.0f, true,  new Stats(5,0.5f,0,0,0),         0, new Stats(0, 0.2f, 0, 0, 0))     },
+            { ItemID.HALBERD,       new Weapon      ("Hillebard",       "Nej, det är inte en bard på en kulle.",    new Resources(10,0,0,0,5),      null, 2.0f, true,  new Stats(150,-0.25f,0,0,0),     0, new Stats(125, -0.25f, 0, 0, 0)) },
+            { ItemID.HIDEARMOUR,    new Armour      ("Hudrustning",     "Av den finaste kvalitén.",                 new Resources(0,0,15,0,0),      null, 2.0f, true,  new Stats(0,0,10,500,5),         0, new Stats(0, 0, 0, 500, 0))      },
+            { ItemID.STONEARMOUR,   new Armour      ("Stenrustning",    "Den här rustningen är stenhård.",          new Resources(0,0,0,0,8),       null, 2.0f, true,  new Stats(0,0,5,0,0),            0, new Stats(0, 0, 5, 0, 0))        },
+            { ItemID.LEATHERARMOUR, new Armour      ("Läderrustning",   "Riktiga kläder.",                          new Resources(0,0,4,0,0),       null, 2.0f, true,  new Stats(0,0.25f,2,0,0),        0, new Stats(0, 0.25f, 2, 0, 0))    },
+            { ItemID.APPLE,         new Consumable  ("Äpple",           "Håller doktorn borta.",                    new Resources(1,0,0,0,0),       null, 2.0f, true,  0.0f,  AppleAction(),            AppleReverseAction())               },
+            { ItemID.ELIXIR,        new Consumable  ("Elixir",          "En magisk brygd.",                         new Resources(0,4,8,8,0),       null, 2.0f, true,  5.0f,  ElixirAction(),           ElixirReverseAction())              },
+            { ItemID.VILLAGER,      new Consumable  ("Bybo",            "En till bybo för att samla resurser.",     new Resources(0,1,2,4,0),       null, 2.0f, false, 0.0f,  VillagerAction(),         VillagerReverseAction())            },
+            { ItemID.MEATSTEW,      new Consumable  ("Köttgryta",       "Bubblande med näring.",                    new Resources(0,0,3,2,0),       null, 2.0f, true,  60.0f, MeatstewAction(),         MeatstewReverseAction())            },
+            { ItemID.MEATCLUB,      new Consumable  ("Köttklubba",      "Inte för att slåss.",                      new Resources(1,0,8,0,0),       null, 2.0f, true,  10.0f, MeatclubAction(),         MeatclubReverseAction())            },
+            { ItemID.BREADLOAF,     new Consumable  ("Limpa",           "Stor som ett hus.",                        new Resources(0,8,0,2,0),       null, 2.0f, true,  10.0f, BreadloafAction(),        BreadloafReverseAction())           },
+            { ItemID.ASGARDMEAL,    new Consumable  ("Asgårdmål",       "Tors favorit.",                            new Resources(0,20,20,15,0),    null, 2.0f, true,  0.0f,  AsgardmealAction(),       AsgardmealReverseAction())          }
         };
     
     void Start()
     {
-        itemList[ItemID.AXE].icon = weaponIcons[0];
-        itemList[ItemID.CLUB].icon = weaponIcons[1];
-        itemList[ItemID.KNIFE].icon = weaponIcons[2];
-        itemList[ItemID.SWORD].icon = weaponIcons[3];
-        itemList[ItemID.SPEAR].icon = weaponIcons[4];
-        itemList[ItemID.HALBERD].icon   = weaponIcons[5];
+        Weapon w;
+
+        for (int i = 1; i < 6; i++)
+        {
+            w = itemList[(ItemID)i] as Weapon;
+            w.weaponSprite = weaponIcons[i - 1];
+            itemList[(ItemID)i] = w;
+        }
+
+        w = itemList[(ItemID)8] as Weapon;
+        w.weaponSprite = weaponIcons[5];
+        itemList[(ItemID)8] = w;
+
+        for (int i = 1; i < (int)ItemID._LENGTH; i++)
+        {
+            itemList[(ItemID)i].icon = itemIcons[i - 1];
+        }
     }
 
     static Action<Giant> AppleAction()
@@ -77,6 +107,8 @@ public class Items : MonoBehaviour {
             if (camp.villagerCount < Camp.maxVillagers)
             {
                 camp.villagerCount++;
+                if (!camp.enemyCamp)
+                    camp.populationText.text = "Bybor: " + camp.villagerCount;
             }
             else
             {
