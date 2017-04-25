@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour {
 
+    public HUDTutorial tutorial;        // inspector set
+
     public GameObject weaponButton;     // inspector set
     public GameObject armourButton;     // inspector set
     public GameObject consumableButton; // inspector set
@@ -26,12 +28,9 @@ public class HUDManager : MonoBehaviour {
 
     public void ToggleState(GameObject parent)
     {
-        //List<GameObject> children = GetChildren(parent);
-
-        //foreach (GameObject c in children)
-        //{
-
-        //}
+        if (tutorial.currentStep == 2 && parent == consumableButton) {
+            tutorial.AdvanceTutorial();
+        }
 
         ToggleOtherParents(parent);
         ToggleMovement(parent);

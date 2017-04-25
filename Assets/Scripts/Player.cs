@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
 
     private Vector3 offScale;
 
+    public HUDTutorial tutorial; // inspector set
+
     void Start ()
     {
         camp = GetComponent<Camp>();
@@ -102,7 +104,15 @@ public class Player : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) // Left-click
         {
             if (mouseTile && mouseTileScript && mouseTileScript.type != TileType.GIANTS && mouseTileScript.type != TileType.CAMP && !mouseTileScript.occupied)
+            {
                 camp.SendVillagerToGather(mouseTile.gameObject);
+                /*
+                if (mouseTileScript.type != TileType.NONE && tutorial.currentStep == 1)
+                {
+                    tutorial.AdvanceTutorial();
+                }
+                */
+            }
         }
     }
 
