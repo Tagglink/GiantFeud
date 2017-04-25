@@ -62,8 +62,8 @@ public class HUDItemButton : MonoBehaviour {
         return new UnityAction(() => {
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(Use(itemID));
-            playerCamp.Craft(id);
-            progressImage.enabled = true;
+            if (playerCamp.Craft(id))
+                progressImage.enabled = true;
         });
     }
 
@@ -72,9 +72,11 @@ public class HUDItemButton : MonoBehaviour {
         return new UnityAction(() => {
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(Craft(itemID));
-            playerCamp.UseItem(id);
-            progressImage.enabled = false;
-            progressImage.fillAmount = 0;
+            if (playerCamp.UseItem(id))
+            {
+                progressImage.enabled = false;
+                progressImage.fillAmount = 0;
+            }
         });
     }
 

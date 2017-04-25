@@ -11,7 +11,6 @@ public class HUDItemInfoBox : MonoBehaviour {
 
     public Text itemName; // inspector set
     public Text itemDesc; // inspector set
-    public Text consumableEffect; // inspector set
     public Image itemImage; // inspector set
     
     Color itemGaugeColor;
@@ -27,8 +26,6 @@ public class HUDItemInfoBox : MonoBehaviour {
 
         ChangeGaugeColors(statGauges, playerGaugeColor, 0);
         ChangeGaugeColors(statGauges, itemGaugeColor, 1);
-
-        enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -42,12 +39,12 @@ public class HUDItemInfoBox : MonoBehaviour {
 
         InjectValues(item);
 
-        enabled = true;
+        gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
     void InjectValues(Item item)

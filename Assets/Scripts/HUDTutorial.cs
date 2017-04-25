@@ -41,7 +41,8 @@ public class HUDTutorial : MonoBehaviour {
             new TutorialStep(233, 198, -105, 228, "Klicka på träden för att samla trä!", 560, 75),
             new TutorialStep(-641, -72, -382, -59, "Klicka här för att crafta!", 400, 75),
             new TutorialStep(-640, 75, -382, 31, "Crafta ett äpple!", 285, 75),
-            new TutorialStep(-640, 75, -382, 31, "Klicka igen för att ge äpplet till jätten!", 340, 120)
+            new TutorialStep(-640, 75, -382, 31, "Klicka igen för att ge äpplet till jätten!", 340, 120),
+            new TutorialStep(-3000, -3000, -3000, -3000, "Kanna is cute", 500, 500)
         };
 
         currentStep = 1;

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class HUDManager : MonoBehaviour {
 
     public HUDTutorial tutorial;        // inspector set
+    public HUDItemInfoBox itemInfoBox;  // inspector set
 
     public GameObject weaponButton;     // inspector set
     public GameObject armourButton;     // inspector set
@@ -13,7 +14,7 @@ public class HUDManager : MonoBehaviour {
 
     void Start()
     {
-
+        itemInfoBox.Hide();
     }
 
     void Update()

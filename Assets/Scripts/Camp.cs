@@ -77,6 +77,9 @@ public class Camp : MonoBehaviour {
         List<GameObject> idleVillagers = GetIdleVillagers();
         Villager villager;
 
+        if (tutorial.currentStep == 4 && itemId == ItemID.APPLE)
+            tutorial.AdvanceTutorial();
+
         if (idleVillagers.Count > 0)
         {
             villager = idleVillagers[0].GetComponent<Villager>();
