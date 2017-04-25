@@ -211,6 +211,7 @@ public class Giant : MonoBehaviour {
             hudStatusBox.UpdateStatGauges();
 
         animator.SetFloat("swing_speed", stats.atkspd);
+        transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sprite = currentWeapon.icon;
     }
 
     void FixedUpdate()

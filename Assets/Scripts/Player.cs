@@ -9,6 +9,8 @@ public class Player : MonoBehaviour {
     public GameObject map;
     public GameObject arrow;
 
+    public Sprite[] resourceIcons;
+
     [HideInInspector]
     public Camp camp;
 
@@ -62,6 +64,32 @@ public class Player : MonoBehaviour {
 
                 // Arrow Offset
                 arrow.transform.position = new Vector3(mouseTile.position.x, mouseTile.position.y + highlight.r);
+
+                int iconNumber;
+
+                switch(mouseTileScript.type)
+                {
+                    case TileType.CATTLE:
+                        iconNumber = 0;
+                        break;
+                    case TileType.STONE:
+                        iconNumber = 1;
+                        break;
+                    case TileType.WATER:
+                        iconNumber = 2;
+                        break;
+                    case TileType.CROPS:
+                        iconNumber = 3;
+                        break;
+                    case TileType.WOODS:
+                        iconNumber = 4;
+                        break;
+                    default:
+                        iconNumber = 0;
+                        break;
+                }
+
+                arrow.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sprite = resourceIcons[iconNumber];
             }
             else
             {
