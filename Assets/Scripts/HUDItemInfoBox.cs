@@ -18,15 +18,26 @@ public class HUDItemInfoBox : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        itemGaugeColor = new Color(0.5f, 0.5f, 0f, 0.5f);
-        playerGaugeColor = new Color(0f, 0.5f, 0.5f, 0.5f);
+        itemGaugeColor = new Color(1f, 0f, 0f, 0.5f);
+        playerGaugeColor = new Color(1f, 1f, 0f, 0.5f);
 
         ChangeGaugeColors(resourceGauges, playerGaugeColor, 0);
         ChangeGaugeColors(resourceGauges, itemGaugeColor, 1);
 
         ChangeGaugeColors(statGauges, playerGaugeColor, 0);
         ChangeGaugeColors(statGauges, itemGaugeColor, 1);
-	}
+
+        SetStatGaugesToZero();
+    }
+
+    void SetStatGaugesToZero()
+    {
+        foreach (HUDGauge gauge in statGauges)
+        {
+            gauge.SetValue(0, 0);
+            gauge.SetValue(0, 1, true);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -71,7 +82,7 @@ public class HUDItemInfoBox : MonoBehaviour {
 
         if (item is Consumable)
         {
-            // consumableEffect.text = ...
+            SetStatGaugesToZero();
         }
         else if (item is Equipment)
         {

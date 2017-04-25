@@ -168,6 +168,7 @@ public class Villager : MonoBehaviour {
         if (resource == ResourceType.NONE)
             return;
 
+        at.occupied = true;
         state = VillagerState.GATHERING;
         animator.SetTrigger("gathering");
         StartCoroutine(WaitForGather(at));
@@ -264,7 +265,6 @@ public class Villager : MonoBehaviour {
         Tile tileScript = tile.GetComponent<Tile>();
 
         arriveAction = actionAtArrival;
-        tileScript.occupied = true;
 
         movePositions = FindTilePathTo(tile);
 

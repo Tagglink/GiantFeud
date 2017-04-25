@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-    public GameObject map;
-    public GameObject arrow;
-
-    public Sprite[] resourceIcons;
+    public GameObject map; // inspector set
+    public GameObject arrow; // inspector set
+    public HUDTutorial tutorial; // inspector set
+    public Sprite[] resourceIcons; // inspector set
 
     [HideInInspector]
     public Camp camp;
@@ -22,7 +22,8 @@ public class Player : MonoBehaviour {
 
     private Vector3 offScale;
 
-    public HUDTutorial tutorial; // inspector set
+
+    private SpriteRenderer arrowResourceIcon;
 
     void Start ()
     {
@@ -40,10 +41,11 @@ public class Player : MonoBehaviour {
         highlight = Color.white;
 
         arrowDirection = false;
+        arrowResourceIcon = arrow.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 
         // testing
 
-        camp.resources = new Resources(99, 99, 99, 99, 99);
+        //camp.resources = new Resources(99, 99, 99, 99, 99);
 	}
 
 	void Update ()
@@ -89,7 +91,7 @@ public class Player : MonoBehaviour {
                         break;
                 }
 
-                arrow.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sprite = resourceIcons[iconNumber];
+                arrowResourceIcon.sprite = resourceIcons[iconNumber];
             }
             else
             {
