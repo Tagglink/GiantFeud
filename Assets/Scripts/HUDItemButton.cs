@@ -14,6 +14,8 @@ public class HUDItemButton : MonoBehaviour {
     public ItemID itemID;
     public EventTrigger eventTrigger;
 
+    Button button;
+
     //private GameObject infoBox;
 
     // Lerp variables
@@ -38,7 +40,8 @@ public class HUDItemButton : MonoBehaviour {
         //infoBox.transform.localPosition = Vector3.zero;
         //infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
 
-        GetComponent<Button>().onClick.AddListener(Craft(itemID));
+        button = GetComponent<Button>();
+        button.onClick.AddListener(Craft(itemID));
         eventTrigger = GetComponent<EventTrigger>();
         eventTrigger.enabled = false;
 
@@ -48,7 +51,8 @@ public class HUDItemButton : MonoBehaviour {
     UnityAction Craft(ItemID id)
     {
         return new UnityAction(() => {
-            GetComponent<Button>().onClick.AddListener(Use(itemID));
+            button.onClick.AddListener(Use(itemID));
+            button.onClick.RemoveListener(Craft(itemID));
             playerCamp.Craft(id);
         });
     }
@@ -56,6 +60,8 @@ public class HUDItemButton : MonoBehaviour {
     UnityAction Use(ItemID id)
     {
         return new UnityAction(() => {
+            button.onClick.AddListener(Craft(itemID));
+            button.onClick.RemoveListener(Use(itemID));
             playerCamp.UseItem(id);
         });
     }
