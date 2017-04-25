@@ -11,14 +11,9 @@ public class HUDManager : MonoBehaviour {
     
     public Camp playerCamp;             // inspector set
 
-    public GameObject townName;         // inspector set
-
     void Start()
     {
-        if (PlayerPrefs.HasKey("Town Name"))
-            townName.GetComponent<Text>().text = PlayerPrefs.GetString("Town Name");
-        else
-            townName.GetComponent<Text>().text = "Your Town";
+
     }
 
     void Update()
