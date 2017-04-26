@@ -13,6 +13,14 @@ public class GameManager : MonoBehaviour {
         player = playerObject.GetComponent<Giant>();
 	}
 
+    void Update ()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Restart();
+        }
+    }
+
     public void EndGame(Giant giant)
     {
         bool loss;
