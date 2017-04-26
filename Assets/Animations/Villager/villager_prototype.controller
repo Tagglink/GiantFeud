@@ -27,7 +27,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Villager_Idle
+  m_Name: Villager_Walk
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -39,7 +39,7 @@ AnimatorState:
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e9fa67b74bb486d4b8767812f1711825, type: 2}
+  m_Motion: {fileID: 7400000, guid: df37597bea111c14bafbd60af08d390e, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

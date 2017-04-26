@@ -26,7 +26,6 @@ public class Villager : MonoBehaviour {
     Vector3 feetPositionOffset;
 
     Camp camp; // the camp the villager belongs to.
-    Animator animator;
 
     VillagerArriveAction arriveActionNext;
     GameObject targetTileNext;
@@ -48,7 +47,6 @@ public class Villager : MonoBehaviour {
         targetTileNext = null;
 
         camp = GetComponentInParent<Camp>();
-        animator = GetComponent<Animator>();
 
         tileCenterPositionOffset = new Vector3(0, 0.25f, 0);
         feetPositionOffset = new Vector3(0, 0, 0);
@@ -78,7 +76,6 @@ public class Villager : MonoBehaviour {
     {
         state = VillagerState.IDLE;
         MoveOutOfBounds();
-        animator.SetTrigger("idle");
     }
 
     void MoveIntoBounds()
@@ -94,8 +91,10 @@ public class Villager : MonoBehaviour {
 
     public void Gather(GameObject tile)
     {
+        Tile tileScript = tile.GetComponent<Tile>();
+        tileScript.occupied = true;
         MoveIntoBounds();
-        resource = Resources.TileToResource(tile.GetComponent<Tile>().type);
+        resource = Resources.TileToResource(tileScript.type);
         Pathfind(tile, VillagerArriveAction.GATHER_RESOURCE);
     }
 
@@ -168,9 +167,7 @@ public class Villager : MonoBehaviour {
         if (resource == ResourceType.NONE)
             return;
 
-        at.occupied = true;
         state = VillagerState.GATHERING;
-        animator.SetTrigger("gathering");
         StartCoroutine(WaitForGather(at));
     }
 
@@ -204,6 +201,8 @@ public class Villager : MonoBehaviour {
 
     void Pathfind(GameObject tile, VillagerArriveAction actionAtArrival)
     {
+        tile.GetComponent<Tile>().occupied = true;
+
         GameObject cornerTileUpper = Map.tiles[2][1];
         GameObject cornerTileLower = Map.tiles[12][1];
 
@@ -269,7 +268,6 @@ public class Villager : MonoBehaviour {
         movePositions = FindTilePathTo(tile);
 
         state = VillagerState.WALKING;
-        animator.SetTrigger("walking");
     }
 
     GameObject FindClosestToRay(Ray2D ray, GameObject obj1, GameObject obj2)
