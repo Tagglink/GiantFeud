@@ -15,4 +15,11 @@ public class Equipment : Item {
         reinforcementStats = _reinforcementStats;
     }
 
+    public Equipment(Equipment _equipment) : base(_equipment.name, _equipment.description, _equipment.resourceCost, _equipment.icon, _equipment.craftingTime, _equipment.giantUse)
+    {
+        stats = _equipment.stats;
+        reinforcementCount = _equipment.reinforcementCount;
+        reinforcementStats = _equipment.reinforcementStats;
+    }
+
 }

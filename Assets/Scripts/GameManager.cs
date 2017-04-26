@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour {
             loss = false;
         }
         PlayEndAnimation(loss);
+        Time.timeScale = 0;
     }
 
     void PlayEndAnimation(bool loss)
@@ -40,5 +42,11 @@ public class GameManager : MonoBehaviour {
         {
             text.GetComponent<Text>().text = "A   WINNER   IS   YOU";
         }
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
     }
 }

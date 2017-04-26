@@ -10,4 +10,9 @@ public class Weapon : Equipment {
     {
 
     }
+
+    public Weapon(Weapon weapon) : base(weapon)
+    {
+        weaponSprite = weapon.weaponSprite;
+    }
 }

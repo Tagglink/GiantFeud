@@ -122,6 +122,7 @@ public class Giant : MonoBehaviour {
     {
         Armour armor;
         Weapon weapon;
+
         if (equipment is Armour)
         {
             armor = equipment as Armour;
@@ -133,7 +134,7 @@ public class Giant : MonoBehaviour {
         }
         else if (equipment is Weapon)
         {
-            weapon = equipment as Weapon;
+            weapon = new Weapon(equipment as Weapon);
 
             if (currentWeapon == weapon)
                 currentWeapon.reinforcementCount++;
