@@ -72,23 +72,36 @@ public class Villager : MonoBehaviour {
         transform.position = targetPosition;
     }
 
+    /// <summary>
+    /// Sets the villager's state to IDLE as well as moves it out of camera view
+    /// </summary>
     void Escape()
     {
         state = VillagerState.IDLE;
         MoveOutOfBounds();
     }
 
+    /// <summary>
+    /// Moves the villager into the camp's spawn position.
+    /// </summary>
     void MoveIntoBounds()
     {
         Vector3 spawnPosition = camp.homeTile.transform.position + feetPositionOffset + tileCenterPositionOffset;
         transform.position = spawnPosition;
     }
 
+    /// <summary>
+    /// Moves the villager outside of the camera's view
+    /// </summary>
     void MoveOutOfBounds()
     {
         transform.position = new Vector3(-30, -30, 0);
     }
 
+    /// <summary>
+    /// Sends a villager to gather resources at the given tile
+    /// </summary>
+    /// <param name="tile">The tile to gather resources at</param>
     public void Gather(GameObject tile)
     {
         Tile tileScript = tile.GetComponent<Tile>();
@@ -98,13 +111,20 @@ public class Villager : MonoBehaviour {
         Pathfind(tile, VillagerArriveAction.GATHER_RESOURCE);
     }
 
+    /// <summary>
+    /// Sends a villager to the Giant in order to use an item
+    /// </summary>
+    /// <param name="id">The id of the item to use</param>
     public void UseItem(ItemID id)
     {
         MoveIntoBounds();
-        item = id;
+        item = id; // set the item property to id so that the correct item is used on arrival.
         MoveTo(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
+    /// <summary>
+    /// The iterating function that is called once every update while the villager is moving.
+    /// </summary>
     void Move()
     {
         if (ValidateMovement())
@@ -120,16 +140,28 @@ public class Villager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Checks if there is a position to move to and whether the current position exists.
+    /// </summary>
+    /// <returns>True if there is a position and the current position exists</returns>
     bool ValidateMovement()
     {
         return movePositions.Length > 0 && currentTargetPositionIndex < movePositions.Length;
     }
 
+    /// <summary>
+    /// Checks if the last position reached was the final position.
+    /// </summary>
+    /// <returns>True if the last position reached was the final position</returns>
     bool CheckIfArrived()
     {
         return movePositions.Length == currentTargetPositionIndex;
     }
 
+    /// <summary>
+    /// Called when a villager arrives at its destination after moving.
+    /// Selects which function to call from the arriveAction property.
+    /// </summary>
     void Arrived()
     {
         Tile at = movePositions[movePositions.Length - 1].GetComponent<Tile>();
@@ -162,6 +194,10 @@ public class Villager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Starts the gathering process when the villager has arrived at a resource tile.
+    /// </summary>
+    /// <param name="at">The tile the villager is standing on</param>
     void StartGather(Tile at)
     {
         if (resource == ResourceType.NONE)
@@ -171,6 +207,10 @@ public class Villager : MonoBehaviour {
         StartCoroutine(WaitForGather(at));
     }
 
+    /// <summary>
+    /// Called when the villager arrives at the Giant tile.
+    /// Tells the giant to use the item given by the item property.
+    /// </summary>
     void ApplyItemToGiant()
     {
         if (item == ItemID.NULL)
@@ -180,17 +220,27 @@ public class Villager : MonoBehaviour {
         camp.giant.GetComponent<Giant>().UseItem(itemObject);
     }
 
+    /// <summary>
+    /// Called when a villager arrives back at the camp after gathering a resource.
+    /// Adds the gathered resource to the camp.
+    /// </summary>
     void GiveCampResource()
     {
+        // in lack of a proper event system, this is used to advance the tutorial in the right conditions
         if (tutorial.currentStep == 1 && !opponent && resource == ResourceType.WOOD)
             tutorial.AdvanceTutorial();
 
         camp.resources.Add(resource, resourcesCarried);
         resource = ResourceType.NONE;
         resourcesCarried = 0;
-
     }
 
+    /// <summary>
+    /// A coroutine that waits for gathering to finish.
+    /// Sends the villager back to camp once the gathering has finished.
+    /// </summary>
+    /// <param name="at">The tile the villager is gathering on</param>
+    /// <returns></returns>
     IEnumerator WaitForGather(Tile at)
     {
         yield return new WaitForSeconds(gatherTime);
@@ -199,14 +249,20 @@ public class Villager : MonoBehaviour {
         Pathfind(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 
+    /// <summary>
+    /// The main function used to move a villager to a certain tile.
+    /// </summary>
+    /// <param name="tile">The tile to move to</param>
+    /// <param name="actionAtArrival">The action to perform at arrival</param>
     void Pathfind(GameObject tile, VillagerArriveAction actionAtArrival)
     {
         tile.GetComponent<Tile>().occupied = true;
 
-        GameObject cornerTileUpper = Map.tiles[2][1];
-        GameObject cornerTileLower = Map.tiles[12][1];
+        GameObject cornerTileUpper = Map.tiles[2][1]; // select the tile above the Giant area
+        GameObject cornerTileLower = Map.tiles[12][1]; // select the tile below the Giant area
 
-        Vector3 cornerUpperPos = cornerTileUpper.transform.position + tileCenterPositionOffset;
+        // get their respective centers
+        Vector3 cornerUpperPos = cornerTileUpper.transform.position + tileCenterPositionOffset; 
         Vector3 cornerLowerPos = cornerTileLower.transform.position + tileCenterPositionOffset;
 
         Vector2 dstTileCenter = tile.transform.position + tileCenterPositionOffset;
@@ -216,6 +272,8 @@ public class Villager : MonoBehaviour {
 
         GameObject tileNext;
 
+        // if the straight line to the destination intersects with the line between cornerTileUpper and cornerTileLower,
+        // select the one of the two which is closest to the point of intersection and move to it first, then move to the destination.
         if (LineIntersect(rayToTile, cornerUpperPos, cornerLowerPos, Vector2.Distance(dstTileCenter, currentTileCenter)))
         {
             arriveActionNext = actionAtArrival;
@@ -230,6 +288,14 @@ public class Villager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Checks whether a Ray intersects a line between two points
+    /// </summary>
+    /// <param name="ray">The ray to check</param>
+    /// <param name="lineEnd1">The first endpoint of the line</param>
+    /// <param name="lineEnd2">The second endpoint of the line</param>
+    /// <param name="maxDistance">The maximum distance to check with the ray</param>
+    /// <returns>True if the ray intersects</returns>
     bool LineIntersect(Ray2D ray, Vector2 lineEnd1, Vector2 lineEnd2, float maxDistance)
     {
         Vector2 point = ray.GetPoint(maxDistance);
@@ -245,6 +311,14 @@ public class Villager : MonoBehaviour {
         return ray.origin.x > point.x ? intersection.x < ray.origin.x && intersection.x > point.x : intersection.x > ray.origin.x && intersection.x < point.x;
     }
 
+    /// <summary>
+    /// Gets the point of intersection between two finite lines.
+    /// </summary>
+    /// <param name="p1">Endpoint 1 for line 1</param>
+    /// <param name="p2">Endpoint 2 for line 1</param>
+    /// <param name="p3">Endpoint 1 for line 2</param>
+    /// <param name="p4">Endpoint 2 for line 2</param>
+    /// <returns>The point of the intersection</returns>
     Vector2 GetLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
     {
         Vector2 ret = new Vector2();
@@ -259,6 +333,11 @@ public class Villager : MonoBehaviour {
         return ret;
     }
 
+    /// <summary>
+    /// Tries to move the villager to the given tile with the fastest possible path.
+    /// </summary>
+    /// <param name="tile">The destination tile</param>
+    /// <param name="actionAtArrival">The action to perform at arrival</param>
     void MoveTo(GameObject tile, VillagerArriveAction actionAtArrival)
     {
         Tile tileScript = tile.GetComponent<Tile>();
@@ -270,6 +349,13 @@ public class Villager : MonoBehaviour {
         state = VillagerState.WALKING;
     }
 
+    /// <summary>
+    /// Find which of two specified GameObjects are closer to the Ray2D at any point along the Ray.
+    /// </summary>
+    /// <param name="ray">The Ray2D to check</param>
+    /// <param name="obj1">The first GameObject</param>
+    /// <param name="obj2">The second GameObject</param>
+    /// <returns>The closest GameObject</returns>
     GameObject FindClosestToRay(Ray2D ray, GameObject obj1, GameObject obj2)
     {
         Vector2 pos1 = obj1.transform.position;
@@ -281,6 +367,12 @@ public class Villager : MonoBehaviour {
             return obj1;
     }
 
+    /// <summary>
+    /// Gets the shortest distance from a Ray to a point at any given point along the Ray.
+    /// </summary>
+    /// <param name="ray">The Ray to check</param>
+    /// <param name="p">The point to check</param>
+    /// <returns>The shortest distance</returns>
     float ShortestDistanceFromRayToPoint(Ray2D ray, Vector2 p)
     {
         Vector2 rayPoint = ray.GetPoint(1.0f);
@@ -290,6 +382,12 @@ public class Villager : MonoBehaviour {
         return Mathf.Abs(((y2 - y1) * p.x) - ((x2 - x1) * p.y) + (x2 * y1) - (y2 * x1)) / Mathf.Sqrt(Mathf.Pow((y2 - y1), 2) + Mathf.Pow((x2 - x1), 2));
     }
 
+    /// <summary>
+    /// Used by the MoveTo function to create the fastest possible path to a destination tile and return a list of
+    /// the travel points. Does not check for obstacles along the way.
+    /// </summary>
+    /// <param name="tile">The destination tile</param>
+    /// <returns>An array of the Transforms to travel to, in order from first to last</returns>
     Transform[] FindTilePathTo(GameObject tile)
     {
         List<Transform> ret = new List<Transform>();
@@ -301,21 +399,25 @@ public class Villager : MonoBehaviour {
 
         Ray2D rayToTile = new Ray2D(currentTileCenter, directionToTile);
         float[] angles = new float[] { 45.0f, 135.0f, 225.0f, 315.0f };
-        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, angles);
+
+        // get a list of possible angles, ordered by angles that point closest to the destination first
+        Ray2D[] moveOptions = RayAngleAdjust(rayToTile, angles); 
         int hitCount;
 
         Collider2D lastCollider = null;
 
-        var walkableTileLayerMask = 1 << 8;
+        // get the layer mask to only check for hits on tiles that are walkable
+        var walkableTileLayerMask = 1 << 8; 
 
         do
         {
             hitCount = angles.Length;
+            // check all possible directions until we hit a tile
             do
             {
-                hit = Physics2D.Raycast(moveOptions[angles.Length - hitCount].origin, moveOptions[angles.Length - hitCount].direction, 0.7f, walkableTileLayerMask);
+                hit = Physics2D.Raycast(moveOptions[angles.Length - hitCount].origin, moveOptions[angles.Length - hitCount].direction, 0.7f, walkableTileLayerMask); 
             } while (!hit && --hitCount != 0);
-
+            
             if (lastCollider)
                 lastCollider.enabled = true; // re-enable the collider as we have passed it
 
@@ -342,6 +444,14 @@ public class Villager : MonoBehaviour {
     // returns a list of rays with a length equal to the length of angles,
     // with directions adjusted to the angles.
     // the ray with a direction closest to originRay is first in the list, and so on
+
+    /// <summary>
+    /// Using a Ray2D and a list of possible angles, returns a list of rays which point in the
+    /// possible angles, ordered with the ray closest to the origin ray first.
+    /// </summary>
+    /// <param name="originRay">The base ray to match</param>
+    /// <param name="angles">The possible angles, 0 &lt;= x &lt; 360, with the smallest angle first</param>
+    /// <returns></returns>
     Ray2D[] RayAngleAdjust(Ray2D originRay, float[] angles)
     {
         Ray2D[] ret = new Ray2D[angles.Length];
@@ -364,7 +474,12 @@ public class Villager : MonoBehaviour {
         return ret;
     }
 
-    // sorts a list of angles by closest to pivot.
+    /// <summary>
+    /// Sorts a list of angle values with closest to the pivot angle first.
+    /// </summary>
+    /// <param name="nums">The list of angles to sort, 0 &lt;= x &lt; 360, with the smallest angle first</param>
+    /// <param name="pivot">The angle to sort after</param>
+    /// <returns></returns>
     float[] SortAnglesByPivot(float[] nums, float pivot)
     {
         List<float> sortedNums = new List<float>();
@@ -394,6 +509,13 @@ public class Villager : MonoBehaviour {
         return sortedNums.ToArray();
     }
 
+    /// <summary>
+    /// Gets the closest angle to the pivot angle out of two other angles.
+    /// </summary>
+    /// <param name="pivot">The angle to compare to</param>
+    /// <param name="a1">The first angle</param>
+    /// <param name="a2">The second angle</param>
+    /// <returns>The closest angle</returns>
     float ClosestAngle(float pivot, float a1, float a2)
     {
         int pivotStage = (int)Mathf.Round(pivot / 360);

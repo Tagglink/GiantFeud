@@ -36,6 +36,7 @@ public class HUDTutorial : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        // This list controls the entire tutorial, except for the events that advance the tutorial. (in lack of a proper event system)
         stepList = new List<TutorialStep>()
         {
             new TutorialStep(233, 198, -105, 228, "Klicka på träden för att samla trä!", 560, 75),
@@ -49,6 +50,9 @@ public class HUDTutorial : MonoBehaviour {
         ApplyTutorialStep(stepList[0]);
 	}
 
+    /// <summary>
+    /// Move the tutorial to the next step
+    /// </summary>
     public void AdvanceTutorial()
     {
         if (stepList.Count > currentStep)
@@ -58,6 +62,10 @@ public class HUDTutorial : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Change the tutorial components according to a given TutorialStep
+    /// </summary>
+    /// <param name="step">The tutorial step to change to</param>
     void ApplyTutorialStep(TutorialStep step)
     {
         textbox.anchoredPosition = new Vector2(step.textboxPositionX, step.textboxPositionY);
@@ -67,13 +75,11 @@ public class HUDTutorial : MonoBehaviour {
         textboxText.text = step.textboxText;
     }
 
+    /// <summary>
+    /// Disable the tutorial
+    /// </summary>
     public void Disable()
     {
         gameObject.SetActive(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

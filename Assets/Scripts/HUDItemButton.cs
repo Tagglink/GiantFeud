@@ -57,6 +57,11 @@ public class HUDItemButton : MonoBehaviour {
         // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
 
+    /// <summary>
+    /// Craft an item.
+    /// </summary>
+    /// <param name="id">The item id to craft</param>
+    /// <returns></returns>
     UnityAction Craft(ItemID id)
     {
         return new UnityAction(() => {
@@ -67,6 +72,11 @@ public class HUDItemButton : MonoBehaviour {
         });
     }
 
+    /// <summary>
+    /// Use a crafted item.
+    /// </summary>
+    /// <param name="id">The item id to use</param>
+    /// <returns></returns>
     UnityAction Use(ItemID id)
     {
         return new UnityAction(() => {
@@ -80,6 +90,10 @@ public class HUDItemButton : MonoBehaviour {
         });
     }
 
+    /// <summary>
+    /// Called when the mouse hovers over this itembutton.
+    /// Shows the item information in the itemInfoBox.
+    /// </summary>
 	public void Move()
     {
         /*
@@ -89,6 +103,9 @@ public class HUDItemButton : MonoBehaviour {
         itemInfoBox.Show(itemID);
     }
 
+    /// <summary>
+    /// Start moving inwards or outwards depending on the state
+    /// </summary>
     public void StartLerping()
     {
         switch (state)
@@ -109,6 +126,10 @@ public class HUDItemButton : MonoBehaviour {
         state = displayState.LERPING;
     }
 
+    /// <summary>
+    /// Sets the endPoint and endScale to the rectract values if the current state is LERPING.
+    /// </summary>
+    /// <returns>returns true if the current state is LERPING, otherwise false</returns>
     public bool RetractIfLerping()
     {
         if (state == displayState.LERPING)
@@ -123,6 +144,9 @@ public class HUDItemButton : MonoBehaviour {
             return false;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     void Update()
     {
         if (progressImage.enabled && playerCamp.isCrafting)
