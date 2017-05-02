@@ -33,6 +33,7 @@ public class HUDItemButton : MonoBehaviour {
     private Button button;
     private Image itemImage;
     private Image progressImage;
+    private Image highlightImage;
 
     void Start () {
         state = displayState.HIDDEN;
@@ -47,10 +48,12 @@ public class HUDItemButton : MonoBehaviour {
         eventTrigger = GetComponent<EventTrigger>();
 
         Image[] images = GetComponentsInChildren<Image>();
-        itemImage = images[1];
-        progressImage = images[2];
+        highlightImage = images[1];
+        itemImage = images[2];
+        progressImage = images[3];
 
         button.onClick.AddListener(Craft(itemID));
+        highlightImage.enabled = false;
         eventTrigger.enabled = false;
         progressImage.enabled = false;
 
@@ -149,6 +152,10 @@ public class HUDItemButton : MonoBehaviour {
     /// </summary>
     void Update()
     {
+        if (playerCamp.resources >= Items.itemList[itemID].resourceCost)
+            highlightImage.enabled = true;
+        else
+            highlightImage.enabled = false;
         if (progressImage.enabled && playerCamp.isCrafting)
         {
             foreach (KeyValuePair<ItemID, Item> pair in Items.itemList)
