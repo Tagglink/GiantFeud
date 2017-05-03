@@ -17,6 +17,8 @@ public class Camp : MonoBehaviour {
     public HUDTutorial tutorial; // inspector set
     public Text populationText; // inspector set
     public bool enemyCamp; // inspector set
+    public Text errorText; // inspector set
+    public Image errorImage; // inspector set
 
     [HideInInspector]
     public Giant giantScript;
@@ -27,6 +29,8 @@ public class Camp : MonoBehaviour {
 
     public float craftingStartTime;
     public Item currentlyCraftingItem;
+
+    private Coroutine coroutineError;
 
     // Use this for initialization
     void Start () {
@@ -63,8 +67,7 @@ public class Camp : MonoBehaviour {
             villager = idleVillagers[0].GetComponent<Villager>();
         else
         {
-            // TODO: Give the player some error message like "You don't have enough idle villagers for that!"
-            // (do not send if it's the opponent's camp)
+            DisplayError("Inga bybor är lediga.");
             return false;
         }
 
@@ -90,6 +93,9 @@ public class Camp : MonoBehaviour {
         {
             // TODO: Give the player some error message like "You don't have enough idle villagers for that!"
             // (do not send if it's the opponent's camp)
+
+            DisplayError("Alla bybor är upptagna!");
+
             return false;
         }
     }
@@ -156,6 +162,9 @@ public class Camp : MonoBehaviour {
         else
         {
             // TODO: show the player some error message like "You don't have enough resources to do that!"
+
+            DisplayError("Du har inte tillräckligt med resurser för det!");
+
             return false;
         }
     }
@@ -170,7 +179,7 @@ public class Camp : MonoBehaviour {
         StartCoroutine(WaitForCraft(itemId, item));
     }
 
-    // returns false if item was not found in the item stash
+    // returns false if failed
     public bool UseItem(ItemID id)
     {
         ItemID currentItem;
@@ -185,29 +194,42 @@ public class Camp : MonoBehaviour {
             {
                 item = Items.itemList[id];
                 if (item.giantUse)
-                    SendVillagerToUseItem(id);
+                {
+                    if (SendVillagerToUseItem(id))
+                    {
+                        itemStash.RemoveAt(i);
+                    }
+                    else
+                        return false;
+                }
                 else
-                    UseItemAtCamp(item);
-
-                itemStash.RemoveAt(i);
+                {
+                    if (UseItemAtCamp(item))
+                        itemStash.RemoveAt(i);
+                    else
+                        return false;
+                }
+                
                 return true;
             }
         }
         return false;
     }
 
-    void UseItemAtCamp(Item item)
+    bool UseItemAtCamp(Item item)
     {
         if (item is Equipment)
         {
             // error: camp can't use equipments
-            return;
+            return false;
         }
 
         Consumable cons = item as Consumable;
         cons.action(giantScript);
 
         StartCoroutine(DelayTemporaryBuff(cons));
+
+        return true;
     }
 
     IEnumerator DelayTemporaryBuff(Consumable consumable)
@@ -226,5 +248,27 @@ public class Camp : MonoBehaviour {
 
         if (!enemyCamp && tutorial.currentStep == 3 && id == ItemID.APPLE)
             tutorial.AdvanceTutorial();
+    }
+
+    void DisplayError(string message)
+    {
+        if (enemyCamp)
+            return;
+
+        if (coroutineError != null)
+        {
+            StopCoroutine(coroutineError);
+        }
+
+        coroutineError = StartCoroutine(CoroutineError(message));
+    }
+
+    IEnumerator CoroutineError(string message)
+    {
+        errorText.text = message;
+        errorImage.enabled = true;
+        yield return new WaitForSeconds(3);
+        errorText.text = "";
+        errorImage.enabled = false;
     }
 }

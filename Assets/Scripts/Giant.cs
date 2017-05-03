@@ -125,21 +125,28 @@ public class Giant : MonoBehaviour {
 
         if (equipment is Armour)
         {
-            armor = equipment as Armour;
-
-            if (currentArmour == armor)
+            if (currentArmour.name == equipment.name)
+            {
                 currentArmour.reinforcementCount++;
+            }
             else
+            {
+                armor = new Armour(equipment as Armour);
                 currentArmour = armor;
+            }
         }
         else if (equipment is Weapon)
         {
-            weapon = new Weapon(equipment as Weapon);
 
-            if (currentWeapon == weapon)
+            if (currentWeapon.name == equipment.name)
+            {
                 currentWeapon.reinforcementCount++;
+            }
             else
+            {
+                weapon = new Weapon(equipment as Weapon);
                 currentWeapon = weapon;
+            }
         }
 
         statsChanged = true;

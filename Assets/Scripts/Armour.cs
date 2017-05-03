@@ -8,4 +8,9 @@ public class Armour : Equipment {
     {
 
     }
+
+    public Armour(Armour _armour) : base(_armour)
+    {
+
+    }
 }
