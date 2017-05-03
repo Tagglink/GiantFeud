@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour {
     public GameObject victoryScreen;
     private static Giant player;
 
+    public GameObject pauseBox; // inspector set
+
 	void Start () {
         player = playerObject.GetComponent<Giant>();
 	}
@@ -17,7 +19,10 @@ public class GameManager : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Restart();
+            if (Time.timeScale > 0)
+                Pause();
+            else
+                Resume();
         }
     }
 
@@ -56,5 +61,19 @@ public class GameManager : MonoBehaviour {
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pauseBox.SetActive(true);
+        GetComponent<AudioSource>().Pause();
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pauseBox.SetActive(false);
+        GetComponent<AudioSource>().UnPause();
     }
 }
