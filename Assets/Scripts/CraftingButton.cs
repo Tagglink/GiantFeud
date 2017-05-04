@@ -3,6 +3,11 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Collections;
 
+/// <summary>
+///   The behavior script for a menu button that expands
+///   item buttons around it.
+/// </summary>
+/// <see cref="HUDItemButton"/>
 public class CraftingButton : MonoBehaviour {
 
     private List<GameObject> children;
@@ -21,10 +26,12 @@ public class CraftingButton : MonoBehaviour {
         state = displayState.HIDDEN;
         children = GetChildren();
         startPositions = MakePositionsCircular(children, 130f);
-        HardRetract(children);
         startPoints = new List<Vector3>(startPositions);
         endPoints = new List<Vector3>(startPositions);
 
+        // 
+        HardRetract(children);
+        // 
         MakeInfoBoxesCircular(children, 160f);
     }
 	
@@ -164,17 +171,15 @@ public class CraftingButton : MonoBehaviour {
             gameObjects[i].GetComponent<HUDItemButton>().displayPoint = pos;
         }
     }
-
-    List<GameObject> GetChildrenOf(List<GameObject> gameObjects, int index)
-    {
-        List<GameObject> ret = new List<GameObject>();
-
-        foreach (GameObject obj in gameObjects)
-            ret.Add(obj.transform.GetChild(index).gameObject);
-
-        return ret;
-    }
     
+    /// <summary>
+    ///   Enables or disables the event trigger component of all
+    ///   children to the specified value
+    /// </summary>
+    /// <param name="val">
+    ///   false if you want to disable the event trigger,
+    ///   true if you want to enable it.
+    /// </param>
     void SetEventTriggerEnabled(bool val)
     {
         foreach (GameObject child in children)
@@ -183,6 +188,11 @@ public class CraftingButton : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    ///   Instantly set the local position and local scale
+    ///   of a list of HUD game objects to zero.
+    /// </summary>
+    /// <param name="gameObjects">The list of game objects to retract</param>
     void HardRetract(List<GameObject> gameObjects)
     {
         foreach (GameObject a in gameObjects)
@@ -192,6 +202,16 @@ public class CraftingButton : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    ///   An exponential function used to softly expand and
+    ///   retract item buttons.
+    /// </summary>
+    /// <param name="time">
+    ///   The "x-value" to insert into the function
+    /// </param>
+    /// <returns>
+    ///   The "y-value" given by x.
+    /// </returns>
     float Curve(float time)
     {
         return (0.7f * time * time) - (1.7f * time) + 1;

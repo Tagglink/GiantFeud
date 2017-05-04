@@ -9710,12 +9710,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemStash: 
   villagers: []
+  enemyCamp: 1
   giant: {fileID: 628574467}
   homeTile: {fileID: 853480032}
   giantTile: {fileID: 1461283195}
   tutorial: {fileID: 2018691373}
   populationText: {fileID: 328045085}
-  enemyCamp: 1
   errorText: {fileID: 0}
   errorImage: {fileID: 0}
   giantScript: {fileID: 0}
@@ -19242,7 +19242,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1656451963}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 170f7db58458b554190af696f434e319, type: 3}
+  m_Script: {fileID: 11500000, guid: 584a646682ba87d4eb91b569cc5f290f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1563978794}
@@ -19268,12 +19268,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemStash: 
   villagers: []
+  enemyCamp: 0
   giant: {fileID: 2077408000}
   homeTile: {fileID: 951042380}
   giantTile: {fileID: 618739226}
   tutorial: {fileID: 2018691373}
   populationText: {fileID: 328045085}
-  enemyCamp: 0
   errorText: {fileID: 261420300}
   errorImage: {fileID: 1026027372}
   giantScript: {fileID: 0}

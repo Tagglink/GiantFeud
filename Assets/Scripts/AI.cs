@@ -5,8 +5,8 @@ public enum AIAction { NONE, BUILD_PATH, HEAL }
 
 public class AI : MonoBehaviour {
 
-    public Giant giant; // inspector set
-    public Camp camp; // inspector set
+    public Giant giant;
+    public Camp camp;
     public bool active;
 
     private ItemID goalItem;

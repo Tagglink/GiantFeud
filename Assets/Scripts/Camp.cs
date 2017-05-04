@@ -3,6 +3,10 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+///   The Camp manages villagers and resources, and takes care of
+///   crafting.
+/// </summary>
 public class Camp : MonoBehaviour {
 
     /// <summary>
@@ -213,10 +217,12 @@ public class Camp : MonoBehaviour {
 
     /// <summary>
     ///   If possible, uses an already crafted item with the
-    ///   given itemId.
+    ///   given ItemId.
     /// </summary>
     /// <param name="itemId">The ItemID of the item to use.</param>
-    /// <returns>false if no available villager is idle, true if the item is used.</returns>
+    /// <returns>
+    ///   false if no available villager is idle, true if the item is used.
+    /// </returns>
     public bool SendVillagerToUseItem(ItemID itemId)
     {
         List<GameObject> idleVillagers = GetIdleVillagers();
@@ -267,20 +273,32 @@ public class Camp : MonoBehaviour {
 
     /// <summary>
     ///   Returns a resource object representing the difference in 
-    ///   current resources and required resources, including the 
-    ///   resources that villagers are currently gathering in the equation.
+    ///   current resources and required resources of a specified item, 
+    ///   including the resources that this camp's villagers are currently 
+    ///   gathering.
     /// </summary>
-    /// <param name="item"></param>
+    /// <param name="item">
+    ///   The ItemID of the item to compare with
+    /// </param>
     /// <returns>
     ///   A resource object where each property is the difference between
     ///   effective current resources and required resources.
     /// </returns>
+    /// <remarks>
+    ///   Used by the bot to calculate how much more 
+    ///   it should gather.
+    /// </remarks>
+    /// <see cref="AI"/>
+    /// <see cref="Villager.efficiency"/>
+    /// <see cref="Resources"/>
     public Resources CalculateRequiredResources(ItemID item)
     {
         Resources itemCost = Items.itemList[item].resourceCost;
         Resources effectiveResources = resources;
         Resources ret = new Resources();
 
+        // create the effectiveResources by looking at what
+        // the villagers are currently gathering.
         foreach (GameObject vObj in villagers)
         {
             Villager v = vObj.GetComponent<Villager>();
@@ -305,83 +323,164 @@ public class Camp : MonoBehaviour {
             }
         }
 
+        // subtract the item cost with the effective resources to
+        // get the return value.
         ret = itemCost - effectiveResources;
 
         return ret;
     }
 
+    /// <summary>
+    ///   If possible, craft an item.
+    /// </summary>
+    /// <param name="itemId">
+    ///   The ItemID of the item to craft
+    /// </param>
+    /// <returns>
+    ///   false if there are not enough resources, or
+    ///   if a craft is already underway. 
+    ///   true if the crafting is started.
+    /// </returns>
+    /// <see cref="isCrafting"/>
+    /// <see cref="StartCraft(Item, ItemID)"/>
+    /// <see cref="resources"/>
     public bool Craft(ItemID itemId)
     {
         Item item = Items.itemList[itemId];
 
-        // check if the camp is already crafting or does not have
-        // enough resources
+        // check so that the camp isn't already crafting
+        // and has enough resources
         if (!isCrafting && item.resourceCost <= resources)
         {
+            // if so, start the crafting
             StartCraft(item, itemId);
             return true;
         }
         else if (isCrafting)
         {
+            // if there was already a craft underway, tell the player
             DisplayError("Du craftar redan något!");
 
             return false;
         }
         else
         {
+            // if there wasn't enough resources, tell the player.
             DisplayError("Du har inte tillräckligt med resurser för det!");
 
             return false;
         }
     }
 
+    /// <summary>
+    ///   Start a crafting process.
+    /// </summary>
+    /// <param name="item">The Item object to craft</param>
+    /// <param name="itemId">The ItemID of the item</param>
+    /// <see cref="craftingStartTime"/>
+    /// <see cref="currentlyCraftingItem"/>
+    /// <see cref="WaitForCraft(ItemID, Item)"/>
     void StartCraft(Item item, ItemID itemId)
     {
+        // prepare the crafting variables
         craftingStartTime = Time.realtimeSinceStartup;
         isCrafting = true;
-        resources -= item.resourceCost;
         currentlyCraftingItem = item;
 
+        // pay the resources
+        resources -= item.resourceCost;
+
+        // start the crafting
         StartCoroutine(WaitForCraft(itemId, item));
     }
 
-    // returns false if failed
+    /// <summary>
+    ///   If possible, uses an already crafted item.
+    /// </summary>
+    /// <param name="id">
+    ///   The ItemID of the item to be used.
+    /// </param>
+    /// <returns>
+    ///   false if failure, true if successful use of item
+    /// </returns>
+    /// <remarks>
+    ///   The function will return false in 3 cases:
+    ///     1. The item is not in the item stash.
+    ///     2. The item is giantUse and there is not enough 
+    ///        idle villagers to go and give the item to the giant.
+    ///     3. The function tried to use something other
+    ///        than a Consumable as non-giantUse.
+    /// </remarks>
+    /// <see cref="Item.giantUse"/>
+    /// <see cref="itemStash"/>
     public bool UseItem(ItemID id)
     {
         ItemID currentItem;
         Item item;
         int i;
-
+        
+        // loop through the item stash to look for the item
         for (i = 0; i < itemStash.Count; i++) { 
 
             currentItem = itemStash[i];
 
             if (currentItem == id)
             {
+                // if found, get the proper Item object from the
+                // static item list
                 item = Items.itemList[id];
                 if (item.giantUse)
                 {
+                    // if the item should be given to the giant, 
+                    // try to send a non-idle villager to do so.
                     if (SendVillagerToUseItem(id))
                     {
                         itemStash.RemoveAt(i);
                     }
                     else
+                    {
+                        // if it fails, return false
                         return false;
+                    }
                 }
                 else
                 {
+                    // if the item should be used at the camp,
+                    // try to use the item
                     if (UseItemAtCamp(item))
+                    {
                         itemStash.RemoveAt(i);
+                    }
                     else
+                    {
+                        // and return false if it failed
                         return false;
+                    }
                 }
                 
+                // return true if the item was found and no
+                // errors were encountered during the usage
                 return true;
             }
         }
+        
+        // return false if the item was not found
+        // in the item stash
         return false;
     }
 
+    /// <summary>
+    ///   Use an item right away.
+    /// </summary>
+    /// <param name="item">
+    ///   The Item object to use.
+    /// </param>
+    /// <returns>
+    ///   false if the Item is an Equipment (the item is not used),
+    ///   true if the Item is a Consumable (the item is used)
+    /// </returns>
+    /// <see cref="Consumable"/>
+    /// <see cref="Equipment"/>
     bool UseItemAtCamp(Item item)
     {
         if (item is Equipment)
@@ -398,37 +497,81 @@ public class Camp : MonoBehaviour {
         return true;
     }
 
+    /// <summary>
+    ///   Uses a Consumable's reverseAction after the consumable's
+    ///   duration.
+    /// </summary>
+    /// <param name="consumable">
+    ///   The Consumable that is used
+    /// </param>
+    /// <remarks>
+    ///   Should be called by StartCoroutine()
+    /// </remarks>
+    /// <see cref="Consumable.duration"/>
     IEnumerator DelayTemporaryBuff(Consumable consumable)
     {
-        yield return new WaitForSeconds(consumable.craftingTime);
+        yield return new WaitForSeconds(consumable.duration);
         consumable.reverseAction(giantScript);
     }
 
+    /// <summary>
+    ///   Waits for the item's craftingTime and then adds the item
+    ///   to the item stash and resets the crafting process.
+    /// </summary>
+    /// <param name="id">The id of the item to be crafted</param>
+    /// <param name="item">The Item object to be crafted</param>
+    /// <remarks>
+    ///   Contains a tutorial advancement
+    /// </remarks>
     IEnumerator WaitForCraft(ItemID id, Item item)
     {
         yield return new WaitForSeconds(item.craftingTime);
+
+        // after the crafting time, add the item to the item stash
         itemStash.Add(id);
+
+        // and reset the crafting variables
         isCrafting = false;
         currentlyCraftingItem = null;
         craftingProgress = 0.0f;
 
+        // if the correct conditions are met, advance the tutorial at this time.
         if (!enemyCamp && tutorial.currentStep == 3 && id == ItemID.APPLE)
             tutorial.AdvanceTutorial();
     }
 
+    /// <summary>
+    ///   Show the player an error.
+    /// </summary>
+    /// <param name="message">
+    ///   The contents of the error box.
+    /// </param>
+    /// <see cref="coroutineError"/>
     void DisplayError(string message)
     {
+        // if the enemy camp triggers an error, ignore it
         if (enemyCamp)
             return;
-
+        
         if (coroutineError != null)
         {
+            // If there is an error currently showing, stop that coroutine
             StopCoroutine(coroutineError);
         }
 
+        // Show the error and save the coroutine so that it can be
+        // cancelled.
         coroutineError = StartCoroutine(CoroutineError(message));
     }
 
+    /// <summary>
+    ///   The coroutine that shows an error to the player, 
+    ///   then waits for a certain duration and terminates the error.
+    /// </summary>
+    /// <param name="message">
+    ///   The contents of the error box.
+    /// </param>
+    /// <see cref="errorShowDuration"/>
     IEnumerator CoroutineError(string message)
     {
         errorText.text = message;

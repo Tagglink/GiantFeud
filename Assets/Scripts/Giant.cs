@@ -117,6 +117,9 @@ public class Giant : MonoBehaviour {
         // Default atkTime to 0
         atkTime = 0;
 
+        // Default hp to 10000
+        hp = 10000;
+
         // Set the animator variable to the Animator component
         animator = GetComponent<Animator>();
 
@@ -153,7 +156,6 @@ public class Giant : MonoBehaviour {
         // So it can display the correct end screen
         if (hp <= 0)
         {
-            hp = 0;
             gameManager.GetComponent<GameManager>().EndGame(this);
         }
     }
