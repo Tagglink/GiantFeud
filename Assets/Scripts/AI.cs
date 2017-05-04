@@ -28,18 +28,18 @@ public class AI : MonoBehaviour {
 
         buildPath = new ItemID[]
         {
-            ItemID.SPEAR
-            //ItemID.LEATHERARMOUR,
-            //ItemID.CLUB,
-            //ItemID.STONEARMOUR,
-            //ItemID.VILLAGER,
-            //ItemID.AXE,
-            //ItemID.HIDEARMOUR,
-            //ItemID.VILLAGER,
-            //ItemID.SWORD,
-            //ItemID.VILLAGER,
-            //ItemID.VILLAGER,
-            //ItemID.ASGARDMEAL
+            ItemID.SPEAR,
+            ItemID.LEATHERARMOUR,
+            ItemID.CLUB,
+            ItemID.STONEARMOUR,
+            ItemID.VILLAGER,
+            ItemID.AXE,
+            ItemID.HIDEARMOUR,
+            ItemID.VILLAGER,
+            ItemID.SWORD,
+            ItemID.VILLAGER,
+            ItemID.VILLAGER,
+            ItemID.ASGARDMEAL
         };
     }
 

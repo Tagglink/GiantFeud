@@ -15,8 +15,6 @@ public class HUDItemButton : MonoBehaviour {
     public ItemID itemID;
     public EventTrigger eventTrigger;
 
-    //private GameObject infoBox;
-
     // Lerp variables
 
     public displayState state;
@@ -38,11 +36,7 @@ public class HUDItemButton : MonoBehaviour {
     void Start () {
         state = displayState.HIDDEN;
         speed = 3;
-        //infoBox = transform.GetChild(0).gameObject;
         hiddenPoint = Vector3.zero;
-        //infoBox.transform.localScale = hiddenPoint;
-        //infoBox.transform.localPosition = Vector3.zero;
-        //infoBox.transform.GetChild(0).GetComponent<Text>().text = "<b><i>" + Items.itemList[itemID].name + "</i></b>" + Environment.NewLine + Items.itemList[itemID].description;
 
         button = GetComponent<Button>();
         eventTrigger = GetComponent<EventTrigger>();
@@ -56,8 +50,6 @@ public class HUDItemButton : MonoBehaviour {
         highlightImage.enabled = false;
         eventTrigger.enabled = false;
         progressImage.enabled = false;
-
-        // TODO: make it change to 'Reinforce' when an equipment has been crafted once.
     }
 
     /// <summary>
@@ -101,10 +93,6 @@ public class HUDItemButton : MonoBehaviour {
     /// </summary>
 	public void Move()
     {
-        /*
-        StartLerping();
-        GetComponentInParent<CraftingButton>().RetractChildren(gameObject);*/
-
         itemInfoBox.Show(itemID);
     }
 
@@ -139,9 +127,7 @@ public class HUDItemButton : MonoBehaviour {
     {
         if (state == displayState.LERPING)
         {
-            //startPoint = infoBox.transform.localPosition;
             endPoint = hiddenPoint;
-            //startScale = infoBox.transform.localScale;
             endScale = Vector3.zero;
             return true;
         }
@@ -149,9 +135,6 @@ public class HUDItemButton : MonoBehaviour {
             return false;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     void Update()
     {
         if (playerCamp.resources >= Items.itemList[itemID].resourceCost)
@@ -170,25 +153,6 @@ public class HUDItemButton : MonoBehaviour {
         if (state == displayState.LERPING)
         {
             lerpTime += Time.deltaTime * speed;
-            //infoBox.transform.localPosition = Vector3.Lerp(startPoint, endPoint, 1 - Curve(lerpTime));
-            //infoBox.transform.localScale = Vector3.Lerp(startScale, endScale, 1 - Curve(lerpTime));
         }
-        if (lerpTime >= 1)
-        {
-            /*if (infoBox.transform.localPosition == hiddenPoint)
-            {
-                state = displayState.HIDDEN;
-            }
-            else
-            {
-                state = displayState.DISPLAYING;
-            }
-            lerpTime = 0;*/
-        }
-    }
-
-    float Curve(float time)
-    {
-        return (0.7f * time * time) - (1.7f * time) + 1;
     }
 }
