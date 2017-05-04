@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject playerObject;
-    public GameObject victoryScreen;
+    public GameObject playerObject; // inspector set
+    public GameObject victoryScreen; // inspector set
+    public GameObject pauseBox; // inspector set
+
     private static Giant player;
 
-    public GameObject pauseBox; // inspector set
 
 	void Start () {
         player = playerObject.GetComponent<Giant>();
