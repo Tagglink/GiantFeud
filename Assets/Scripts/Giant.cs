@@ -286,7 +286,7 @@ public class Giant : MonoBehaviour {
     /// </param>
     public void AddBuff(ItemID item, Stats buff)
     {
-        // Add the buff
+        // Add the buff to the buff list
         buffs.Add(new KeyValuePair<ItemID, Stats>(item, buff));
 
         // Update statsChanged bool to true to update the stats
@@ -319,7 +319,7 @@ public class Giant : MonoBehaviour {
     /// </param>
     public void AddMultiplier(ItemID item, Stats buff)
     {
-        // Add the multiplier
+        // Add the multiplier to the multiplier list
         multipliers.Add(new KeyValuePair<ItemID, Stats>(item, buff));
 
         // Update statsChanged bool to true to update the stats
@@ -374,19 +374,26 @@ public class Giant : MonoBehaviour {
         consumable.reverseAction(GetComponent<Giant>());
     }
 
+    /// <summary>
+    /// Updates the stats with Armour, Weapon, Buffs, and Multiplier taken into account.
+    /// As well as updating HUD and Animations.
+    /// </summary>
     void UpdateStats()
     {
         Stats multiplier = new Stats(0, 0, 0, 0, 0);
 
+        // Resets stats
         stats = baseStats;
 
+        // Adds the Weapon and Armour stats to the stats
         stats += currentArmour.stats + (currentArmour.reinforcementStats * currentArmour.reinforcementCount);
         stats += currentWeapon.stats + (currentWeapon.reinforcementStats * currentWeapon.reinforcementCount);
 
-
+        // Adds all buffs to the stats
         foreach (KeyValuePair<ItemID, Stats> buff in buffs)
             stats += buff.Value;
 
+        // If multiplier exists, multiply stats with it
         if (multipliers.Count > 0)
         {
             foreach (KeyValuePair<ItemID, Stats> mult in multipliers)
@@ -395,21 +402,32 @@ public class Giant : MonoBehaviour {
             stats *= multiplier;
         }
 
+        // Update Gauges on HUD to fit the updated stats
         if (hudStatusBox)
             hudStatusBox.UpdateStatGauges();
 
+        // Update the attack animation to accomodate to the updated stats
         animator.SetFloat("swing_speed", stats.atkspd);
+
+        // Update the Weapon Sprite the Giant is holding, to match the Weapon currently equipped
         transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sprite = currentWeapon.weaponSprite;
     }
 
     void FixedUpdate()
     {
         timer++;
+
+        // Calculate how many attacks per second
+        // 50 FixedUpdates is one second (0.02 per update)
         atkTime = Mathf.RoundToInt(50 / stats.atkspd);
+
+        // Once per (1 / Attacks per second) your Giant attacks
         if (timer % atkTime == 0)
         {
             Attack();
         }
+
+        // Health Regeneration is added to Health once per second
         if (timer % 50 == 0)
         {
             hp += stats.hpPerSec;
