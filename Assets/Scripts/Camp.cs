@@ -193,7 +193,10 @@ public class Camp : MonoBehaviour {
     ///   If possible, sends a villager to gather resources at the given tile.
     /// </summary>
     /// <param name="tile">The tile to gather at.</param>
-    /// <returns>false if there are no idle villagers to send, true if a villager was sent.</returns>
+    /// <returns>
+    ///   false if there are no idle villagers to send 
+    ///   true if a villager was sent.
+    /// </returns>
     public bool SendVillagerToGather(GameObject tile)
     {
         List<GameObject> idleVillagers = GetIdleVillagers();

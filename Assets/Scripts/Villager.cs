@@ -8,26 +8,118 @@ public enum VillagerArriveAction { NONE, LEAVE_RESOURCE, USE_ITEM, GATHER_RESOUR
 
 public class Villager : MonoBehaviour {
 
-    public HUDTutorial tutorial; // inspector set
-    public bool opponent;        // inspector set
+    /// <summary>
+    ///   A reference to the tutorial
+    /// </summary>
+    /// <remarks>
+    ///   inspector set
+    ///   HUD object
+    /// </remarks>
+    public HUDTutorial tutorial;
 
+    /// <summary>
+    ///   True if this villager belongs to the non-player camp
+    /// </summary>
+    /// <remarks>
+    ///   inspector set
+    /// </remarks>
+    public bool opponent;
+
+    /// <summary>
+    ///   What the villager is currently doing.
+    ///   IDLE if the villager is in the camp,
+    ///   WALKING if the villager is traveling on the map,
+    ///   GATHERING if the villager is gathering resources on a tile.
+    /// </summary>
     public VillagerState state;
-    public ResourceType resource;
-    public ItemID item;
-    public int speed;
-    public int resourcesCarried;
-    public int efficiency; // the amount of resources to pick up per Gather
 
+    /// <summary>
+    ///   This represents the type of resource
+    ///   that is gathered when the villager is on its way to gather,
+    ///   currently gathering, or going back to camp after
+    ///   gathering a resource. Otherwise this is NONE.
+    /// </summary>
+    public ResourceType resource;
+
+    /// <summary>
+    ///   The item to use on arrival at the Giant, when sent
+    ///   to use a giantUse item.
+    /// </summary>
+    /// <see cref="Item.giantUse"/> 
+    public ItemID item;
+
+    /// <summary>
+    ///   How fast villagers move across the map.
+    /// </summary>
+    public int speed;
+
+    /// <summary>
+    ///   How many pieces of resources that the villager is holding of
+    ///   the type from the resource property.
+    /// </summary>
+    /// <see cref="resource"/> 
+    public int resourcesCarried;
+
+    /// <summary>
+    ///   How many resources that a villager picks up after
+    ///   gathering at any one tile.
+    /// </summary>
+    public int efficiency;
+
+    /// <summary>
+    ///   Determines the action at arrival after Pathfinding
+    ///   to a tile.
+    /// </summary>
+    /// <see cref="Pathfind(GameObject, VillagerArriveAction)"/> 
     VillagerArriveAction arriveAction;
+
+    /// <summary>
+    ///   How long it takes for this villager to gather a resource
+    ///   on any tile.
+    /// </summary>
     float gatherTime;
+
+    /// <summary>
+    ///   A number iterating through the list of positions
+    ///   to move between when traveling.
+    /// </summary>
+    /// <see cref="movePositions"/>
     int currentTargetPositionIndex;
+
+    /// <summary>
+    ///   A list of positions to move between when traveling to a tile.
+    /// </summary>
     Transform[] movePositions;
+
+    /// <summary>
+    ///   A vector describing the distance between the visual center
+    ///   of a tile and its actual position
+    /// </summary>
     Vector3 tileCenterPositionOffset;
+
+    /// <summary>
+    ///   A vector that adjusts the position of villagers relative to tiles
+    ///   along the y-axis.
+    /// </summary>
     Vector3 feetPositionOffset;
 
-    Camp camp; // the camp the villager belongs to.
+    /// <summary>
+    ///   A reference to the parent camp this villager belongs to
+    /// </summary>
+    Camp camp;
 
+    /// <summary>
+    ///   A secondary arrive action in order to get
+    ///   functional pathfinding around the impassable Giants'
+    ///   area in the middle of the map.
+    /// </summary>
+    /// <see cref="arriveAction"/> 
     VillagerArriveAction arriveActionNext;
+
+    /// <summary>
+    ///   The tile to travel to after turning around the corner in the middle of the map, 
+    ///   if necessary.
+    /// </summary>
     GameObject targetTileNext;
 
     // Use this for initialization
@@ -56,15 +148,22 @@ public class Villager : MonoBehaviour {
 	void Update () {
         SetDepth();
 
+        // if the villager is in the walking state
 	    if (state == VillagerState.WALKING)
         {
+            // try to move towards the next tile position
             Move();
 
+            // if arrived, do an arrive action
             if (CheckIfArrived())
                 Arrived();
         }
 	}
 
+    /// <summary>
+    ///   Make it so that villagers further down on the y-axis is
+    ///   drawn on top of other villagers.
+    /// </summary>
     void SetDepth()
     {
         Vector3 targetPosition = transform.position;
@@ -106,8 +205,13 @@ public class Villager : MonoBehaviour {
     {
         Tile tileScript = tile.GetComponent<Tile>();
         tileScript.occupied = true;
+
+        // spawn
         MoveIntoBounds();
+
+        // convert the tile type into a resource type
         resource = Resources.TileToResource(tileScript.type);
+        
         Pathfind(tile, VillagerArriveAction.GATHER_RESOURCE);
     }
 
@@ -117,8 +221,14 @@ public class Villager : MonoBehaviour {
     /// <param name="id">The id of the item to use</param>
     public void UseItem(ItemID id)
     {
+        // spawn
         MoveIntoBounds();
-        item = id; // set the item property to id so that the correct item is used on arrival.
+
+        // set the item property to id so that the correct item is used on arrival.
+        item = id; 
+
+        // Use MoveTo instead of Pathfind because the giantTile is never on the
+        // other side of the map
         MoveTo(camp.giantTile, VillagerArriveAction.USE_ITEM);
     }
 
@@ -127,8 +237,10 @@ public class Villager : MonoBehaviour {
     /// </summary>
     void Move()
     {
+        // make sure we can move
         if (ValidateMovement())
         {
+            // move towards the target position
             Vector3 destinationPos = movePositions[currentTargetPositionIndex].position + tileCenterPositionOffset + feetPositionOffset;
             transform.position = Vector2.MoveTowards(transform.position, destinationPos, speed * Time.deltaTime);
 
@@ -167,26 +279,34 @@ public class Villager : MonoBehaviour {
         Tile at = movePositions[movePositions.Length - 1].GetComponent<Tile>();
         currentTargetPositionIndex = 0;
         
+        // select the proper functions to call depending on
+        // the arrive action
         switch (arriveAction)
         {
             case VillagerArriveAction.NONE:
                 // idk
                 break;
             case VillagerArriveAction.GATHER_RESOURCE:
+                // start gathering
                 StartGather(at);
                 break;
             case VillagerArriveAction.LEAVE_RESOURCE:
+                // give the camp a resource and then despawn
                 GiveCampResource();
                 Escape();
                 break;
             case VillagerArriveAction.USE_ITEM:
+                // use a giantUse item
                 ApplyItemToGiant();
                 MoveTo(camp.homeTile, VillagerArriveAction.ESCAPE);
                 break;
             case VillagerArriveAction.ESCAPE:
+                // despawn
                 Escape();
                 break;
             case VillagerArriveAction.WALK:
+                // this happens once the villager has arrived to the corner of the
+                // giant area and selects the new position
                 MoveTo(targetTileNext, arriveActionNext);
                 targetTileNext = null;
                 arriveActionNext = VillagerArriveAction.NONE;
@@ -201,8 +321,12 @@ public class Villager : MonoBehaviour {
     void StartGather(Tile at)
     {
         if (resource == ResourceType.NONE)
+        {
+            Debug.Log("StartGather(Tile) failed because no resource was specified");
             return;
+        }
 
+        // switch states and start gathering
         state = VillagerState.GATHERING;
         StartCoroutine(WaitForGather(at));
     }
@@ -230,7 +354,10 @@ public class Villager : MonoBehaviour {
         if (tutorial.currentStep == 1 && !opponent && resource == ResourceType.WOOD)
             tutorial.AdvanceTutorial();
 
+        // add the resources
         camp.resources.Add(resource, resourcesCarried);
+
+        // reset variables
         resource = ResourceType.NONE;
         resourcesCarried = 0;
     }
@@ -245,7 +372,9 @@ public class Villager : MonoBehaviour {
     {
         yield return new WaitForSeconds(gatherTime);
         at.occupied = false;
-        resourcesCarried = efficiency;
+        resourcesCarried += efficiency;
+
+        // go back to camp and deliver the resources
         Pathfind(camp.homeTile, VillagerArriveAction.LEAVE_RESOURCE);
     }
 
@@ -303,9 +432,11 @@ public class Villager : MonoBehaviour {
         float lineTilt = (lineEnd1.y - lineEnd2.y) / (lineEnd1.x - lineEnd2.x);
         float rayTilt = ray.direction.y / ray.direction.x;
 
+        // the lines are parallell so they cannot intersect
         if (lineTilt == rayTilt)
             return false;
 
+        // get the intersection point of the lines
         Vector2 intersection = GetLineIntersection(ray.origin, point, lineEnd1, lineEnd2);
 
         return ray.origin.x > point.x ? intersection.x < ray.origin.x && intersection.x > point.x : intersection.x > ray.origin.x && intersection.x < point.x;
@@ -321,6 +452,8 @@ public class Villager : MonoBehaviour {
     /// <returns>The point of the intersection</returns>
     Vector2 GetLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
     {
+        // I don't understand this function myself; I got it from 
+        // the internet. But it gets the job done.
         Vector2 ret = new Vector2();
 
         float divisor = ((p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x));
@@ -456,14 +589,17 @@ public class Villager : MonoBehaviour {
     {
         Ray2D[] ret = new Ray2D[angles.Length];
 
+        // get the angle of the ray
         float angle = Mathf.Rad2Deg * Mathf.Atan2(originRay.direction.y, originRay.direction.x);
         float a;
 
+        // if negative angle, convert to positive
         while (angle < 0)
             angle += 360;
-
+        
         angles = SortAnglesByPivot(angles, angle);
 
+        // make the list of rays ordered by closest to the ray
         for (int i = 0; i < angles.Length; i++)
         {
             a = angles[i];
@@ -475,11 +611,10 @@ public class Villager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sorts a list of angle values with closest to the pivot angle first.
+    /// Sorts a list of angle values by closest to the pivot angle first.
     /// </summary>
     /// <param name="nums">The list of angles to sort, 0 &lt;= x &lt; 360, with the smallest angle first</param>
     /// <param name="pivot">The angle to sort after</param>
-    /// <returns></returns>
     float[] SortAnglesByPivot(float[] nums, float pivot)
     {
         List<float> sortedNums = new List<float>();
@@ -493,13 +628,15 @@ public class Villager : MonoBehaviour {
 
             for (int j = 0; j < sortedNums.Count; j++)
             {
-                if (sortedNums[j] != ClosestAngle(pivot, num_current, sortedNums[j])) // if it's closer, place before
+                if (sortedNums[j] != ClosestAngle(pivot, num_current, sortedNums[j])) 
                 {
+                    // if it's closer, place before
                     sortedNums.Insert(j, num_current);
                     break;
                 }
-                else if (j == sortedNums.Count - 1) // if it's the furthest away number, place at end
+                else if (j == sortedNums.Count - 1)
                 {
+                    // if it's the furthest away number, place at end
                     sortedNums.Add(num_current);
                     break;
                 }

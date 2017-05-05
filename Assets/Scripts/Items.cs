@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-public enum ItemID { NULL,
+public enum ItemID {
+    NULL,
     AXE,
     CLUB,
     KNIFE,
