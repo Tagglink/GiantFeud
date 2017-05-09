@@ -83,6 +83,14 @@ public class Giant : MonoBehaviour {
     public Animator animator;
 
     /// <summary>
+    /// Used to display numbers of damage and healing.
+    /// </summary>
+    /// <remarks>
+    /// Inspector set
+    /// </remarks>
+    public GameObject numberSpawner;
+
+    /// <summary>
     /// The Giant's health stat.
     /// </summary>
     public int hp;
@@ -184,6 +192,7 @@ public class Giant : MonoBehaviour {
     {
         // Reduce HP with damage amount subtracted by this Giant's DEF stat
         hp -= damageTaken - stats.def;
+
     }
 
     /// <summary>

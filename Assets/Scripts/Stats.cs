@@ -27,6 +27,8 @@ public struct Stats {
         ret.def = stats1.def - stats2.def;
         ret.maxHP = stats1.maxHP - stats2.maxHP;
         ret.hpPerSec = stats1.hpPerSec - stats2.hpPerSec;
+        if (ret.atkspd < 0)
+            ret.atkspd = 0;
         return ret;
     }
 
@@ -81,5 +83,17 @@ public struct Stats {
         def = _def;
         maxHP = _maxHP;
         hpPerSec = _hpPerSec;
+    }
+
+    int CheckIfBelowZero(int value)
+    {
+        if (value < 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return value;
+        }
     }
 }

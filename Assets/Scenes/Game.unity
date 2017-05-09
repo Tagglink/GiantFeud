@@ -6157,6 +6157,7 @@ RectTransform:
   - {fileID: 2018691369}
   - {fileID: 1026027371}
   - {fileID: 319193502}
+  - {fileID: 1593217398}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -6360,6 +6361,7 @@ MonoBehaviour:
   gameManager: {fileID: 2109390056}
   hudStatusBox: {fileID: 0}
   animator: {fileID: 0}
+  numberSpawner: {fileID: 1593217397}
   hp: 0
   statsChanged: 0
 --- !u!212 &628574470
@@ -18557,6 +18559,53 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!1 &1593217397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1593217398}
+  - 114: {fileID: 1593217399}
+  m_Layer: 5
+  m_Name: Number Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1593217398
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1593217397}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 615101685}
+  m_RootOrder: 7
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1593217399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1593217397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f53e7025d8529e44b5050568e780d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberObject: {fileID: 1000012657505490, guid: 34e4c343fa5824a4f960ad9e2fa1682c,
+    type: 2}
 --- !u!1 &1597401068
 GameObject:
   m_ObjectHideFlags: 0
@@ -19242,7 +19291,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1656451963}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 584a646682ba87d4eb91b569cc5f290f, type: 3}
+  m_Script: {fileID: 11500000, guid: 170f7db58458b554190af696f434e319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1563978794}
@@ -24968,6 +25017,7 @@ MonoBehaviour:
   gameManager: {fileID: 2109390056}
   hudStatusBox: {fileID: 769080648}
   animator: {fileID: 0}
+  numberSpawner: {fileID: 1593217397}
   hp: 0
   statsChanged: 0
 --- !u!212 &2077408003
