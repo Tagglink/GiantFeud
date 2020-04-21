@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
         player = playerObject.GetComponent<Giant>();
+        Time.timeScale = 1;
 	}
 
     void Update ()

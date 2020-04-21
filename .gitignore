@@ -1,6 +1,8 @@
 Library/
 Temp/
 Builds/
+Logs/
+obj/
 .vs/
 *.bat
 *.csproj
