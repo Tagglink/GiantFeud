@@ -1,5 +1,5 @@
 # GiantFeud
-Two villages have come into conflict, and each have a giant loyal to their cause. Arm your giant with sword and armor, and make sure he is well fed! Lest he fell to the giant of the enemy village.
+Two villages have come into conflict, and each have a giant loyal to their cause. Arm your giant with sword and armor, and make sure he is well fed! Lest he fall to the giant of the enemy village.
 
 The game is in Swedish.
 [HTML5 Playable](https://tagg.link/games/giant-feud/)
